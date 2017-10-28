@@ -3,7 +3,7 @@
         <img src="http://demo.sylius.org/assets/shop/img/logo.png" />
     </a>
 </p>
-<h1 align="center">Plugin Skeleton</h1>
+<h1 align="center">SyliusImportExportPlugin</h1>
 <p align="center">
     <a href="https://packagist.org/packages/friendsofsylius/SyliusImportExportPlugin" title="License">
         <img src="https://img.shields.io/packagist/l/friendsofsylius/SyliusImportExportPlugin.svg" />
@@ -38,7 +38,7 @@
 
 ### CLI commands
 
-  - Get list if available Importers
+  - Get list if available importers
 
     ```bash
     $ bin/console sylius:import
