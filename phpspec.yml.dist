@@ -1,0 +1,4 @@
+suites:
+    main:
+        namespace: FriendsOfSylius\SyliusImportExportPlugin
+        psr4_prefix: FriendsOfSylius\SyliusImportExportPlugin

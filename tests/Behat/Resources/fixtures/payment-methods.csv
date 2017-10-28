@@ -1,0 +1,3 @@
+Code,Name,Instructions,Gateway
+OFFLINE,Offline,Offline payment method instructions,offline
+PAYPAL,PayPal,PayPal payment method instructions,paypal_express_checkout

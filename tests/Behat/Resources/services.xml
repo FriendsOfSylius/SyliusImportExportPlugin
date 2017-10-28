@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns="http://symfony.com/schema/dic/services" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <parameters>
+        <parameter key="behat.files_directory">%__symfony__.kernel.project_dir%/tests/Behat/Resources/fixtures</parameter>
+    </parameters>
+    <services>
+        <service id="test.behat.context.notification_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\NotificationContext">
+            <argument type="service" id="sylius.behat.notification_checker"/>
+            <tag name="fob.context_service" />
+        </service>
+        <service id="test.behat.context.payment_methods_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\PaymentMethodsContext">
+            <argument type="service" id="test.behat.page.payment_method_index_page"/>
+            <tag name="fob.context_service" />
+        </service>
+        <service id="test.behat.context.tax_categories_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\TaxCategoriesContext">
+            <argument type="service" id="test.behat.page.tax_category_index_page" />
+            <tag name="fob.context_service" />
+        </service>
+
+        <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxCategoryIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+            <argument>sylius_admin_tax_category_index</argument>
+            <argument>%behat.files_directory%</argument>
+        </service>
+        <service id="test.behat.page.payment_method_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+            <argument>sylius_admin_payment_method_index</argument>
+            <argument>%behat.files_directory%</argument>
+        </service>
+    </services>
+</container>
