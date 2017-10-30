@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -27,7 +27,11 @@ final class RegisterImporterPass implements CompilerPassInterface
             if (!isset($attributes[0]['type'])) {
                 throw new \InvalidArgumentException('Tagged importer '.$id.' needs to have a type');
             }
-            $importersRegistry->addMethodCall('register', [$attributes[0]['type'], new Reference($id)]);
+            if (!isset($attributes[0]['format'])) {
+                throw new \InvalidArgumentException('Tagged importer '.$id.' needs to have a format');
+            }
+            $name = ImporterRegistry::buildServiceName($attributes[0]['type'], $attributes[0]['format']);
+            $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
         }
     }
 }

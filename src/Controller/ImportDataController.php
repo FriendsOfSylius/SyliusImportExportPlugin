@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Sylius\Component\Registry\ServiceRegistry;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -31,20 +32,25 @@ final class ImportDataController
 
     public function importAction(Request $request): RedirectResponse
     {
-        $importType = $request->attributes->get('resource');
-        $this->importData($request, $importType);
-        return new RedirectResponse($this->router->generate('sylius_admin_'.$importType.'_index'));
+        $importer = $request->attributes->get('resource');
+        $format = $request->attributes->get('format');
+
+        $this->importData($request, $importer, $format);
+
+        return new RedirectResponse($this->router->generate('sylius_admin_'.$importer.'_index'));
     }
 
-    private function importData(Request $request, $importType): void
+    private function importData(Request $request, $importer, $format): void
     {
-        if (!$this->registry->has($importType)) {
-            $this->session->getFlashBag()->add('error', 'No importer found of type "' . $importType . '""');
+        $name = ImporterRegistry::buildServiceName($importer, $format);
+        if (!$this->registry->has($name)) {
+            $message = sprintf("No importer found of type '%s' for format '%s'", $importer, $format);
+            $this->session->getFlashBag()->add('error', $message);
         }
 
         /** @var UploadedFile $file */
         $file = $request->files->get('import-data');
-        $service = $this->registry->get($importType);
+        $service = $this->registry->get($name);
         $service->import($file->getRealPath());
 
         $this->session->getFlashBag()->add('success', 'Data successfully imported');

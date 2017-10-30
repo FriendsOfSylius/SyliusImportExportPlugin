@@ -1,6 +1,6 @@
 services:
     sylius.importers_registry:
-        class: Sylius\Component\Registry\ServiceRegistry
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry
         arguments:
             - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
             - importer
@@ -17,7 +17,7 @@ services:
             - "@router"
             - "@session"
 
-    sylius.importer.payment_methods:
+    sylius.importer.payment_methods.csv:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter
         arguments:
             - "@sylius.factory.csv_reader"
@@ -25,9 +25,9 @@ services:
             - "@sylius.repository.payment_method"
             - "@sylius.manager.payment_method"
         tags:
-            - { name: sylius.importer, type: payment_method }
+            - { name: sylius.importer, type: payment_method, format: csv }
 
-    sylius.importer.tax_categories:
+    sylius.importer.tax_categories.csv:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\TaxCategoriesImporter
         arguments:
             - "@sylius.factory.csv_reader"
@@ -35,4 +35,4 @@ services:
             - "@sylius.repository.tax_category"
             - "@sylius.manager.tax_category"
         tags:
-            - { name: sylius.importer, type: tax_category }
+            - { name: sylius.importer, type: tax_category, format: csv }
