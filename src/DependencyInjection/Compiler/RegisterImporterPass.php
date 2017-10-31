@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
+use Sylius\Bundle\UiBundle\Block\BlockEventListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -30,8 +31,35 @@ final class RegisterImporterPass implements CompilerPassInterface
             if (!isset($attributes[0]['format'])) {
                 throw new \InvalidArgumentException('Tagged importer '.$id.' needs to have a format');
             }
-            $name = ImporterRegistry::buildServiceName($attributes[0]['type'], $attributes[0]['format']);
+            $type = $attributes[0]['type'];
+            $format = $attributes[0]['format'];
+            $name = ImporterRegistry::buildServiceName($type, $format);
+
             $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
+
+            $this->registerImportFormBlockEvent($container, $type);
         }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param string $type
+     */
+    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
+    {
+        $container
+            ->register(
+                'app.block_event_listener.admin.crud.after_content'.'_'.$type,
+                BlockEventListener::class
+            )
+            ->setAutowired(false)
+            ->addArgument('@SyliusImportExportPlugin/Crud/import_form.html.twig')
+            ->addTag(
+                'kernel.event_listener',
+                [
+                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
+                    'method' => 'onBlockEvent'
+                ]
+            );
     }
 }
