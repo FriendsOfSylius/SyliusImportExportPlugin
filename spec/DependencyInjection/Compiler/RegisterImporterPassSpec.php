@@ -34,6 +34,7 @@ class RegisterImporterPassSpec extends ObjectBehavior
          * prepare the mock for the container builder
          */
         $container->has('sylius.importers_registry')->willReturn(true);
+        $container->has(Argument::type('string'))->willReturn(false);
         $container->findDefinition('sylius.importers_registry')->willReturn($importerRegistry);
         $container->findTaggedServiceIds('sylius.importer')->willReturn([
             'importer_id' => [
@@ -47,6 +48,7 @@ class RegisterImporterPassSpec extends ObjectBehavior
             Argument::type('string'),
             BlockEventListener::class
         )->willReturn($blockEventDefinition)->shouldBeCalled();
+
 
         /**
          * prepare the mock for the importerRegistry

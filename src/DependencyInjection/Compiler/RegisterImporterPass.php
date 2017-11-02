@@ -43,23 +43,27 @@ final class RegisterImporterPass implements CompilerPassInterface
 
     /**
      * @param ContainerBuilder $container
-     * @param string $type
+     * @param string           $type
      */
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
-        $container
-            ->register(
-                'app.block_event_listener.admin.crud.after_content'.'_'.$type,
-                BlockEventListener::class
-            )
-            ->setAutowired(false)
-            ->addArgument('@SyliusImportExportPlugin/Crud/import_form.html.twig')
-            ->addTag(
-                'kernel.event_listener',
-                [
-                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                    'method' => 'onBlockEvent'
-                ]
-            );
+        $eventHookName = ImporterRegistry::buildEventHookName($type);
+
+        if ($container->has($eventHookName) === false) {
+            $container
+                ->register(
+                    $eventHookName,
+                    BlockEventListener::class
+                )
+                ->setAutowired(false)
+                ->addArgument('@SyliusImportExportPlugin/Crud/import_form.html.twig')
+                ->addTag(
+                    'kernel.event_listener',
+                    [
+                        'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
+                        'method' => 'onBlockEvent'
+                    ]
+                );
+        }
     }
 }
