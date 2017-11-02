@@ -1,2 +1,5 @@
 sylius:
     resource: "../../../../vendor/sylius/sylius/app/config/routing.yml"
+
+sylius_import_export:
+    resource: "@SyliusImportExportPlugin/Resources/config/routing.yml"

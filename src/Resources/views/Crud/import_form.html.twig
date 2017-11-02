@@ -1,0 +1,4 @@
+<form action="{{ path('app_import_data', {'resource': block.settings.resources.metadata.name, 'format': 'csv'}) }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="import-data"/>
+    <button type="submit">Import data</button>
+</form>

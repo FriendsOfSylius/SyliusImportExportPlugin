@@ -1,0 +1,5 @@
+app_import_data:
+    path: /import/{resource}/{format}
+    methods: [POST]
+    defaults:
+        _controller: sylius.controller.import_data:importAction
