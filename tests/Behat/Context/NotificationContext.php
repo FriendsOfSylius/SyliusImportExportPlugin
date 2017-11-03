@@ -10,7 +10,7 @@ use Sylius\Behat\Service\NotificationCheckerInterface;
 
 final class NotificationContext implements Context
 {
-    /** @var NotificationCheckerInterface  */
+    /** @var NotificationCheckerInterface */
     private $notificationChecker;
 
     public function __construct(NotificationCheckerInterface $notificationChecker)
@@ -24,7 +24,7 @@ final class NotificationContext implements Context
     public function iShouldSeeANotificationThatTheImportWasSuccessful(): void
     {
         $this->notificationChecker->checkNotification(
-            "Data successfully imported",
+            'Data successfully imported',
             NotificationType::success()
         );
     }

@@ -49,6 +49,23 @@ default:
                 - test.behat.context.tax_categories_context
             filters:
                 tags: "@managing_tax_categories && @ui"
+
+        cli_managing_tax_categories:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_tax_categories_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_tax_categories && @cli_importer"
+
+        cli_managing_payment_methods:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_payment_methods_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_payment_methods && @cli_importer"
+
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:
             paths:
