@@ -40,15 +40,14 @@ class RegisterImporterPassSpec extends ObjectBehavior
             'importer_id' => [
                 [
                     'type' => $importerType,
-                    'format' => 'importer_format'
-                ]
-            ]
+                    'format' => 'importer_format',
+                ],
+            ],
         ]);
         $container->register(
             Argument::type('string'),
             BlockEventListener::class
         )->willReturn($blockEventDefinition)->shouldBeCalled();
-
 
         /**
          * prepare the mock for the importerRegistry
@@ -73,7 +72,7 @@ class RegisterImporterPassSpec extends ObjectBehavior
             'kernel.event_listener',
                 [
                     'event' => 'sonata.block.event.sylius.admin.' . $importerType . '.index.after_content',
-                    'method' => 'onBlockEvent'
+                    'method' => 'onBlockEvent',
                 ]
         )
             ->shouldBeCalled()

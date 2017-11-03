@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter;
-use Doctrine\Common\Persistence\ObjectManager;
 use Payum\Core\Model\GatewayConfig;
 use PhpSpec\ObjectBehavior;
 use Port\Csv\CsvReader;
@@ -13,7 +15,6 @@ use Port\Csv\CsvReaderFactory;
 use Prophecy\Argument;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
-use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 class PaymentMethodsImporterSpec extends ObjectBehavior
@@ -47,7 +48,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $offlinePaymentMethod,
         PaymentMethodInterface $paypalPaymentMethod
     ) {
-        $csvReader->getColumnHeaders()->willReturn(["Code", "Name", "Instructions", "Gateway"]);
+        $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
@@ -81,7 +82,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         $paypalGatewayConfig->setGatewayName('PayPal')->shouldBeCalled();
         $paypalPaymentMethod->setGatewayConfig($paypalGatewayConfig)->shouldBeCalled();
 
-        $this->import(__DIR__.'/payment-methods.csv');
+        $this->import(__DIR__ . '/payment-methods.csv');
     }
 
     function it_updates_existing_payment_methods_data(
@@ -94,7 +95,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $offlinePaymentMethod,
         PaymentMethodInterface $paypalPaymentMethod
     ) {
-        $csvReader->getColumnHeaders()->willReturn(["Code", "Name", "Instructions", "Gateway"]);
+        $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
@@ -128,7 +129,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         $paypalGatewayConfig->setGatewayName('PayPal')->shouldBeCalled();
         $paypalPaymentMethod->setGatewayConfig($paypalGatewayConfig)->shouldBeCalled();
 
-        $this->import(__DIR__.'/payment-methods.csv');
+        $this->import(__DIR__ . '/payment-methods.csv');
     }
 
     function it_fails_importing_data_of_payment_methods_for_missing_headers_in_csv_file(
@@ -141,7 +142,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
 
         $this
             ->shouldThrow(ImporterException::class)
-            ->during('import', [__DIR__.'/payment-methods.csv'])
+            ->during('import', [__DIR__ . '/payment-methods.csv'])
         ;
     }
 }

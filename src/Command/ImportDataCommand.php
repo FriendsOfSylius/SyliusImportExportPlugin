@@ -28,7 +28,7 @@ final class ImportDataCommand extends ContainerAwareCommand
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
                 // @TODO try to guess the format from the file to make this optional
-                new InputOption('format', null,InputOption::VALUE_REQUIRED, 'The format of the file to import'),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to import'),
             ])
         ;
     }
@@ -78,7 +78,7 @@ final class ImportDataCommand extends ContainerAwareCommand
         $output->writeln($message);
     }
 
-    private function listImporters(InputInterface $input, OutputInterface $output, ServiceRegistry $registry) :void
+    private function listImporters(InputInterface $input, OutputInterface $output, ServiceRegistry $registry): void
     {
         $output->writeln('<info>Available importers:</info>');
         $all = array_keys($registry->all());
@@ -91,7 +91,7 @@ final class ImportDataCommand extends ContainerAwareCommand
         $list = [];
         foreach ($importers as $importer => $formats) {
             $list[] = sprintf(
-                "%s (formats: %s)",
+                '%s (formats: %s)',
                 $importer,
                 implode(', ', $formats)
             );

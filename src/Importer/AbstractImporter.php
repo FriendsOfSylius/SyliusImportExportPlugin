@@ -48,7 +48,7 @@ abstract class AbstractImporter implements ImporterInterface
 
         $missingHeaders = array_diff($this->headerKeys, $csvReader->getColumnHeaders());
         if (!empty($missingHeaders)) {
-            throw new ImporterException('Missing expected headers: '.implode(', ', $missingHeaders));
+            throw new ImporterException('Missing expected headers: ' . implode(', ', $missingHeaders));
         }
 
         foreach ($csvReader as $row) {
@@ -62,7 +62,7 @@ abstract class AbstractImporter implements ImporterInterface
     {
         throw new \Exception(
             sprintf(
-                "Method %s has to be implemented in the importer %s",
+                'Method %s has to be implemented in the importer %s',
                 __FUNCTION__,
                 static::class)
         );
