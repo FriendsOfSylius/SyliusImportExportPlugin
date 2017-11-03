@@ -37,7 +37,7 @@ final class ImportDataController
 
         $this->importData($request, $importer, $format);
 
-        return new RedirectResponse($this->router->generate('sylius_admin_'.$importer.'_index'));
+        return new RedirectResponse($this->router->generate('sylius_admin_' . $importer . '_index'));
     }
 
     private function importData(Request $request, $importer, $format): void

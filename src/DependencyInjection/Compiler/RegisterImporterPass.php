@@ -26,10 +26,10 @@ final class RegisterImporterPass implements CompilerPassInterface
 
         foreach ($container->findTaggedServiceIds('sylius.importer') as $id => $attributes) {
             if (!isset($attributes[0]['type'])) {
-                throw new \InvalidArgumentException('Tagged importer '.$id.' needs to have a type');
+                throw new \InvalidArgumentException('Tagged importer ' . $id . ' needs to have a type');
             }
             if (!isset($attributes[0]['format'])) {
-                throw new \InvalidArgumentException('Tagged importer '.$id.' needs to have a format');
+                throw new \InvalidArgumentException('Tagged importer ' . $id . ' needs to have a format');
             }
             $type = $attributes[0]['type'];
             $format = $attributes[0]['format'];
@@ -61,7 +61,7 @@ final class RegisterImporterPass implements CompilerPassInterface
                     'kernel.event_listener',
                     [
                         'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                        'method' => 'onBlockEvent'
+                        'method' => 'onBlockEvent',
                     ]
                 );
         }

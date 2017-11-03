@@ -50,6 +50,7 @@ before_script:
 
 script:
     - composer validate --strict
+    - bin/easy-coding-standard check src/ spec/
 
     - echo 'run specs'
     - bin/phpspec run --no-interaction -f dot

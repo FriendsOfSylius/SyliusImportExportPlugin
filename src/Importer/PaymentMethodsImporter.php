@@ -9,7 +9,7 @@ use Sylius\Component\Core\Model\PaymentMethodInterface;
 
 final class PaymentMethodsImporter extends AbstractImporter
 {
-    /** @var  PaymentMethodFactoryInterface */
+    /** @var PaymentMethodFactoryInterface */
     protected $factory;
 
     /** @var array */
@@ -28,7 +28,7 @@ final class PaymentMethodsImporter extends AbstractImporter
 
         $gatewayConfig = $paymentMethod->getGatewayConfig();
         if (null === $gatewayConfig) {
-            throw new ImporterException('Gateway does not exist:'. $row['Gateway']);
+            throw new ImporterException('Gateway does not exist:' . $row['Gateway']);
         }
 
         $gatewayConfig->setGatewayName($row['Name']);

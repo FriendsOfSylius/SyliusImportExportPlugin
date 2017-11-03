@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\TaxCategoriesImporter;
-use Doctrine\Common\Persistence\ObjectManager;
 use PhpSpec\ObjectBehavior;
 use Port\Csv\CsvReader;
 use Port\Csv\CsvReaderFactory;
@@ -44,14 +46,14 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
         TaxCategoryInterface $taxCategoryBook,
         TaxCategoryInterface $taxCategoryCar
     ) {
-        $csvReader->getColumnHeaders()->willReturn(["Code", "Name", "Description"]);
+        $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
         $csvReader->next()->willReturn();
         $csvReader->current()->willReturn(
-            ["Code" => "BOOKS", "Name" => "books", "Description" => "tax category for books"],
-            ["Code" => "CARS", "Name" => "cars", "Description" => "tax category for cars"]
+            ['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books'],
+            ['Code' => 'CARS', 'Name' => 'cars', 'Description' => 'tax category for cars']
         );
 
         $csvReaderFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($csvReader);
@@ -74,7 +76,7 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
 
         $taxCategoryManager->flush()->shouldBeCalled();
 
-        $this->import(__DIR__.'/tax_categories.csv');
+        $this->import(__DIR__ . '/tax_categories.csv');
     }
 
     function it_updates_existing_tax_category_data(
@@ -86,14 +88,14 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
         TaxCategoryInterface $taxCategoryBook,
         TaxCategoryInterface $taxCategoryCar
     ) {
-        $csvReader->getColumnHeaders()->willReturn(["Code", "Name", "Description"]);
+        $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
         $csvReader->next()->willReturn();
         $csvReader->current()->willReturn(
-            ["Code" => "BOOKS", "Name" => "books", "Description" => "tax category for books"],
-            ["Code" => "CARS", "Name" => "cars", "Description" => "tax category for cars"]
+            ['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books'],
+            ['Code' => 'CARS', 'Name' => 'cars', 'Description' => 'tax category for cars']
         );
 
         $csvReaderFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($csvReader);
@@ -114,7 +116,7 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
 
         $taxCategoryManager->flush()->shouldBeCalled();
 
-        $this->import(__DIR__.'/tax_categories.csv');
+        $this->import(__DIR__ . '/tax_categories.csv');
     }
 
     function it_fails_importing_data_of_tax_categories_for_missing_headers_in_csv_file(
@@ -127,7 +129,7 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
 
         $this
             ->shouldThrow(ImporterException::class)
-            ->during('import', [__DIR__.'/tax_categories.csv'])
+            ->during('import', [__DIR__ . '/tax_categories.csv'])
         ;
     }
 }
