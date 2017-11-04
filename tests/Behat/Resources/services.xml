@@ -9,6 +9,12 @@
             <argument type="service" id="sylius.behat.notification_checker"/>
             <tag name="fob.context_service" />
         </service>
+
+        <service id="test.behat.context.countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CountriesContext">
+            <argument type="service" id="test.behat.page.country_index_page"/>
+            <argument type="service" id="sylius.behat.context.transform.country"/>
+            <tag name="fob.context_service" />
+        </service>
         <service id="test.behat.context.payment_methods_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\PaymentMethodsContext">
             <argument type="service" id="test.behat.page.payment_method_index_page"/>
             <tag name="fob.context_service" />
@@ -18,6 +24,12 @@
             <tag name="fob.context_service" />
         </service>
 
+        <service id="test.behat.context.cli_countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCountriesContext">
+            <argument type="service" id="__symfony__.kernel" />
+            <argument type="service" id="__symfony__.sylius.repository.country" />
+            <argument>%behat.files_directory%</argument>
+            <tag name="fob.context_service" />
+        </service>
         <service id="test.behat.context.cli_tax_categories_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliTaxCategoriesContext">
             <argument type="service" id="__symfony__.kernel" />
             <argument type="service" id="__symfony__.sylius.repository.tax_category" />
@@ -31,6 +43,10 @@
             <tag name="fob.context_service" />
         </service>
 
+        <service id="test.behat.page.country_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+            <argument>sylius_admin_country_index</argument>
+            <argument>%behat.files_directory%</argument>
+        </service>
         <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxCategoryIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_tax_category_index</argument>
             <argument>%behat.files_directory%</argument>
