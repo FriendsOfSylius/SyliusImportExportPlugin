@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
+namespace FriendsOfSylius\SyliusImportExportPlugin\Exception;
 
 use Exception;
 
