@@ -16,6 +16,9 @@ final class PaymentMethodsImporter extends AbstractImporter
     /** @var array */
     protected $headerKeys = ['Code', 'Gateway', 'Name', 'Instructions'];
 
+    /**
+     * {@inheritdoc}
+     */
     protected function createOrUpdateObject(array $row): void
     {
         $paymentMethod = $this->repository->findOneBy(['code' => $row['Code']]);

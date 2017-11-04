@@ -11,6 +11,9 @@ final class TaxCategoriesImporter extends AbstractImporter
     /** @var array */
     protected $headerKeys = ['Code', 'Name', 'Description'];
 
+    /**
+     * {@inheritdoc}
+     */
     protected function createOrUpdateObject(array $row): void
     {
         /** @var TaxCategoryInterface $taxCategory */
