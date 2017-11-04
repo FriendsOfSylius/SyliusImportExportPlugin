@@ -36,6 +36,20 @@
 
 ## Usage
 
+### Available importer types
+
+* payment_method (csv)
+* tax_category (csv)
+
+## Example import files
+
+See the fixtures in the Behat tests: `tests/Behat/Resources/fixtures`
+
+### UI
+
+For all available importers, a form to upload files is automatically injected into the relevant
+admin overview panel using the event hook system, ie. `admin/tax-categories/`.
+
 ### CLI commands
 
   - Get list if available importers
@@ -49,6 +63,35 @@
     ```bash
     $ bin/console sylius:import tax_category tests/Behat/Resources/fixtures/tax_categories.csv --format=csv
     ```
+
+## Development
+
+### Adding new importer types
+
+  - Notes
+  
+    * Currently only CSV is supported until https://github.com/portphp/portphp/pull/63 is merged.
+    * Replace `foobar` with the name of the type you want to implement in the following examples.
+
+  - Implement the importer
+ 
+    ```php
+    class FoobarImporter extends AbstractImporter
+    ```
+
+ - Define service
+ 
+   ```yaml
+    sylius.importer.foobar.:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FoobarImporter
+        arguments:
+            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.payment_method"
+            - "@sylius.repository.payment_method"
+            - "@sylius.manager.payment_method"
+        tags:
+            - { name: sylius.importer, type: foobar, format: csv }
+   ```
 
 ### Running plugin tests
 
