@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
-use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter;
 use Payum\Core\Model\GatewayConfig;

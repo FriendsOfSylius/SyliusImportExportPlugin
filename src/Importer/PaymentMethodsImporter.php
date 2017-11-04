@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 

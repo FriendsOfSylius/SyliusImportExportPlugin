@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Port\Csv\CsvReaderFactory;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
