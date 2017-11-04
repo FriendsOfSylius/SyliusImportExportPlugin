@@ -13,6 +13,9 @@ final class SyliusImportExportPlugin extends Bundle
 {
     use SyliusPluginTrait;
 
+    /**
+     * {@inheritdoc}
+     */
     public function build(ContainerBuilder $container)
     {
         parent::build($container);

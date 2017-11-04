@@ -23,6 +23,11 @@ final class ImportDataController
     /** @var Session */
     private $session;
 
+    /**
+     * @param ServiceRegistry $registry
+     * @param UrlGeneratorInterface $router
+     * @param Session $session
+     */
     public function __construct(ServiceRegistry $registry, UrlGeneratorInterface $router, Session $session)
     {
         $this->registry = $registry;
@@ -30,6 +35,11 @@ final class ImportDataController
         $this->session = $session;
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     */
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
@@ -40,6 +50,11 @@ final class ImportDataController
         return new RedirectResponse($this->router->generate('sylius_admin_' . $importer . '_index'));
     }
 
+    /**
+     * @param Request $request
+     * @param $importer
+     * @param $format
+     */
     private function importData(Request $request, $importer, $format): void
     {
         $name = ImporterRegistry::buildServiceName($importer, $format);

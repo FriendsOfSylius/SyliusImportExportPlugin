@@ -36,7 +36,7 @@ final class ImportDataCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var ServiceRegistry $registry */
         $registry = $this->getContainer()->get('sylius.importers_registry');
@@ -45,7 +45,7 @@ final class ImportDataCommand extends ContainerAwareCommand
         if (empty($importer)) {
             $this->listImporters($input, $output, $registry);
 
-            return;
+            return 0;
         }
 
         $format = $input->getOption('format');
@@ -76,6 +76,8 @@ final class ImportDataCommand extends ContainerAwareCommand
         );
 
         $output->writeln($message);
+
+        return 0;
     }
 
     private function listImporters(InputInterface $input, OutputInterface $output, ServiceRegistry $registry): void

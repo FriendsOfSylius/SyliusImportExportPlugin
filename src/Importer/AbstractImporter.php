@@ -27,6 +27,14 @@ abstract class AbstractImporter implements ImporterInterface
     /** @var array */
     protected $headerKeys;
 
+    /**
+     * @param CsvReaderFactory $csvReaderFactory
+     * @param FactoryInterface $factory
+     * @param RepositoryInterface $repository
+     * @param ObjectManager $objectManager
+     *
+     * @throws ImporterException
+     */
     public function __construct(
         CsvReaderFactory $csvReaderFactory,
         FactoryInterface $factory,
@@ -43,6 +51,11 @@ abstract class AbstractImporter implements ImporterInterface
         }
     }
 
+    /**
+     * @param string $fileName
+     *
+     * @throws ImporterException
+     */
     public function import(string $fileName): void
     {
         $csvReader = $this->csvReaderFactory->getReader(new \SplFileObject($fileName));
@@ -59,7 +72,12 @@ abstract class AbstractImporter implements ImporterInterface
         $this->objectManager->flush();
     }
 
-    protected function createOrUpdateObject(array $row)
+    /**
+     * @param array $row
+     *
+     * @throws \Exception
+     */
+    protected function createOrUpdateObject(array $row): void
     {
         throw new \Exception(
             sprintf(

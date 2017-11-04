@@ -6,5 +6,8 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 interface ImporterInterface
 {
+    /**
+     * @param string $fileName
+     */
     public function import(string $fileName): void;
 }
