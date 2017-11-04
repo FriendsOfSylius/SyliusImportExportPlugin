@@ -1,5 +1,5 @@
 @managing_payment_methods
-Feature: Importing payment methods from csv
+Feature: Importing payment methods from csv with the user interface
     In order to have my payment methods from external source
     As an Administrator
     I want to be able to import data from csv file

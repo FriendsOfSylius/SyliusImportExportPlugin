@@ -18,6 +18,19 @@
             <tag name="fob.context_service" />
         </service>
 
+        <service id="test.behat.context.cli_tax_categories_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliTaxCategoriesContext">
+            <argument type="service" id="__symfony__.kernel" />
+            <argument type="service" id="__symfony__.sylius.repository.tax_category" />
+            <argument>%behat.files_directory%</argument>
+            <tag name="fob.context_service" />
+        </service>
+        <service id="test.behat.context.cli_payment_methods_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliPaymentMethodsContext">
+            <argument type="service" id="__symfony__.kernel" />
+            <argument type="service" id="__symfony__.sylius.repository.payment_method" />
+            <argument>%behat.files_directory%</argument>
+            <tag name="fob.context_service" />
+        </service>
+
         <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxCategoryIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_tax_category_index</argument>
             <argument>%behat.files_directory%</argument>

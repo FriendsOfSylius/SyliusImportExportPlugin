@@ -11,7 +11,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
 {
-    /** @var  string */
+    /** @var string */
     protected $filesPath;
 
     public function __construct(
@@ -31,7 +31,7 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
         $this
             ->getDocument()
             ->find('css', 'input[type="file"]')
-            ->attachFile($this->filesPath.'/'.$filePath)
+            ->attachFile($this->filesPath . '/' . $filePath)
         ;
 
         $this->getDocument()->pressButton('Import data');

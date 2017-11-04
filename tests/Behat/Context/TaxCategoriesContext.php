@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
@@ -19,7 +21,7 @@ class TaxCategoriesContext implements Context
     /**
      * @When I import tax category data from :file file
      */
-    public function iImportTaxClassDataFromFile(string $file) :void
+    public function iImportTaxClassDataFromFile(string $file): void
     {
         $this->taxCategoryIndexPage->importData($file);
     }

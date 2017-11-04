@@ -1,5 +1,5 @@
 @managing_tax_categories
-Feature: Importing tax categories from csv
+Feature: Importing tax categories from csv with the user interface
     In order to have my tax categories imported from an external source
     As an Administrator
     I want to be able to import data from csv file

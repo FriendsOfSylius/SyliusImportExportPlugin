@@ -11,7 +11,7 @@ use Symfony\Component\Routing\RouterInterface;
 
 final class TaxCategoryIndexPage extends IndexPage implements TaxCategoryIndexPageInterface
 {
-    /** @var string  */
+    /** @var string */
     private $filesPath;
 
     public function __construct(
@@ -31,7 +31,7 @@ final class TaxCategoryIndexPage extends IndexPage implements TaxCategoryIndexPa
         $this
             ->getDocument()
             ->find('css', 'input[type="file"]')
-            ->attachFile($this->filesPath.'/'.$filePath)
+            ->attachFile($this->filesPath . '/' . $filePath)
         ;
         $this->getDocument()->pressButton('Import data');
     }
