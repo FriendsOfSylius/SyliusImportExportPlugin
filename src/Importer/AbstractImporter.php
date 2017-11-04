@@ -59,7 +59,7 @@ abstract class AbstractImporter implements ImporterInterface
         $this->objectManager->flush();
     }
 
-    protected function createOrUpdateObject(array $row)
+    protected function createOrUpdateObject(array $row): void
     {
         throw new \Exception(
             sprintf(

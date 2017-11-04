@@ -16,7 +16,7 @@ class ImporterRegistry extends ServiceRegistry
      *
      * @return string
      */
-    public static function buildServiceName($type, $format): string
+    public static function buildServiceName(string $type, string $format): string
     {
         return sprintf('%s.%s', $type, $format);
     }
@@ -26,7 +26,7 @@ class ImporterRegistry extends ServiceRegistry
      *
      * @return string
      */
-    public static function buildEventHookName($type): string
+    public static function buildEventHookName(string $type): string
     {
         return sprintf('%s_%s', self::EVENT_HOOK_NAME_PREFIX_ADMIN_CRUD_AFTER_CONTENT, $type);
     }
