@@ -43,7 +43,7 @@ final class ImportDataController
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
-        $format = $request->attributes->get('format');
+        $format = $request->request->get('format');
 
         $this->importData($request, $importer, $format);
 
@@ -52,10 +52,10 @@ final class ImportDataController
 
     /**
      * @param Request $request
-     * @param $importer
+     * @param string $importer
      * @param $format
      */
-    private function importData(Request $request, $importer, $format): void
+    private function importData(Request $request, string $importer, string $format): void
     {
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->registry->has($name)) {

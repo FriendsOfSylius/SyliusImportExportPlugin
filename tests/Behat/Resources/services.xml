@@ -47,7 +47,7 @@
             <argument>sylius_admin_country_index</argument>
             <argument>%behat.files_directory%</argument>
         </service>
-        <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxCategoryIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_tax_category_index</argument>
             <argument>%behat.files_directory%</argument>
         </service>

@@ -8,5 +8,5 @@ use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
 
 interface ResourceIndexPageInterface extends IndexPageInterface
 {
-    public function importData(string $filePath): void;
+    public function importData(string $filePath, string $format): void;
 }

@@ -21,26 +21,22 @@
 
 ## Installation
 
-1. Run `composer create-project friendsofsylius/SyliusImportExportPlugin ProjectName`.
+1. Require relevant portphp format support
 
-2. From the plugin skeleton root directory, run the following commands:
+  - Run `composer require portphp/csv --no-update` to add CSV format support
+  - Run `composer require portphp/excel --no-update` to add Excel format support
 
-    ```bash
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn run gulp)
-    $ (cd tests/Application && bin/console assets:install web -e test)
-    
-    $ (cd tests/Application && bin/console doctrine:database:create -e test)
-    $ (cd tests/Application && bin/console doctrine:schema:create -e test)
-    ```
+2. Require and install the plugin
+
+  - Run `composer require friendsofsylius/sylius-import-export-plugin`
 
 ## Usage
 
 ### Available importer types
 
-* country (csv)
-* payment_method (csv)
-* tax_category (csv)
+* country (csv, excel)
+* payment_method (csv, excel)
+* tax_category (csv, excel)
 
 ## Example import files
 
@@ -71,30 +67,42 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
   - Notes
   
-    * Currently only CSV is supported until https://github.com/portphp/portphp/pull/63 is merged.
-    * Replace `foobar` with the name of the type you want to implement in the following examples.
+    * Replace `foo` with the name of the type you want to implement in the following examples.
+    * Replace `bar` with the name of the format you want to implement in the following examples.
+    * Note it is of course also possible to implement a dedicated importer for `foo` type and format `bar`,
+      in case a generic type implementation is not possible.
 
   - Implement the importer
  
     ```php
-    class FoobarImporter extends AbstractImporter
+    class FooImporter extends AbstractImporter
     ```
 
  - Define service
  
    ```yaml
     sylius.importer.foobar.:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FoobarImporter
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FooImporter
         arguments:
-            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.bar_reader"
             - "@sylius.factory.payment_method"
             - "@sylius.repository.payment_method"
             - "@sylius.manager.payment_method"
         tags:
-            - { name: sylius.importer, type: foobar, format: csv }
+            - { name: sylius.importer, type: foo, format: bar }
    ```
 
 ### Running plugin tests
+
+  - Test application install
+
+    ```bash
+    $ (cd tests/Application && yarn install)
+    $ (cd tests/Application && yarn run gulp)
+    $ (cd tests/Application && bin/console assets:install web -e test)
+    
+    $ (cd tests/Application && bin/console doctrine:database:create -e test)
+    $ (cd tests/Application && bin/console doctrine:schema:create -e test)
 
   - PHPUnit
 

@@ -24,12 +24,12 @@ class CountriesContext implements Context
     }
 
     /**
-     * @When I import country data from :arg1 file
+     * @When I import country data from :file :format file
      */
-    public function iImportCountryDataFromFile($file)
+    public function iImportCountryDataFromCsvFile(string $file, string $format)
     {
         $this->countryIndexPage->open();
-        $this->countryIndexPage->importData($file);
+        $this->countryIndexPage->importData($file, $format);
     }
 
     /**

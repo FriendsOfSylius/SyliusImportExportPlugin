@@ -1,0 +1,35 @@
+services:
+    sylius.factory.excel_reader:
+        class: Port\Excel\ExcelReaderFactory
+        arguments:
+            - 1
+
+    sylius.importer.countries.excel:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\CountriesImporter
+        arguments:
+            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.country"
+            - "@sylius.repository.country"
+            - "@sylius.manager.country"
+        tags:
+            - { name: sylius.importer, type: country, format: excel }
+
+    sylius.importer.payment_methods.excel:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter
+        arguments:
+            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.payment_method"
+            - "@sylius.repository.payment_method"
+            - "@sylius.manager.payment_method"
+        tags:
+            - { name: sylius.importer, type: payment_method, format: excel }
+
+    sylius.importer.tax_categories.excel:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\TaxCategoriesImporter
+        arguments:
+            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.tax_category"
+            - "@sylius.repository.tax_category"
+            - "@sylius.manager.tax_category"
+        tags:
+            - { name: sylius.importer, type: tax_category, format: excel }

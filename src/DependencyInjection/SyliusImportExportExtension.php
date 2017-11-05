@@ -21,5 +21,13 @@ class SyliusImportExportExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
+
+        if (class_exists('Port\Csv\CsvReaderFactory')) {
+            $loader->load('services_csv.yml');
+        }
+
+        if (class_exists('Port\Excel\ExcelReaderFactory')) {
+            $loader->load('services_excel.yml');
+        }
     }
 }

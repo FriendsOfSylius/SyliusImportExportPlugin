@@ -26,12 +26,18 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
         $this->filesPath = $filesPath;
     }
 
-    public function importData(string $filePath): void
+    public function importData(string $filePath, string $format): void
     {
         $this
             ->getDocument()
             ->find('css', 'input[type="file"]')
             ->attachFile($this->filesPath . '/' . $filePath)
+        ;
+
+        $this
+            ->getDocument()
+            ->find('css', 'select[name="format"]')
+            ->selectOption($format)
         ;
 
         $this->getDocument()->pressButton('Import data');
