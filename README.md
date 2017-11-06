@@ -38,6 +38,7 @@
 
 ### Available importer types
 
+* country (csv)
 * payment_method (csv)
 * tax_category (csv)
 
