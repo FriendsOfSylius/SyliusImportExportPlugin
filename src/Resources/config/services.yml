@@ -17,6 +17,16 @@ services:
             - "@router"
             - "@session"
 
+    sylius.importer.countries.csv:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\CountriesImporter
+        arguments:
+            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.country"
+            - "@sylius.repository.country"
+            - "@sylius.manager.country"
+        tags:
+            - { name: sylius.importer, type: country, format: csv }
+
     sylius.importer.payment_methods.csv:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter
         arguments:
