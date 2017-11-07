@@ -49,7 +49,7 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
 ### CLI commands
 
-  - Get list if available importers
+  - Get list of available importers
 
     ```bash
     $ bin/console sylius:import
