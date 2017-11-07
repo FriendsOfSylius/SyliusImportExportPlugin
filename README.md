@@ -28,7 +28,7 @@
 
 2. Require and install the plugin
 
-  - Run `composer require friendsofsylius/sylius-import-export-plugin`
+  - Run `composer require friendsofsylius/sylius-import-export-plugin --dev`
 
 ## Usage
 
@@ -58,7 +58,7 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
   - Import a file using the `tax_category` importer
 
     ```bash
-    $ bin/console sylius:import tax_category tests/Behat/Resources/fixtures/tax_categories.csv --format=csv
+    $ bin/console sylius:import tax_category my/tax/categories/csv/file.csv --format=csv
     ```
 
 ## Development
