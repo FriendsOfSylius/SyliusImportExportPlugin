@@ -6,10 +6,10 @@
 <h1 align="center">SyliusImportExportPlugin</h1>
 <p align="center">
     <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="License">
-        <img src="https://img.shields.io/packagist/l/friendsofsylius/SyliusImportExportPlugin.svg" />
+        <img src="https://img.shields.io/packagist/l/friendsofsylius/sylius-import-export-plugin.svg" />
     </a>
     <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="Version">
-        <img src="https://img.shields.io/packagist/v/friendsofsylius/SyliusImportExportPlugin.svg" />
+        <img src="https://img.shields.io/packagist/v/friendsofsylius/sylius-import-export-plugin.svg" />
     </a>
     <a href="http://travis-ci.org/FriendsOfSylius/SyliusImportExportPlugin" title="Build status">
         <img src="https://img.shields.io/travis/FriendsOfSylius/SyliusImportExportPlugin/master.svg" />
