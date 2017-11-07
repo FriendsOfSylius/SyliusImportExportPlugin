@@ -5,10 +5,10 @@
 </p>
 <h1 align="center">SyliusImportExportPlugin</h1>
 <p align="center">
-    <a href="https://packagist.org/packages/friendsofsylius/SyliusImportExportPlugin" title="License">
+    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="License">
         <img src="https://img.shields.io/packagist/l/friendsofsylius/SyliusImportExportPlugin.svg" />
     </a>
-    <a href="https://packagist.org/packages/friendsofsylius/SyliusImportExportPlugin" title="Version">
+    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="Version">
         <img src="https://img.shields.io/packagist/v/friendsofsylius/SyliusImportExportPlugin.svg" />
     </a>
     <a href="http://travis-ci.org/FriendsOfSylius/SyliusImportExportPlugin" title="Build status">
