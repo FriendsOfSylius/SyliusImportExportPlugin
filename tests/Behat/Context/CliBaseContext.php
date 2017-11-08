@@ -57,15 +57,15 @@ class CliBaseContext implements Context
     }
 
     /**
-     * @When I import :importType data from csv-file :fileName file with the cli-command
+     * @When I import :importType data from :format file :fileName file with the cli-command
      */
-    public function iImportCsvDataFromFileWithTheCliCommand($importType, $fileName)
+    public function iImportDataFromFileWithTheCliCommand(string $importType, string $fileName, string $format)
     {
         $this->cliArguments = [$importType, $fileName];
         $this->application->add(new ImportDataCommand());
         $this->command = $this->application->find('sylius:import');
         $this->tester = new CommandTester($this->command);
-        $this->tester->execute(['command' => 'sylius:import', 'importer' => $importType, 'file' => $this->filePath . '/' . $fileName, '--format' => 'csv']);
+        $this->tester->execute(['command' => 'sylius:import', 'importer' => $importType, 'file' => $this->filePath . '/' . $fileName, '--format' => $format]);
     }
 
     /**

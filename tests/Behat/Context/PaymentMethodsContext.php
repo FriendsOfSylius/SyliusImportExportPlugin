@@ -19,10 +19,10 @@ final class PaymentMethodsContext implements Context
     }
 
     /**
-     * @Given I import payment methods data from :file file
+     * @Given I import payment methods data from :file :format file
      */
-    public function iImportPaymentMethodsDataFromFile(string $file): void
+    public function iImportPaymentMethodsDataFromFile(string $file, string $format): void
     {
-        $this->paymentMethodIndexPage->importData($file);
+        $this->paymentMethodIndexPage->importData($file, $format);
     }
 }
