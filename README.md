@@ -75,7 +75,8 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
   - Implement the importer
  
     ```php
-    class FooImporter extends AbstractImporter
+    // alternatively extend from AbstractImporter
+    class FooImporter implements ImporterInterface
     ```
 
  - Define service
@@ -85,9 +86,9 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FooImporter
         arguments:
             - "@sylius.factory.bar_reader"
-            - "@sylius.factory.payment_method"
-            - "@sylius.repository.payment_method"
-            - "@sylius.manager.payment_method"
+            - "@sylius.factory.foo"
+            - "@sylius.repository.foo"
+            - "@sylius.manager.foo"
         tags:
             - { name: sylius.importer, type: foo, format: bar }
    ```
