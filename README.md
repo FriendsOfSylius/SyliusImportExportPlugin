@@ -3,7 +3,7 @@
         <img src="http://demo.sylius.org/assets/shop/img/logo.png" />
     </a>
 </p>
-<h1 align="center">SyliusImportExportPlugin</h1>
+<h1 align="center">FOSSyliusImportExportPlugin</h1>
 <p align="center">
     <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="License">
         <img src="https://img.shields.io/packagist/l/friendsofsylius/sylius-import-export-plugin.svg" />
