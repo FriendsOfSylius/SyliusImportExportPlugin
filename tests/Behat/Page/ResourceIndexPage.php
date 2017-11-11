@@ -30,13 +30,13 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
     {
         $this
             ->getDocument()
-            ->find('css', 'input[type="file"]')
+            ->find('css', 'input[id="import_import-data"]')
             ->attachFile($this->filesPath . '/' . $filePath)
         ;
 
         $this
             ->getDocument()
-            ->find('css', 'select[name="format"]')
+            ->find('css', 'select[id="import_format"]')
             ->selectOption($format)
         ;
 

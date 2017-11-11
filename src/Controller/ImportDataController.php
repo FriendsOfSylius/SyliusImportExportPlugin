@@ -4,12 +4,16 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Sylius\Component\Registry\ServiceRegistry;
+use Symfony\Component\Form\Form;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
@@ -24,16 +28,46 @@ final class ImportDataController
     /** @var Session */
     private $session;
 
+    /** @var FormFactoryInterface */
+    private $formFactory;
+
+    /** @var \Twig_Environment */
+    private $twig;
+
     /**
      * @param ServiceRegistry $registry
      * @param UrlGeneratorInterface $router
      * @param Session $session
      */
-    public function __construct(ServiceRegistry $registry, UrlGeneratorInterface $router, Session $session)
-    {
+    public function __construct(
+        ServiceRegistry $registry,
+        UrlGeneratorInterface $router,
+        Session $session,
+        FormFactoryInterface $formFactory,
+        \Twig_Environment $twig
+    ) {
         $this->registry = $registry;
         $this->router = $router;
         $this->session = $session;
+        $this->formFactory = $formFactory;
+        $this->twig = $twig;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return Response
+     */
+    public function importFormAction(Request $request): Response
+    {
+        $form = $this->getForm();
+
+        $content = $this->twig->render(
+            '@FOSSyliusImportExportPlugin/Crud/import_form.html.twig',
+            ['form' => $form->createView(), 'resource' => $request->attributes->get('resource')]
+        );
+
+        return new Response($content);
     }
 
     /**
@@ -44,11 +78,20 @@ final class ImportDataController
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
-        $format = $request->request->get('format');
 
-        $this->importData($request, $importer, $format);
+        $form = $this->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->importData($importer, $form);
+        }
 
         return new RedirectResponse($this->router->generate('sylius_admin_' . $importer . '_index'));
+    }
+
+    private function getForm()
+    {
+        return $this->formFactory->create(ImportType::class);
     }
 
     /**
@@ -56,8 +99,9 @@ final class ImportDataController
      * @param string $importer
      * @param $format
      */
-    private function importData(Request $request, string $importer, string $format): void
+    private function importData(string $importer, Form $form): void
     {
+        $format = $form->get('format')->getData();
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->registry->has($name)) {
             $message = sprintf("No importer found of type '%s' for format '%s'", $importer, $format);
@@ -65,7 +109,7 @@ final class ImportDataController
         }
 
         /** @var UploadedFile $file */
-        $file = $request->files->get('import-data');
+        $file = $form->get('import-data')->getData();
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
         $result = $service->import($file->getRealPath());

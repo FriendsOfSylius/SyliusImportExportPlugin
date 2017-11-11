@@ -56,7 +56,7 @@ final class RegisterImporterPass implements CompilerPassInterface
                     BlockEventListener::class
                 )
                 ->setAutowired(false)
-                ->addArgument('@FOSSyliusImportExportPlugin/Crud/import_form.html.twig')
+                ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
                 ->addTag(
                     'kernel.event_listener',
                     [

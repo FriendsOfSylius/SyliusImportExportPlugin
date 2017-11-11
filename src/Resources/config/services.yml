@@ -11,6 +11,8 @@ services:
             - "@sylius.importers_registry"
             - "@router"
             - "@session"
+            - "@form.factory"
+            - "@twig"
 
     sylius.importer.result:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult
