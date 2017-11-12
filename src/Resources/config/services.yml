@@ -11,3 +11,18 @@ services:
             - "@sylius.importers_registry"
             - "@router"
             - "@session"
+
+# Definition of the ResourceProcessors
+    sylius.processor.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.country"
+            - "@sylius.repository.country"
+            - ["Code"]
+
+    sylius.processor.tax_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.tax_category"
+            - "@sylius.repository.tax_category"
+            - ["Code", "Name", "Description"]
