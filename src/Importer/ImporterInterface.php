@@ -8,6 +8,8 @@ interface ImporterInterface
 {
     /**
      * @param string $fileName
+     *
+     * @return ImporterResult
      */
-    public function import(string $fileName): void;
+    public function import(string $fileName): ImporterResult;
 }

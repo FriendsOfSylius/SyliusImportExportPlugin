@@ -46,6 +46,7 @@ class CountriesImporterSpec extends ObjectBehavior
         CountryInterface $countryTwo
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);

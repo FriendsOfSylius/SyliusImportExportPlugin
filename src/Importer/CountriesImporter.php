@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Sylius\Component\Addressing\Model\CountryInterface;
 
 class CountriesImporter extends AbstractImporter
@@ -14,8 +15,12 @@ class CountriesImporter extends AbstractImporter
     /**
      * @param array $row
      */
-    protected function createOrUpdateObject(array $row): void
+    protected function createOrUpdateObject(ImporterResult $result, array $row): void
     {
+        if (empty($row['Code'])) {
+            throw new ItemIncompleteException();
+        }
+
         $country = $this->repository->findOneBy(['code' => $row['Code']]);
 
         if ($country === null) {

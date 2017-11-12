@@ -49,6 +49,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $paypalPaymentMethod
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
@@ -96,6 +97,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $paypalPaymentMethod
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);

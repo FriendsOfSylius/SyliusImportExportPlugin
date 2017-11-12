@@ -23,12 +23,13 @@ final class ImportDataCommand extends ContainerAwareCommand
     {
         $this
             ->setName('sylius:import')
-            ->setDescription('Import a csv file.')
+            ->setDescription('Import a file.')
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
                 // @TODO try to guess the format from the file to make this optional
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to import'),
+                new InputOption('details', null, InputOption::VALUE_NONE, 'If to return details about skipped/failed rows'),
             ])
         ;
     }
@@ -67,15 +68,38 @@ final class ImportDataCommand extends ContainerAwareCommand
 
         /** @var ImporterInterface $service */
         $service = $registry->get($name);
-        $service->import($file);
+        $result = $service->import($file);
 
         $message = sprintf(
-            "<info>Successfully imported '%s' via the %s importer</info>",
+            "<info>Imported '%s' via the %s importer</info>",
             $file,
             $name
         );
-
         $output->writeln($message);
+
+        $io = new SymfonyStyle($input, $output);
+
+        $details = $input->getOption('details');
+        if ($details) {
+            $imported = implode(', ', $result->getSuccessRows());
+            $skipped = implode(', ', $result->getSkippedRows());
+            $failed = implode(', ', $result->getFailedRows());
+            $countOrRows = 'rows';
+        } else {
+            $imported = count($result->getSuccessRows());
+            $skipped = count($result->getSkippedRows());
+            $failed = count($result->getFailedRows());
+            $countOrRows = 'count';
+        }
+
+        $io->listing(
+            [
+                sprintf('Time taken: %s ms ', $result->getDuration()),
+                sprintf('Imported %s: %s', $countOrRows, $imported),
+                sprintf('Skipped %s: %s', $countOrRows, $skipped),
+                sprintf('Failed %s: %s', $countOrRows, $failed),
+            ]
+        );
 
         return 0;
     }
