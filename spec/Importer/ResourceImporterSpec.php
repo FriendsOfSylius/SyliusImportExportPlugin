@@ -8,7 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter;
-use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor;
+use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use PhpSpec\ObjectBehavior;
 use Port\Csv\CsvReader;
 use Port\Excel\ExcelReader;
@@ -21,7 +21,7 @@ class ResourceImporterSpec extends ObjectBehavior
     function let(
         ReaderFactory $readerFactory,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $this->beConstructedWith($readerFactory, $objectManager, $resourceProcessor);
     }
@@ -40,7 +40,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         Reader $someReader,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($someReader);
         $this->shouldThrow(ImporterException::class)->during('import', [__DIR__ . '/tax_categories.csv']);
@@ -50,7 +50,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         CsvReader $csvReader,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code']);
         $csvReader->rewind()->willReturn();
@@ -73,7 +73,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         ExcelReader $excelReader,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $excelReader->getColumnHeaders()->willReturn(['Code']);
         $excelReader->rewind()->willReturn();
@@ -95,7 +95,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         CsvReader $csvReader,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $csvReader->rewind()->willReturn();
@@ -118,7 +118,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         ExcelReader $excelReader,
         ObjectManager $objectManager,
-        ResourceProcessor $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor
     ) {
         $excelReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $excelReader->rewind()->willReturn();

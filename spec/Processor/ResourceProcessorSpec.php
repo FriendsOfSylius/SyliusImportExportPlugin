@@ -45,4 +45,18 @@ class ResourceProcessorSpec extends ObjectBehavior
 
         $this->process(['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books']);
     }
+
+    function it_can_process_an_array_of_country_data(
+        FactoryInterface $factory,
+        TaxCategoryInterface $country,
+        RepositoryInterface $repository
+    ) {
+        $this->beConstructedWith($factory, $repository, ['Code']);
+        $repository->findOneBy(['code' => 'DE'])->willReturn(null);
+        $factory->createNew()->willReturn($country);
+        $repository->add($country)->shouldBeCalledTimes(1);
+        $country->setCode('DE')->shouldBeCalled();
+
+        $this->process(['Code' => 'DE']);
+    }
 }

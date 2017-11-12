@@ -9,7 +9,7 @@ use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-class ResourceProcessor implements ResourceProcessorInterface
+final class ResourceProcessor implements ResourceProcessorInterface
 {
     /** @var FactoryInterface */
     private $resourceFactory;
@@ -30,7 +30,10 @@ class ResourceProcessor implements ResourceProcessorInterface
         $this->headerKeys = $headerKeys;
     }
 
-    public function process(array $data)
+    /**
+     * {@inheritdoc}
+     */
+    public function process(array $data): void
     {
         /** @var ResourceInterface $resource */
         $resource = $this->resourceRepository->findOneBy(['code' => $data['Code']]);

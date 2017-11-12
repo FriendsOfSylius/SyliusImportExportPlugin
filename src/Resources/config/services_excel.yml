@@ -14,12 +14,11 @@ services:
             - { name: sylius.importer, type: country, format: excel }
 
     sylius.importer.payment_methods.excel:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\PaymentMethodsImporter
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
             - "@sylius.factory.excel_reader"
-            - "@sylius.factory.payment_method"
-            - "@sylius.repository.payment_method"
             - "@sylius.manager.payment_method"
+            - "@sylius.processor.payment_methods"
         tags:
             - { name: sylius.importer, type: payment_method, format: excel }
 

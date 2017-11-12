@@ -26,3 +26,10 @@ services:
             - "@sylius.factory.tax_category"
             - "@sylius.repository.tax_category"
             - ["Code", "Name", "Description"]
+
+    sylius.processor.payment_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
+        arguments:
+            - "@sylius.factory.payment_method"
+            - "@sylius.repository.payment_method"
+            - ['Code', 'Name', 'Instructions', 'Gateway']
