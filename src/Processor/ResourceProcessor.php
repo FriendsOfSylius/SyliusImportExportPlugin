@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -35,6 +36,8 @@ final class ResourceProcessor implements ResourceProcessorInterface
      */
     public function process(array $data): void
     {
+        $this->validateMetadata($data);
+
         /** @var ResourceInterface $resource */
         $resource = $this->resourceRepository->findOneBy(['code' => $data['Code']]);
 
@@ -49,5 +52,14 @@ final class ResourceProcessor implements ResourceProcessorInterface
             call_user_func_array([$resource, $method], [$data[$headerKey]]);
         }
         $this->resourceRepository->add($resource);
+    }
+
+    private function validateMetadata(array $data): void
+    {
+        foreach ($this->headerKeys as $metaDataKey) {
+            if (false === isset($data[$metaDataKey])) {
+                throw new ItemIncompleteException();
+            }
+        }
     }
 }
