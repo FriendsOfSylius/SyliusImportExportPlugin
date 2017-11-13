@@ -38,7 +38,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         $this->shouldImplement(ImporterInterface::class);
     }
 
-    function it_imports_data_of_payment_multiple_methods_passed_in_csv_file(
+    function it_imports_data_of_payment_methods_passed_in_csv_file(
         CsvReaderFactory $csvReaderFactory,
         CsvReader $csvReader,
         GatewayConfig $offlineGatewayConfig,
@@ -49,6 +49,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $paypalPaymentMethod
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
@@ -96,6 +97,7 @@ class PaymentMethodsImporterSpec extends ObjectBehavior
         PaymentMethodInterface $paypalPaymentMethod
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Instructions', 'Gateway']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);

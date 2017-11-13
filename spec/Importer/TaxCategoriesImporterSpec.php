@@ -47,6 +47,7 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
         TaxCategoryInterface $taxCategoryCar
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
@@ -89,6 +90,7 @@ class TaxCategoriesImporterSpec extends ObjectBehavior
         TaxCategoryInterface $taxCategoryCar
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->rewind()->willReturn();
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);

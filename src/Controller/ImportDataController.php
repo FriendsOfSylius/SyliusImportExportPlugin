@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Sylius\Component\Registry\ServiceRegistry;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -65,9 +66,19 @@ final class ImportDataController
 
         /** @var UploadedFile $file */
         $file = $request->files->get('import-data');
+        /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
-        $service->import($file->getRealPath());
+        $result = $service->import($file->getRealPath());
 
-        $this->session->getFlashBag()->add('success', 'Data successfully imported');
+        $message = sprintf(
+            'Imported via %s importer (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
+            $name,
+            $result->getDuration(),
+            count($result->getSuccessRows()),
+            count($result->getSkippedRows()),
+            count($result->getFailedRows())
+        );
+
+        $this->session->getFlashBag()->add('success', $message);
     }
 }

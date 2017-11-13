@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 
@@ -19,8 +20,12 @@ final class PaymentMethodsImporter extends AbstractImporter
     /**
      * {@inheritdoc}
      */
-    protected function createOrUpdateObject(array $row): void
+    protected function createOrUpdateObject(ImporterResult $result, array $row): void
     {
+        if (empty($row['Code']) || empty($row['Gateway']) || empty($row['Name'])) {
+            throw new ItemIncompleteException();
+        }
+
         $paymentMethod = $this->repository->findOneBy(['code' => $row['Code']]);
 
         if ($paymentMethod === null) {

@@ -24,7 +24,7 @@ final class NotificationContext implements Context
     public function iShouldSeeANotificationThatTheImportWasSuccessful(): void
     {
         $this->notificationChecker->checkNotification(
-            'Data successfully imported',
+            'Imported via',
             NotificationType::success()
         );
     }

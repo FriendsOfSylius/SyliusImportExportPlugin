@@ -6,6 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Port\Reader;
 use Port\Reader\ReaderFactory;
 use Sylius\Component\Resource\Factory\FactoryInterface;
@@ -55,19 +56,33 @@ abstract class AbstractImporter implements ImporterInterface
     /**
      * @param string $fileName
      *
+     * @return ImporterResult
+     *
      * @throws ImporterException
      */
-    public function import(string $fileName): void
+    public function import(string $fileName): ImporterResult
     {
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
 
         $this->assertKeys($reader);
 
-        foreach ($reader as $row) {
-            $this->createOrUpdateObject($row);
+        $result = new ImporterResult();
+        $result->start();
+        foreach ($reader as $i => $row) {
+            try {
+                $this->createOrUpdateObject($result, $row);
+                $result->success($i);
+            } catch (ItemIncompleteException $e) {
+                $result->skipped($i);
+            } catch (ImporterException $e) {
+                $result->failed($i);
+            }
         }
+        $result->stop();
 
         $this->objectManager->flush();
+
+        return $result;
     }
 
     /**
@@ -88,11 +103,12 @@ abstract class AbstractImporter implements ImporterInterface
     }
 
     /**
+     * @param ImporterResult $result
      * @param array $row
      *
      * @throws \Exception
      */
-    protected function createOrUpdateObject(array $row): void
+    protected function createOrUpdateObject(ImporterResult $result, array $row): void
     {
         throw new \Exception(
             sprintf(

@@ -6,7 +6,8 @@
     "require": {
         "php": "^7.1",
         "sylius/sylius": "^1.0",
-        "portphp/portphp": "^1.2"
+        "portphp/portphp": "^1.2",
+        "symfony/stopwatch": "^3.3"
     },
     "suggest": {
         "portphp/excel": "To support importing excel files, use dev-master",

@@ -10,7 +10,7 @@ Feature: Importing payment methods from csv with the command-line-interface
     @cli_importer
     Scenario: Importing defined payment-methods with the cli-command
         When I import "payment_method" data from csv file "payment-methods.csv" file with the cli-command
-        Then I should see "Successfully imported" in the output
+        Then I should see "Imported" in the output
         And I should have at least the following payment-method ids in the database:
           | OFFLINE |
           | PAYPAL  |
