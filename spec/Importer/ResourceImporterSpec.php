@@ -54,6 +54,7 @@ class ResourceImporterSpec extends ObjectBehavior
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code']);
         $csvReader->rewind()->willReturn();
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
         $csvReader->next()->willReturn();
@@ -77,6 +78,7 @@ class ResourceImporterSpec extends ObjectBehavior
     ) {
         $excelReader->getColumnHeaders()->willReturn(['Code']);
         $excelReader->rewind()->willReturn();
+        $excelReader->key()->willReturn(0, 1);
         $excelReader->count()->willReturn(2);
         $excelReader->valid()->willReturn(true, true, false);
         $excelReader->next()->willReturn();
@@ -99,6 +101,7 @@ class ResourceImporterSpec extends ObjectBehavior
     ) {
         $csvReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $csvReader->rewind()->willReturn();
+        $csvReader->key()->willReturn(0, 1);
         $csvReader->count()->willReturn(2);
         $csvReader->valid()->willReturn(true, true, false);
         $csvReader->next()->willReturn();
@@ -122,6 +125,7 @@ class ResourceImporterSpec extends ObjectBehavior
     ) {
         $excelReader->getColumnHeaders()->willReturn(['Code', 'Name', 'Description']);
         $excelReader->rewind()->willReturn();
+        $excelReader->key()->willReturn(0, 1);
         $excelReader->count()->willReturn(2);
         $excelReader->valid()->willReturn(true, true, false);
         $excelReader->next()->willReturn();

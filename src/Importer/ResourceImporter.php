@@ -6,6 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use Port\Reader;
 use Port\Reader\ReaderFactory;
@@ -33,17 +34,32 @@ class ResourceImporter implements ImporterInterface
 
     /**
      * @param string $fileName
+     *
+     * @return ImporterResult
      */
-    public function import(string $fileName): void
+    public function import(string $fileName): ImporterResult
     {
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
 
         $this->assertMethods($reader);
 
-        foreach ($reader as $row) {
-            $this->resourceProcessor->process($row);
+        $result = new ImporterResult();
+        $result->start();
+        foreach ($reader as $i => $row) {
+            try {
+                $this->resourceProcessor->process($row);
+                $result->success($i);
+            } catch (ItemIncompleteException $e) {
+                $result->skipped($i);
+            } catch (ImporterException $e) {
+                $result->failed($i);
+            }
         }
+        $result->stop();
+
         $this->objectManager->flush();
+
+        return $result;
     }
 
     /**
