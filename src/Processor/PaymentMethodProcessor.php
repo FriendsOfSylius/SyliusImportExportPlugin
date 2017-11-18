@@ -7,6 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class PaymentMethodProcessor implements ResourceProcessorInterface
 {
@@ -16,11 +17,22 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     /** @var RepositoryInterface */
     private $resourceRepository;
 
+    /** @var PropertyAccessorInterface */
+    private $propertyAccessor;
+
     /** @var array */
     private $headerKeys;
 
-    public function __construct(PaymentMethodFactoryInterface $factory, RepositoryInterface $repository, array $headerKeys)
-    {
+    /**
+     * @param PaymentMethodFactoryInterface $factory
+     * @param RepositoryInterface           $repository
+     * @param array                         $headerKeys
+     */
+    public function __construct(
+        PaymentMethodFactoryInterface $factory,
+        RepositoryInterface $repository,
+        array $headerKeys
+    ) {
         $this->resourceFactory = $factory;
         $this->resourceRepository = $repository;
         $this->headerKeys = $headerKeys;

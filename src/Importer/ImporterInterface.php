@@ -9,7 +9,7 @@ interface ImporterInterface
     /**
      * @param string $fileName
      *
-     * @return ImporterResult
+     * @return ImporterResultInterface
      */
-    public function import(string $fileName): ImporterResult;
+    public function import(string $fileName): ImporterResultInterface;
 }

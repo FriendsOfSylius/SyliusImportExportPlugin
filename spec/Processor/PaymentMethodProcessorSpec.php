@@ -11,6 +11,7 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class PaymentMethodProcessorSpec extends ObjectBehavior
 {
@@ -35,6 +36,7 @@ class PaymentMethodProcessorSpec extends ObjectBehavior
         PaymentMethodFactoryInterface $factory,
         PaymentMethodInterface $paymentMethod,
         GatewayConfigInterface $gatewayConfig,
+        PropertyAccessorInterface $propertyAccessor,
         RepositoryInterface $repository
     ) {
         $this->beConstructedWith($factory, $repository, ['Code', 'Name', 'Instructions', 'Gateway']);

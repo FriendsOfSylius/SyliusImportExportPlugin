@@ -83,6 +83,7 @@ sylius.importer.foo.bar:
         - "@sylius.factory.bar_reader"
         - "@sylius.manager.foo"
         - "@sylius.processor.foo"
+        - "@sylius.importer.result"
     tags:
         - { name: sylius.importer, type: country, format: csv }
 ```
@@ -102,6 +103,7 @@ sylius.importer.foo.bar:
       - "@sylius.factory.bar_reader"
       - "@sylius.manager.foo"
       - "@sylius.processor.foo"
+      - "@sylius.importer.result"
   tags:
       - { name: sylius.importer, type: country, format: bar }
 ```
@@ -116,10 +118,11 @@ sylius.processor.foo:
     arguments:
         - "@sylius.factory.foo"
         - "@sylius.repository.foo"
+        - "@property_accessor"
         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
-    
-The third parameter represents the Headers of the data to import. For csv-files this would be the headers defined in 
+
+The fourth parameter represents the Headers of the data to import. For csv-files this would be the headers defined in 
 its first line. These HeaderKeys have to be equal to the fields in the resource to import if the generic
 ResourceProcessor is used, since the Keys are used for building dynamic Methodnames
     
@@ -139,6 +142,7 @@ class FooProcessor implements ResourceProcessorInterface
          - "@sylius.repository.foo"
          - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
+
 ### Running plugin tests
 
   - Test application install

@@ -8,7 +8,6 @@ use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
-use Port\Reader;
 use Port\Reader\ReaderFactory;
 
 class ResourceImporter implements ImporterInterface
@@ -22,55 +21,45 @@ class ResourceImporter implements ImporterInterface
     /** @var ResourceProcessorInterface */
     private $resourceProcessor;
 
+    /** @var ImporterResultInterface */
+    private $result;
+
     public function __construct(
         ReaderFactory $readerFactory,
         ObjectManager $objectManager,
-        ResourceProcessorInterface $resourceProcessor
+        ResourceProcessorInterface $resourceProcessor,
+        ImporterResultInterface $importerResult
     ) {
         $this->readerFactory = $readerFactory;
         $this->objectManager = $objectManager;
         $this->resourceProcessor = $resourceProcessor;
+        $this->result = $importerResult;
     }
 
     /**
      * @param string $fileName
      *
-     * @return ImporterResult
+     * @return ImporterResultInterface
      */
-    public function import(string $fileName): ImporterResult
+    public function import(string $fileName): ImporterResultInterface
     {
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
 
-        $this->assertMethods($reader);
-
-        $result = new ImporterResult();
-        $result->start();
+        $this->result->start();
         foreach ($reader as $i => $row) {
             try {
                 $this->resourceProcessor->process($row);
-                $result->success($i);
+                $this->result->success($i);
             } catch (ItemIncompleteException $e) {
-                $result->skipped($i);
+                $this->result->skipped($i);
             } catch (ImporterException $e) {
-                $result->failed($i);
+                $this->result->failed($i);
             }
         }
-        $result->stop();
+        $this->result->stop();
 
         $this->objectManager->flush();
 
-        return $result;
-    }
-
-    /**
-     * @param Reader $reader
-     *
-     * @throws ImporterException
-     */
-    protected function assertMethods(Reader $reader)
-    {
-        if (!method_exists($reader, 'getColumnHeaders')) {
-            throw new ImporterException('Missing "getColumnHeaders" method on reader');
-        }
+        return $this->result;
     }
 }

@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\AccessorNotFoundException;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ResourceProcessor implements ResourceProcessorInterface
 {
@@ -18,42 +19,69 @@ final class ResourceProcessor implements ResourceProcessorInterface
     /** @var RepositoryInterface */
     private $resourceRepository;
 
+    /** @var PropertyAccessorInterface */
+    private $propertyAccessor;
+
     /** @var array */
     private $headerKeys;
 
+    /**
+     * ResourceProcessor constructor.
+     *
+     * @param FactoryInterface $resourceFactory
+     * @param RepositoryInterface $resourceRepository
+     * @param PropertyAccessorInterface $propertyAccessor
+     * @param array $headerKeys
+     */
     public function __construct(
         FactoryInterface $resourceFactory,
         RepositoryInterface $resourceRepository,
-        array $headerKeys = []
+        PropertyAccessorInterface $propertyAccessor,
+        array $headerKeys
     ) {
         $this->resourceFactory = $resourceFactory;
         $this->resourceRepository = $resourceRepository;
+        $this->propertyAccessor = $propertyAccessor;
         $this->headerKeys = $headerKeys;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @throws AccessorNotFoundException
+     * @throws ItemIncompleteException
+     * @throws \Symfony\Component\PropertyAccess\Exception\AccessException
+     * @throws \Symfony\Component\PropertyAccess\Exception\InvalidArgumentException
+     * @throws \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
      */
     public function process(array $data): void
     {
         $this->validateMetadata($data);
+        $resource = $this->getResource($data['Code']);
 
-        /** @var ResourceInterface $resource */
-        $resource = $this->resourceRepository->findOneBy(['code' => $data['Code']]);
-
-        if (null === $resource) {
-            $resource = $this->resourceFactory->createNew();
-        }
         foreach ($this->headerKeys as $headerKey) {
-            $method = 'set' . ucfirst($headerKey);
-            if (!method_exists($resource, $method)) {
-                throw new ImporterException(sprintf('Method for %s not found in resource %s', $method, $resource));
+            if (false === $this->propertyAccessor->isReadable($resource, $headerKey)) {
+                throw new AccessorNotFoundException(
+                    sprintf(
+                        'No Accessor found for %s in Resource %s, ' .
+                        'please implement one or change the Header-Key to an existing field',
+                        $headerKey,
+                        \get_class($resource)
+                    )
+                );
             }
-            call_user_func_array([$resource, $method], [$data[$headerKey]]);
+
+            $this->propertyAccessor->setValue($resource, $headerKey, $data[$headerKey]);
         }
+
         $this->resourceRepository->add($resource);
     }
 
+    /**
+     * @param array $data
+     *
+     * @throws ItemIncompleteException
+     */
     private function validateMetadata(array $data): void
     {
         foreach ($this->headerKeys as $metaDataKey) {
@@ -61,5 +89,22 @@ final class ResourceProcessor implements ResourceProcessorInterface
                 throw new ItemIncompleteException();
             }
         }
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return ResourceInterface
+     */
+    private function getResource(string $code): ResourceInterface
+    {
+        /** @var ResourceInterface $resource */
+        $resource = $this->resourceRepository->findOneBy(['code' => $code]);
+
+        if (null === $resource) {
+            $resource = $this->resourceFactory->createNew();
+        }
+
+        return $resource;
     }
 }

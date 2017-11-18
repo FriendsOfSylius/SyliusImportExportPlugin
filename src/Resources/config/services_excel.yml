@@ -10,6 +10,7 @@ services:
             - "@sylius.factory.excel_reader"
             - "@sylius.manager.country"
             - "@sylius.processor.countries"
+            - "@sylius.importer.result"
         tags:
             - { name: sylius.importer, type: country, format: excel }
 
@@ -19,6 +20,7 @@ services:
             - "@sylius.factory.excel_reader"
             - "@sylius.manager.payment_method"
             - "@sylius.processor.payment_methods"
+            - "@sylius.importer.result"
         tags:
             - { name: sylius.importer, type: payment_method, format: excel }
 
@@ -28,5 +30,6 @@ services:
             - "@sylius.factory.excel_reader"
             - "@sylius.manager.tax_category"
             - "@sylius.processor.tax_categories"
+            - "@sylius.importer.result"
         tags:
             - { name: sylius.importer, type: tax_category, format: excel }

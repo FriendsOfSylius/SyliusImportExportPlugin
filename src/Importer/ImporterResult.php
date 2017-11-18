@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
-final class ImporterResult
+final class ImporterResult implements ImporterResultInterface
 {
     /** @var Stopwatch */
     private $stopwatch;
@@ -24,17 +24,17 @@ final class ImporterResult
     /** @var StopwatchEvent */
     private $stopWatchEvent;
 
-    public function __construct()
+    public function __construct(Stopwatch $stopwatch)
     {
-        $this->stopwatch = new Stopwatch();
+        $this->stopwatch = $stopwatch;
     }
 
-    public function start()
+    public function start(): void
     {
         $this->stopwatch->start('import');
     }
 
-    public function stop()
+    public function stop(): void
     {
         $this->stopWatchEvent = $this->stopwatch->stop('import');
     }
@@ -42,7 +42,7 @@ final class ImporterResult
     /**
      * @param int $rowNum
      */
-    public function success(int $rowNum)
+    public function success(int $rowNum): void
     {
         $this->success[] = $rowNum;
     }
@@ -50,7 +50,7 @@ final class ImporterResult
     /**
      * @return array
      */
-    public function getSuccessRows()
+    public function getSuccessRows(): array
     {
         return $this->success;
     }
@@ -58,7 +58,7 @@ final class ImporterResult
     /**
      * @param int $rowNum
      */
-    public function skipped(int $rowNum)
+    public function skipped(int $rowNum): void
     {
         $this->skipped[] = $rowNum;
     }
@@ -66,7 +66,7 @@ final class ImporterResult
     /**
      * @return array
      */
-    public function getSkippedRows()
+    public function getSkippedRows(): array
     {
         return $this->skipped;
     }
@@ -74,7 +74,7 @@ final class ImporterResult
     /**
      * @param int $rowNum
      */
-    public function failed(int $rowNum)
+    public function failed(int $rowNum): void
     {
         $this->failed[] = $rowNum;
     }
@@ -82,7 +82,7 @@ final class ImporterResult
     /**
      * @return array
      */
-    public function getFailedRows()
+    public function getFailedRows(): array
     {
         return $this->failed;
     }
@@ -90,7 +90,7 @@ final class ImporterResult
     /**
      * @return int The duration (in milliseconds)
      */
-    public function getDuration()
+    public function getDuration(): int
     {
         return $this->stopWatchEvent->getDuration();
     }
