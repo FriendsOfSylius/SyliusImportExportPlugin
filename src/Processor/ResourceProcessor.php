@@ -22,6 +22,9 @@ final class ResourceProcessor implements ResourceProcessorInterface
     /** @var PropertyAccessorInterface */
     private $propertyAccessor;
 
+    /** @var MetadataValidatorInterface */
+    private $metadataValidator;
+
     /** @var array */
     private $headerKeys;
 
@@ -37,11 +40,13 @@ final class ResourceProcessor implements ResourceProcessorInterface
         FactoryInterface $resourceFactory,
         RepositoryInterface $resourceRepository,
         PropertyAccessorInterface $propertyAccessor,
+        MetadataValidatorInterface $metadataValidator,
         array $headerKeys
     ) {
         $this->resourceFactory = $resourceFactory;
         $this->resourceRepository = $resourceRepository;
         $this->propertyAccessor = $propertyAccessor;
+        $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
     }
 
@@ -56,7 +61,8 @@ final class ResourceProcessor implements ResourceProcessorInterface
      */
     public function process(array $data): void
     {
-        $this->validateMetadata($data);
+        $this->metadataValidator->validateHeaders($this->headerKeys, $data);
+
         $resource = $this->getResource($data['Code']);
 
         foreach ($this->headerKeys as $headerKey) {
@@ -75,20 +81,6 @@ final class ResourceProcessor implements ResourceProcessorInterface
         }
 
         $this->resourceRepository->add($resource);
-    }
-
-    /**
-     * @param array $data
-     *
-     * @throws ItemIncompleteException
-     */
-    private function validateMetadata(array $data): void
-    {
-        foreach ($this->headerKeys as $metaDataKey) {
-            if (false === isset($data[$metaDataKey])) {
-                throw new ItemIncompleteException();
-            }
-        }
     }
 
     /**

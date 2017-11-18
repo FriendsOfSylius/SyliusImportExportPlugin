@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\AccessorNotFoundException;
+use FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidatorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use PhpSpec\ObjectBehavior;
@@ -18,9 +19,10 @@ class ResourceProcessorSpec extends ObjectBehavior
     public function let(
         FactoryInterface $factory,
         RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor
+        PropertyAccessorInterface $propertyAccessor,
+        MetadataValidatorInterface $metadataValidator
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, []);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, []);
     }
 
     function it_is_initializable()
@@ -37,12 +39,19 @@ class ResourceProcessorSpec extends ObjectBehavior
         FactoryInterface $factory,
         TaxCategoryInterface $taxCategory,
         PropertyAccessorInterface $propertyAccessor,
-        RepositoryInterface $repository
+        RepositoryInterface $repository,
+        MetadataValidatorInterface $metadataValidator
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, ['Code', 'Name', 'Description']);
+        $headerKeys = ['Code', 'Name', 'Description'];
+        $dataset = ['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books'];
+
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $headerKeys);
+
+        $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
+
         $repository->findOneBy(['code' => 'BOOKS'])->willReturn(null);
-        $factory->createNew()->willReturn($taxCategory);
         $repository->add($taxCategory)->shouldBeCalledTimes(1);
+        $factory->createNew()->willReturn($taxCategory);
 
         $propertyAccessor->isReadable($taxCategory, 'Code')
             ->willReturn(true)
@@ -58,19 +67,27 @@ class ResourceProcessorSpec extends ObjectBehavior
         $propertyAccessor->setValue($taxCategory, 'Name', 'books')->shouldBeCalled();
         $propertyAccessor->setValue($taxCategory, 'Description', 'tax category for books')->shouldBeCalled();
 
-        $this->process(['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books']);
+        $this->process($dataset);
     }
 
     function it_can_process_an_array_of_country_data(
         FactoryInterface $factory,
         TaxCategoryInterface $country,
         RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor
+        PropertyAccessorInterface $propertyAccessor,
+        MetadataValidatorInterface $metadataValidator
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, ['Code']);
+        $headerKeys = ['Code'];
+        $dataset = ['Code' => 'DE'];
+
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $headerKeys);
+
+        $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
+
         $repository->findOneBy(['code' => 'DE'])->willReturn(null);
-        $factory->createNew()->willReturn($country);
         $repository->add($country)->shouldBeCalledTimes(1);
+
+        $factory->createNew()->willReturn($country);
 
         $propertyAccessor->isReadable($country, 'Code')
             ->willReturn(true)
@@ -78,16 +95,17 @@ class ResourceProcessorSpec extends ObjectBehavior
         $propertyAccessor->setValue($country, 'Code', 'DE')
             ->shouldBeCalled();
 
-        $this->process(['Code' => 'DE']);
+        $this->process($dataset);
     }
 
     function it_throws_accessor_not_found_exception_for_non_existing_header_keys(
         FactoryInterface $factory,
         TaxCategoryInterface $country,
         RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor
+        PropertyAccessorInterface $propertyAccessor,
+        MetadataValidatorInterface $metadataValidator
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, ['Code', 'not_existing_header_key']);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, ['Code', 'not_existing_header_key']);
         $repository->findOneBy(['code' => 'DE'])->willReturn(null);
         $factory->createNew()->willReturn($country);
         $repository->add($country)->shouldNotBeCalled();

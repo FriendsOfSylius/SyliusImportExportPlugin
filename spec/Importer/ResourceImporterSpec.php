@@ -62,13 +62,14 @@ class ResourceImporterSpec extends ObjectBehavior
         $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
         $importerResult->stop()->shouldBeCalledTimes(1);
 
-        $this->import(__DIR__ . '/countries.csv');
+        $this->import(__DIR__ . '/countries.csv')->shouldReturn($importerResult);
     }
 
     function it_imports_countries_from_excel_file(
         ReaderFactory $readerFactory,
         ExcelReader $excelReader,
         ObjectManager $objectManager,
+        ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
         $excelReader->rewind()->willReturn();
@@ -84,13 +85,18 @@ class ResourceImporterSpec extends ObjectBehavior
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
 
-        $this->import(__DIR__ . '/countries.xlsx');
+        $importerResult->start()->shouldBeCalledTimes(1);
+        $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
+        $importerResult->stop()->shouldBeCalledTimes(1);
+
+        $this->import(__DIR__ . '/countries.xlsx')->shouldReturn($importerResult);
     }
 
     function it_imports_tax_categories_from_csv_file(
         ReaderFactory $readerFactory,
         CsvReader $csvReader,
         ObjectManager $objectManager,
+        ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
         $csvReader->rewind()->willReturn();
@@ -107,13 +113,18 @@ class ResourceImporterSpec extends ObjectBehavior
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
 
-        $this->import(__DIR__ . '/tax_categories.csv');
+        $importerResult->start()->shouldBeCalledTimes(1);
+        $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
+        $importerResult->stop()->shouldBeCalledTimes(1);
+
+        $this->import(__DIR__ . '/tax_categories.csv')->shouldReturn($importerResult);
     }
 
     function it_imports_tax_categories_from_excel_file(
         ReaderFactory $readerFactory,
         ExcelReader $excelReader,
         ObjectManager $objectManager,
+        ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
         $excelReader->rewind()->willReturn();
@@ -130,6 +141,10 @@ class ResourceImporterSpec extends ObjectBehavior
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
 
-        $this->import(__DIR__ . '/tax_categories.xlsx');
+        $importerResult->start()->shouldBeCalledTimes(1);
+        $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
+        $importerResult->stop()->shouldBeCalledTimes(1);
+
+        $this->import(__DIR__ . '/tax_categories.xlsx')->shouldReturn($importerResult);
     }
 }

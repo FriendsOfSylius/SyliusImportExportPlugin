@@ -119,6 +119,7 @@ sylius.processor.foo:
         - "@sylius.factory.foo"
         - "@sylius.repository.foo"
         - "@property_accessor"
+        - "@sylius.importer.metadata_validator"
         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
 
@@ -140,8 +141,14 @@ class FooProcessor implements ResourceProcessorInterface
      arguments:
          - "@sylius.factory.foo"
          - "@sylius.repository.foo"
+         - "@sylius.importer.metadata_validator"
          - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
+
+#### Validating Metadata
+Each Processor has defined mandatory 'HeaderKeys'. For basic validation of these HeaderKeys you can use 
+"@sylius.importer.metadata_validator". Of course it is also possible to implement you own Validator, by implementing the 
+MetadataValidatorInterface and injecting it in your FooProcessor instead of the generic one.
 
 ### Running plugin tests
 

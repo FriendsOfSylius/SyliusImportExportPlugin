@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidatorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use Payum\Core\Model\GatewayConfigInterface;
@@ -11,15 +12,15 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
 use Sylius\Component\Core\Model\PaymentMethodInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class PaymentMethodProcessorSpec extends ObjectBehavior
 {
     function let(
         PaymentMethodFactoryInterface $factory,
-        RepositoryInterface $repository
+        RepositoryInterface $repository,
+        MetadataValidatorInterface $metadataValidator
     ) {
-        $this->beConstructedWith($factory, $repository, []);
+        $this->beConstructedWith($factory, $repository, $metadataValidator, []);
     }
 
     function it_is_initializable()
@@ -36,10 +37,16 @@ class PaymentMethodProcessorSpec extends ObjectBehavior
         PaymentMethodFactoryInterface $factory,
         PaymentMethodInterface $paymentMethod,
         GatewayConfigInterface $gatewayConfig,
-        PropertyAccessorInterface $propertyAccessor,
+        MetadataValidatorInterface $metadataValidator,
         RepositoryInterface $repository
     ) {
-        $this->beConstructedWith($factory, $repository, ['Code', 'Name', 'Instructions', 'Gateway']);
+        $headerKeys = ['Code', 'Name', 'Instructions', 'Gateway'];
+        $dataset = ['Code' => 'OFFLINE', 'Name' => 'Offline', 'Instructions' => 'Offline payment method instructions.', 'Gateway' => 'offline'];
+
+        $this->beConstructedWith($factory, $repository, $metadataValidator, $headerKeys);
+
+        $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
+
         $repository->findOneBy(['code' => 'OFFLINE'])->willReturn(null);
         $factory->createWithGateway('offline')->willReturn($paymentMethod);
         $repository->add($paymentMethod)->shouldBeCalledTimes(1);
@@ -52,6 +59,6 @@ class PaymentMethodProcessorSpec extends ObjectBehavior
         $paymentMethod->getGatewayConfig()->willReturn($gatewayConfig);
         $paymentMethod->setGatewayConfig($gatewayConfig)->shouldBeCalled();
 
-        $this->process(['Code' => 'OFFLINE', 'Name' => 'Offline', 'Instructions' => 'Offline payment method instructions.', 'Gateway' => 'offline']);
+        $this->process($dataset);
     }
 }
