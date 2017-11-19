@@ -65,33 +65,90 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
 ### Adding new importer types
 
-  - Notes
+  #### Notes
   
-    * Replace `foo` with the name of the type you want to implement in the following examples.
-    * Replace `bar` with the name of the format you want to implement in the following examples.
-    * Note it is of course also possible to implement a dedicated importer for `foo` type and format `bar`,
-      in case a generic type implementation is not possible.
+  - Replace `foo` with the name of the type you want to implement in the following examples.
+  - Replace `bar` with the name of the format you want to implement in the following examples.
+  - Note it is of course also possible to implement a dedicated importer for `foo` type and format `bar`,
+    in case a generic type implementation is not possible.
 
-  - Implement the importer
- 
-    ```php
-    // alternatively extend from AbstractImporter
-    class FooImporter implements ImporterInterface
-    ```
+#### Adding a ResourceImporter
 
- - Define service
+##### Define Importer-Service for Generic Importer in services_bar.yml with ResourceImporter
  
-   ```yaml
-    sylius.importer.foobar.:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FooImporter
-        arguments:
-            - "@sylius.factory.bar_reader"
-            - "@sylius.factory.foo"
-            - "@sylius.repository.foo"
-            - "@sylius.manager.foo"
-        tags:
-            - { name: sylius.importer, type: foo, format: bar }
-   ```
+```yaml
+sylius.importer.foo.bar:
+    class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
+    arguments:
+        - "@sylius.factory.bar_reader"
+        - "@sylius.manager.foo"
+        - "@sylius.processor.foo"
+        - "@sylius.importer.result"
+    tags:
+        - { name: sylius.importer, type: country, format: csv }
+```
+  
+##### Alternatively implement a custom ResourceImporter _FooImporter_
+
+```php
+class FooImporter implements ImporterInterface
+```
+
+##### Define service instead of the above mentioned
+
+```yaml
+sylius.importer.foo.bar:
+  class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FooImporter
+  arguments:
+      - "@sylius.factory.bar_reader"
+      - "@sylius.manager.foo"
+      - "@sylius.processor.foo"
+      - "@sylius.importer.result"
+  tags:
+      - { name: sylius.importer, type: country, format: bar }
+```
+
+#### Adding a ResourceProcessor
+
+##### Define processor service with generic ResourceProcessor in services.yml
+
+```yaml
+sylius.processor.foo:
+    class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+    arguments:
+        - "@sylius.factory.foo"
+        - "@sylius.repository.foo"
+        - "@property_accessor"
+        - "@sylius.importer.metadata_validator"
+        - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
+```
+
+The fourth parameter represents the Headers of the data to import. For csv-files this would be the headers defined in 
+its first line. These HeaderKeys have to be equal to the fields in the resource to import if the generic
+ResourceProcessor is used, since the Keys are used for building dynamic Methodnames
+    
+
+##### Alternatively implement a custom ResourceProcessor _FooProcessor_
+ 
+```php
+class FooProcessor implements ResourceProcessorInterface
+```
+##### Define processor service with _FooProcessor_ in services.yml instead of the above mentioned generic one
+ 
+```yaml
+ sylius.processor.tax_categories:
+     class: FriendsOfSylius\SyliusImportExportPlugin\Processor\FooProcessor
+     arguments:
+         - "@sylius.factory.foo"
+         - "@sylius.repository.foo"
+         - "@sylius.importer.metadata_validator"
+         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
+```
+
+#### Validating Metadata
+Each Processor has defined mandatory 'HeaderKeys'. For basic validation of these HeaderKeys you can use 
+"@sylius.importer.metadata_validator". Of course it is also possible to implement you own Validator, by implementing the 
+MetadataValidatorInterface and injecting it in your FooProcessor instead of the generic one.
 
 ### Running plugin tests
 

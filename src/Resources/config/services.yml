@@ -11,3 +11,40 @@ services:
             - "@sylius.importers_registry"
             - "@router"
             - "@session"
+
+    sylius.importer.result:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult
+        arguments:
+            - "@debug.stopwatch"
+
+    sylius.importer.metadata_validator:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidator
+
+
+# Definition of the generic ResourceProcessors
+    sylius.processor.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.country"
+            - "@sylius.repository.country"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - ["Code"]
+
+    sylius.processor.tax_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.tax_category"
+            - "@sylius.repository.tax_category"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - ["Code", "Name", "Description"]
+
+# Definition of the custom Processors
+    sylius.processor.payment_methods:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
+        arguments:
+            - "@sylius.factory.payment_method"
+            - "@sylius.repository.payment_method"
+            - "@sylius.importer.metadata_validator"
+            - ['Code', 'Name', 'Instructions', 'Gateway']
