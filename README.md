@@ -155,6 +155,7 @@ MetadataValidatorInterface and injecting it in your FooProcessor instead of the 
   - Test application install
 
     ```bash
+    $ composer install
     $ (cd tests/Application && yarn install)
     $ (cd tests/Application && yarn run gulp)
     $ (cd tests/Application && bin/console assets:install web -e test)
