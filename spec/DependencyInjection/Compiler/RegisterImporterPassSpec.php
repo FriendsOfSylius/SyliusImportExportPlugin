@@ -33,6 +33,7 @@ class RegisterImporterPassSpec extends ObjectBehavior
         /**
          * prepare the mock for the container builder
          */
+        $container->getParameter('sylius.importer.web_ui')->willReturn(true);
         $container->has('sylius.importers_registry')->willReturn(true);
         $container->has(Argument::type('string'))->willReturn(false);
         $container->findDefinition('sylius.importers_registry')->willReturn($importerRegistry);

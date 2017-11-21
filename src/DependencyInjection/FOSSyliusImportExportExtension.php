@@ -16,8 +16,12 @@ class FOSSyliusImportExportExtension extends Extension
      */
     public function load(array $configs, ContainerBuilder $container)
     {
-        $configuration = new Configuration();
-        $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($this->getConfiguration($configs, $container), $configs);
+
+        $container->setParameter('sylius.importer.web_ui', $config['importer']['web_ui']);
+        $container->setParameter('sylius.importer.batch_size', $config['importer']['batch_size']);
+        $container->setParameter('sylius.importer.fail_on_incomplete', $config['importer']['fail_on_incomplete']);
+        $container->setParameter('sylius.importer.stop_on_failure', $config['importer']['stop_on_failure']);
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');

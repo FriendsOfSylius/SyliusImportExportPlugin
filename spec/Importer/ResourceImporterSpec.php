@@ -23,7 +23,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ResourceProcessorInterface $resourceProcessor,
         ImporterResultInterface $importerResult
     ) {
-        $this->beConstructedWith($readerFactory, $objectManager, $resourceProcessor, $importerResult);
+        $this->beConstructedWith($readerFactory, $objectManager, $resourceProcessor, $importerResult, false, false, false);
     }
 
     function it_is_initializable()
