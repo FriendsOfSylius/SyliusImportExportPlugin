@@ -37,7 +37,9 @@ final class RegisterImporterPass implements CompilerPassInterface
 
             $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
-            $this->registerImportFormBlockEvent($container, $type);
+            if ($container->getParameter('sylius.importer.web_ui')) {
+                $this->registerImportFormBlockEvent($container, $type);
+            }
         }
     }
 

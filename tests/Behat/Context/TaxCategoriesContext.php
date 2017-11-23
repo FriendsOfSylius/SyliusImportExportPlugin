@@ -27,7 +27,7 @@ class TaxCategoriesContext implements Context
     }
 
     /**
-     * @When I browse tax categories
+     * @When I browse all tax categories
      */
     public function iBrowseTaxCategories(): void
     {

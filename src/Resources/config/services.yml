@@ -22,8 +22,7 @@ services:
     sylius.importer.metadata_validator:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidator
 
-
-# Definition of the generic ResourceProcessors
+    # Definition of the generic ResourceProcessors
     sylius.processor.countries:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
         arguments:
@@ -42,7 +41,7 @@ services:
             - "@sylius.importer.metadata_validator"
             - ["Code", "Name", "Description"]
 
-# Definition of the custom Processors
+    # Definition of the custom Processors
     sylius.processor.payment_methods:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
         arguments:

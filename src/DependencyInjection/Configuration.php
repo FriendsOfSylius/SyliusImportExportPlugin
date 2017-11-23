@@ -15,7 +15,21 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('sylius_importer_export');
+        $rootNode = $treeBuilder->root('fos_sylius_import_export');
+
+        $rootNode
+            ->children()
+                ->arrayNode('importer')
+                    ->addDefaultsIfNotSet()
+                    ->children()
+                        ->booleanNode('web_ui')->defaultTrue()->end()
+                        ->integerNode('batch_size')->defaultFalse()->end()
+                        ->booleanNode('fail_on_incomplete')->defaultFalse()->end()
+                        ->booleanNode('stop_on_failure')->defaultFalse()->end()
+                    ->end()
+                ->end()
+            ->end()
+        ->end();
 
         return $treeBuilder;
     }
