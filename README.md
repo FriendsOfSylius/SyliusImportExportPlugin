@@ -30,6 +30,30 @@
 
   - Run `composer require friendsofsylius/sylius-import-export-plugin --dev`
 
+## Configuration
+
+### Application configuration:
+
+```yaml
+fos_sylius_import_export:
+    importer:
+      # set to false to not add an upload form to the entity overview pages
+        web_ui:               true
+        # set to an integer value to flush the object manager in regular intervals
+        batch_size:           false
+        # if incomplete rows (ie. missing required fields) should be considered failures
+        fail_on_incomplete:   false
+        # if to stop the import process in case of a failure
+        stop_on_failure:      false
+```
+
+### Routing configuration (only necessary if `web_ui` is set to `true`):
+
+```yaml
+sylius_import_export:
+    resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
+```
+
 ## Usage
 
 ### Available importer types
