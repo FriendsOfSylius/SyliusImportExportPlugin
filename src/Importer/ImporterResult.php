@@ -92,6 +92,6 @@ final class ImporterResult implements ImporterResultInterface
      */
     public function getDuration(): int
     {
-        return $this->stopWatchEvent->getDuration();
+        return (int) $this->stopWatchEvent->getDuration();
     }
 }

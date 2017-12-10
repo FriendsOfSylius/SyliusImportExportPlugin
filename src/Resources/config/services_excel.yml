@@ -17,6 +17,19 @@ services:
         tags:
             - { name: sylius.importer, type: country, format: excel }
 
+    sylius.importer.customer_group.excel:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
+        arguments:
+            - "@sylius.factory.excel_reader"
+            - "@sylius.manager.customer_group"
+            - "@sylius.processor.customer_groups"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: customer_group, format: excel }
+
     sylius.importer.payment_methods.excel:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:

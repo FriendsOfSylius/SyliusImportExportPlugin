@@ -41,6 +41,15 @@ services:
             - "@sylius.importer.metadata_validator"
             - ["Code", "Name", "Description"]
 
+    sylius.processor.customer_groups:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.customer_group"
+            - "@sylius.repository.customer_group"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - ["Code", "Name"]
+
     # Definition of the custom Processors
     sylius.processor.payment_methods:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor

@@ -59,6 +59,7 @@ sylius_import_export:
 ### Available importer types
 
 * country (csv, excel)
+* customer_group (csv, excel)
 * payment_method (csv, excel)
 * tax_category (csv, excel)
 
@@ -109,7 +110,7 @@ sylius.importer.foo.bar:
         - "@sylius.processor.foo"
         - "@sylius.importer.result"
     tags:
-        - { name: sylius.importer, type: country, format: csv }
+        - { name: sylius.importer, type: foo, format: csv }
 ```
   
 ##### Alternatively implement a custom ResourceImporter _FooImporter_
@@ -129,7 +130,7 @@ sylius.importer.foo.bar:
       - "@sylius.processor.foo"
       - "@sylius.importer.result"
   tags:
-      - { name: sylius.importer, type: country, format: bar }
+      - { name: sylius.importer, type: foo, format: bar }
 ```
 
 #### Adding a ResourceProcessor
