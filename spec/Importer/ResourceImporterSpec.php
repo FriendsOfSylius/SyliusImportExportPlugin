@@ -147,4 +147,61 @@ class ResourceImporterSpec extends ObjectBehavior
 
         $this->import(__DIR__ . '/tax_categories.xlsx')->shouldReturn($importerResult);
     }
+
+    function it_imports_customer_groups_from_csv_file(
+        ReaderFactory $readerFactory,
+        CsvReader $csvReader,
+        ObjectManager $objectManager,
+        ImporterResultInterface $importerResult,
+        ResourceProcessorInterface $resourceProcessor
+    ) {
+        $csvReader->rewind()->willReturn();
+        $csvReader->key()->willReturn(0, 1);
+        $csvReader->count()->willReturn(2);
+        $csvReader->valid()->willReturn(true, true, false);
+        $csvReader->next()->willReturn();
+        $csvReader->current()->willReturn(
+            ['Code' => 'PREMIUM', 'Name' => 'premium'],
+            ['Code' => 'BASIC', 'Name' => 'basic']
+        );
+
+        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($csvReader);
+
+        $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
+        $objectManager->flush()->shouldBeCalledTimes(1);
+
+        $importerResult->start()->shouldBeCalledTimes(1);
+        $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
+        $importerResult->stop()->shouldBeCalledTimes(1);
+
+        $this->import(__DIR__ . '/customer_groups.csv')->shouldReturn($importerResult);
+    }
+
+    function it_imports_customer_groups_from_excel_file(
+        ReaderFactory $readerFactory,
+        ExcelReader $excelReader,
+        ObjectManager $objectManager,
+        ImporterResultInterface $importerResult,
+        ResourceProcessorInterface $resourceProcessor
+    ) {
+        $excelReader->rewind()->willReturn();
+        $excelReader->key()->willReturn(0, 1);
+        $excelReader->count()->willReturn(2);
+        $excelReader->valid()->willReturn(true, true, false);
+        $excelReader->next()->willReturn();
+        $excelReader->current()->willReturn(
+            ['Code' => 'PREMIUM', 'Name' => 'premium'],
+            ['Code' => 'BASIC', 'Name' => 'basic']
+        );
+        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($excelReader);
+
+        $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
+        $objectManager->flush()->shouldBeCalledTimes(1);
+
+        $importerResult->start()->shouldBeCalledTimes(1);
+        $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
+        $importerResult->stop()->shouldBeCalledTimes(1);
+
+        $this->import(__DIR__ . '/customer_groups.xlsx')->shouldReturn($importerResult);
+    }
 }
