@@ -40,6 +40,6 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
             ->selectOption($format)
         ;
 
-        $this->getDocument()->pressButton('Import data');
+        $this->getDocument()->pressButton('Import Data');
     }
 }
