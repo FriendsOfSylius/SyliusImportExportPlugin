@@ -86,7 +86,7 @@ default:
                 - test.behat.context.cli_countries_context
                 - sylius.behat.context.cli.installer
             filters:
-                tags: "@managing_countries && @cli_importer"
+                tags: "@managing_countries && @cli_importer_exporter"
 
         cli_managing_customer_groups:
             contexts_services:

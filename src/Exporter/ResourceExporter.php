@@ -4,12 +4,17 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 
+/**
+ * Class ResourceExporter
+ */
 class ResourceExporter implements ResourceExporterInterface
 {
+    /** @var array */
+    private $resourceKeys;
+
     /** @var WriterInterface */
     private $writer;
 
@@ -21,22 +26,37 @@ class ResourceExporter implements ResourceExporterInterface
      *
      * @param WriterInterface $writer
      * @param PluginPoolInterface $pluginPool
+     * @param array $resourceKeys
      */
-    public function __construct(WriterInterface $writer, PluginPoolInterface $pluginPool)
+    public function __construct(WriterInterface $writer, PluginPoolInterface $pluginPool, array $resourceKeys)
     {
         $this->writer = $writer;
         $this->pluginPool = $pluginPool;
+        $this->resourceKeys = $resourceKeys;
     }
 
-    public function export(array $idsToExport)
+    /**
+     * {@inheritdoc}
+     */
+    public function setExportFile(string $filename): void
     {
+        $this->writer->setFile($filename);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function export(array $idsToExport): void
+    {
+        $this->pluginPool->initPlugins($idsToExport);
+        $this->writer->write($this->resourceKeys);
         foreach ($idsToExport as $id) {
             $this->writeDataForId($id);
         }
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     private function writeDataForId($id): void
     {
@@ -45,20 +65,12 @@ class ResourceExporter implements ResourceExporterInterface
     }
 
     /**
-     * @param $id
+     * @param int $id
      *
      * @return array
      */
     private function getDataForId($id): array
     {
-        $dataForId = [[]];
-        $plugins = $this->pluginPool->getPlugins();
-        foreach ($plugins as $plugin) {
-            /** @var PluginInterface $plugin */
-            $dataForId[] = $plugin->getData($id);
-        }
-        $dataForId = array_merge(...$dataForId);
-
-        return $dataForId;
+        return $this->pluginPool->getDataForId((string) $id);
     }
 }

@@ -8,6 +8,8 @@ class PluginFactory implements PluginFactoryInterface
 {
     public function create($namespaceOfPlugin): PluginInterface
     {
-        // TODO: Implement create() method.
+        if (class_exists($namespaceOfPlugin)) {
+            return new $namespaceOfPlugin();
+        }
     }
 }

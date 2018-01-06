@@ -6,4 +6,8 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 interface ResourcePluginInterface extends PluginInterface
 {
+    /**
+     * @return array
+     */
+    public function getFieldNames(): array;
 }

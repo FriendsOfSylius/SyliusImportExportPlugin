@@ -4,25 +4,23 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+/**
+ * Class PluginPool
+ */
 class PluginPool implements PluginPoolInterface
 {
-    /** @var array */
-    private $ids;
-
-    /** @var PluginFactoryInterface */
-    private $pluginFactory;
-
     /** @var PluginInterface[] */
     private $plugins;
 
-    public function __construct(PluginFactoryInterface $pluginFactory, array $plugins)
+    /** @var array */
+    private $exportKeys;
+
+    public function __construct(array $plugins, array $exportKeys)
     {
-        $this->pluginFactory = $pluginFactory;
-        foreach ($plugins as $namespace) {
-            /** @var PluginInterface $plugin */
-            $plugin = $this->pluginFactory->create($namespace);
+        foreach ($plugins as $plugin) {
             $this->plugins[] = $plugin;
         }
+        $this->exportKeys = $exportKeys;
     }
 
     /**
@@ -34,12 +32,46 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @param array $plugins
+     * @param array $ids
      */
     public function initPlugins(array $ids): void
     {
         foreach ($this->plugins as $plugin) {
             $plugin->init($ids);
         }
+    }
+
+    /**
+     * @param string $id
+     *
+     * @return array
+     */
+    public function getDataForId(string $id): array
+    {
+        $result = [];
+        foreach ($this->plugins as $index => $plugin) {
+            $result = $this->getDataForIdFromPlugin($id, $plugin, $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $id
+     * @param PluginInterface $plugin
+     * @param array $result
+     *
+     * @return array
+     */
+    private function getDataForIdFromPlugin(string $id, PluginInterface $plugin, array $result): array
+    {
+        foreach ($plugin->getData($id, $this->exportKeys) as $exportKey => $exportValue) {
+            if (true === empty($result[$exportKey])) {
+                // no other plugin has delivered a value till now
+                $result[$exportKey] = $exportValue;
+            }
+        }
+
+        return $result;
     }
 }

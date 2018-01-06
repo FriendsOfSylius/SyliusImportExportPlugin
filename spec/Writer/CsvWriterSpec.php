@@ -7,11 +7,12 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Writer;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\CsvWriter;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 use PhpSpec\ObjectBehavior;
+use Port\Csv\CsvWriter as PortCsvWriter;
 use Port\Writer;
 
 class CsvWriterSpec extends ObjectBehavior
 {
-    function let(Writer $csvWriter)
+    function let(PortCsvWriter $csvWriter)
     {
         $this->beConstructedWith($csvWriter);
     }

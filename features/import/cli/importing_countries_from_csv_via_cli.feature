@@ -7,7 +7,7 @@ Feature: Importing countries from csv with the command-line-interface
     Background:
        Given I have a working command-line-interface
 
-    @cli_importer
+    @cli_importer_exporter
     Scenario: Importing defined countries with the cli-command
         When I import "country" data from csv file "countries.csv" file with the cli-command
         Then I should see "Imported" in the output

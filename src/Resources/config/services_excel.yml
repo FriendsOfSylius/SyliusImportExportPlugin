@@ -4,6 +4,7 @@ services:
         arguments:
             - 1
 
+    # Excel-Importers
     sylius.importer.countries.excel:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:

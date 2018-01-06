@@ -123,26 +123,22 @@ class ResourcePluginSpec extends ObjectBehavior
         $propertyAccessor->getValue($taxCategoryCars, 'UpdatedAt')->willReturn(null);
 
         $this->init($idsToExport);
-        $this->getData(1)
+        $this->getData('1', ['Code', 'Name', 'Description', 'Rates'])
             ->shouldReturn([
                 'Code' => 'BOOKS',
                 'Name' => 'books',
                 'Description' => 'tax category for books',
                 'Rates' => $bookRates,
-                'CreatedAt' => null,
-                'UpdatedAt' => null,
             ]);
 
-        $this->getData(2)
+        $this->getData('2', ['Code', 'Name', 'Description', 'Rates'])
             ->shouldReturn([
                 'Code' => 'CARS',
                 'Name' => 'cars',
                 'Description' => 'tax category for cars',
                 'Rates' => $carRates,
-                'CreatedAt' => null,
-                'UpdatedAt' => null,
             ]);
-        $this->getData(3)
+        $this->getData('3', ['Code', 'Name', 'Description', 'Rates'])
             ->shouldReturn([]);
     }
 }

@@ -10,4 +10,9 @@ interface WriterInterface
      * @param array $data
      */
     public function write(array $data): void;
+
+    /**
+     * @param $filename
+     */
+    public function setFile($filename): void;
 }
