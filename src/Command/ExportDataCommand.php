@@ -33,8 +33,8 @@ final class ExportDataCommand extends ContainerAwareCommand
                 new InputArgument('exporter', InputArgument::OPTIONAL, 'The exporter to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The target file to export to.'),
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to export to'),
-            /** @todo Extracting details to show with this option. it is commented at the moment, since it would provide no functionality */
-                //new InputOption('details', null, InputOption::VALUE_NONE, 'If to return details about skipped/failed rows'),
+                /** @todo Extracting details to show with this option. At the moment it will have no effect */
+                new InputOption('details', null, InputOption::VALUE_NONE, 'If to return details about skipped/failed rows'),
             ])
         ;
     }

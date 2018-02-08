@@ -201,7 +201,7 @@ MetadataValidatorInterface and injecting it in your FooProcessor instead of the 
   
   - Replace `foo` with the name of the type you want to implement in the following examples.
   - Replace `bar` with the name of the format you want to implement in the following examples.
-  - Note it is of course also possible to implement a dedicated importer for `foo` type and format `bar`,
+  - Note it is of course also possible to implement a dedicated exporter for `foo` type and format `bar`,
     in case a generic type implementation is not possible.
 
 ### Exporters
