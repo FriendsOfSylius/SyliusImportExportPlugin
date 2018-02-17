@@ -62,13 +62,14 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     }
 
     /**
-     * @param array|string $code
+     * @param string $code
      * @param string $gateway
      *
      * @return PaymentMethodInterface
      */
     private function getPaymentMethod(string $code, string $gateway)
     {
+        /** @var PaymentMethodInterface|null $paymentMethod */
         $paymentMethod = $this->resourceRepository->findOneBy(['code' => $code]);
 
         if ($paymentMethod === null) {

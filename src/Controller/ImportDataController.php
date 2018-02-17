@@ -10,6 +10,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Sylius\Component\Registry\ServiceRegistry;
 use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -89,17 +90,19 @@ final class ImportDataController
         return new RedirectResponse($this->router->generate('sylius_admin_' . $importer . '_index'));
     }
 
+    /**
+     * @return FormInterface
+     */
     private function getForm()
     {
         return $this->formFactory->create(ImportType::class);
     }
 
     /**
-     * @param Request $request
      * @param string $importer
-     * @param $format
+     * @param FormInterface $form
      */
-    private function importData(string $importer, Form $form): void
+    private function importData(string $importer, FormInterface $form): void
     {
         $format = $form->get('format')->getData();
         $name = ImporterRegistry::buildServiceName($importer, $format);

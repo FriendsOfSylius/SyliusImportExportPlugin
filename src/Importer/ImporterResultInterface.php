@@ -41,7 +41,7 @@ interface ImporterResultInterface
     public function getFailedRows(): array;
 
     /**
-     * @return int The duration (in milliseconds)
+     * @return float The duration (in milliseconds)
      */
-    public function getDuration(): int;
+    public function getDuration(): float;
 }

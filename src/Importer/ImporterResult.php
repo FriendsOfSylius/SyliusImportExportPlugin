@@ -88,10 +88,10 @@ final class ImporterResult implements ImporterResultInterface
     }
 
     /**
-     * @return int The duration (in milliseconds)
+     * @return float The duration (in milliseconds)
      */
-    public function getDuration(): int
+    public function getDuration(): float
     {
-        return (int) $this->stopWatchEvent->getDuration();
+        return $this->stopWatchEvent->getDuration();
     }
 }

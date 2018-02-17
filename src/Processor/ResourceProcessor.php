@@ -90,10 +90,11 @@ final class ResourceProcessor implements ResourceProcessorInterface
      */
     private function getResource(string $code): ResourceInterface
     {
-        /** @var ResourceInterface $resource */
+        /** @var ResourceInterface|null $resource */
         $resource = $this->resourceRepository->findOneBy(['code' => $code]);
 
         if (null === $resource) {
+            /** @var ResourceInterface $resource */
             $resource = $this->resourceFactory->createNew();
         }
 
