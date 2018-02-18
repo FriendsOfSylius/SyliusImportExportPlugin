@@ -9,15 +9,6 @@ services:
             - "@form.factory"
             - "@twig"
 
-    sylius.controller.export_data:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
-        arguments:
-            - "@sylius.exporters_registry"
-            - "@router"
-            - "@session"
-            - "@form.factory"
-            - "@twig"
-
     # Registries for Importers / Exporters
     sylius.exporters_registry:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry
