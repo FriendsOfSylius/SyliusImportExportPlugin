@@ -76,9 +76,9 @@ class ImporterResultSpec extends ObjectBehavior
     {
         $stopwatch->stop('import')
             ->willReturn($stopwatchEvent);
-        $stopwatchEvent->getDuration()->willReturn(1000);
+        $stopwatchEvent->getDuration()->willReturn(1000.0);
 
         $this->stop();
-        $this->getDuration()->shouldReturn(1000);
+        $this->getDuration()->shouldReturn(1000.0);
     }
 }
