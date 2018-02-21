@@ -30,6 +30,18 @@
 
   - Run `composer require friendsofsylius/sylius-import-export-plugin --dev`
 
+3. Add plugin dependencies to your AppKernel.php file:
+
+````php
+public function registerBundles()
+{
+    return array_merge(parent::registerBundles(), [
+        ...
+        new \FriendsOfSylius\SyliusImportExportPlugin\FOSSyliusImportExportPlugin(),
+    ]);
+}
+````
+
 ## Configuration
 
 ### Application configuration:
