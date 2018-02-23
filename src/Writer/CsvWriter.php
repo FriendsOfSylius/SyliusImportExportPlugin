@@ -24,7 +24,7 @@ class CsvWriter implements WriterInterface
         $this->writer->writeItem($data);
     }
 
-    public function setFile($filename): void
+    public function setFile(string $filename): void
     {
         $this->writer->setStream(fopen($filename, 'w+'));
     }
