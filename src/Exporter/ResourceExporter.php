@@ -58,7 +58,7 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * @param int $id
      */
-    private function writeDataForId($id): void
+    private function writeDataForId(int $id): void
     {
         $dataForId = $this->getDataForId($id);
         $this->writer->write($dataForId);
@@ -69,7 +69,7 @@ class ResourceExporter implements ResourceExporterInterface
      *
      * @return array
      */
-    private function getDataForId($id): array
+    private function getDataForId(int $id): array
     {
         return $this->pluginPool->getDataForId((string) $id);
     }

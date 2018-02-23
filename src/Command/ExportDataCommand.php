@@ -77,7 +77,7 @@ final class ExportDataCommand extends ContainerAwareCommand
         $service = $registry->get($name);
         $service->setExportFile($file);
 
-        $result = $service->export($idsToExport);
+        $service->export($idsToExport);
 
         $message = sprintf(
             "<info>Exported %d item(s) to '%s' via the %s exporter</info>",

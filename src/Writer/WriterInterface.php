@@ -12,7 +12,7 @@ interface WriterInterface
     public function write(array $data): void;
 
     /**
-     * @param $filename
+     * @param string $filename
      */
-    public function setFile($filename): void;
+    public function setFile(string $filename): void;
 }

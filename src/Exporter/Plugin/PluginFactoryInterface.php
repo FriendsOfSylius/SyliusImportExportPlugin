@@ -6,5 +6,5 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 interface PluginFactoryInterface
 {
-    public function create($namespaceOfPlugin): PluginInterface;
+    public function create(string $namespaceOfPlugin): PluginInterface;
 }

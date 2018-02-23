@@ -17,9 +17,7 @@ class PluginPool implements PluginPoolInterface
 
     public function __construct(array $plugins, array $exportKeys)
     {
-        foreach ($plugins as $plugin) {
-            $this->plugins[] = $plugin;
-        }
+        $this->plugins = $plugins;
         $this->exportKeys = $exportKeys;
     }
 

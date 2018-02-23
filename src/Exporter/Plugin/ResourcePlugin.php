@@ -49,7 +49,7 @@ class ResourcePlugin implements ResourcePluginInterface
      */
     public function getData(string $id, array $keysToExport): array
     {
-        if (false === isset($this->data[$id])) {
+        if (!isset($this->data[$id])) {
             return [];
         }
         $result = [];
@@ -91,7 +91,7 @@ class ResourcePlugin implements ResourcePluginInterface
      * @throws \Symfony\Component\PropertyAccess\Exception\AccessException
      * @throws InvalidArgumentException
      */
-    private function addDataForId($resource): void
+    private function addDataForId(ResourceInterface $resource): void
     {
         $fields = $this->entityManager->getClassMetadata(\get_class($resource));
         foreach ($fields->getColumnNames() as $index => $field) {
@@ -104,22 +104,22 @@ class ResourcePlugin implements ResourcePluginInterface
 
     /**
      * @param string $id
-     * @param $exportKey
+     * @param string $exportKey
      *
      * @return bool
      */
-    private function hasPluginDataForExportKey(string $id, $exportKey): bool
+    private function hasPluginDataForExportKey(string $id, string $exportKey): bool
     {
-        return true === isset($this->data[$id][$exportKey]);
+        return isset($this->data[$id][$exportKey]);
     }
 
     /**
      * @param string $id
-     * @param $exportKey
+     * @param string $exportKey
      *
      * @return mixed
      */
-    private function getDataForExportKey(string $id, $exportKey)
+    private function getDataForExportKey(string $id, string $exportKey)
     {
         return $this->data[$id][$exportKey];
     }
