@@ -3,8 +3,3 @@ app_import_data:
     methods: [POST]
     defaults:
         _controller: sylius.controller.import_data:importAction
-app_export_data:
-    path: /export/{resource}
-    methods: [POST]
-    defaults:
-        _controller: sylius.controller.export_data:exportAction
