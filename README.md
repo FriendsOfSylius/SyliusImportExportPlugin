@@ -244,6 +244,56 @@ Define the Plugin for your FooResource in services.yml
 
 ```
 
+### A real example
+Define the Countries-Exporter in services_csv.yml
+```yaml
+  sylius.exporter.countries.csv:
+     class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+     arguments:
+        - "@sylius.exporter.csv_writer"
+        - "@sylius.exporter.pluginpool.countries"
+        - ["Id", "Code" ,"Enabled"]
+     tags:
+        - { name: sylius.exporter, type: country, format: csv }
+```
+
+Define the PluginPool for the Countries-Exporter in services.yml
+
+```yaml
+# PluginPools for Exporters. Can contain multiple Plugins
+  sylius.exporter.pluginpool.countries:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+      arguments:
+          - ["@sylius.exporter.plugin.resource.country"]
+          - ["Id", "Code" ,"Enabled"]
+```
+
+Define the Plugin for the Country-Resource in services.yml
+
+```yaml
+  # Plugins for Exporters
+  sylius.exporter.plugin.resource.countries:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+      arguments:
+          - "@sylius.repository.country"
+          - "@property_accessor"
+          - "@doctrine.orm.entity_manager"
+
+```
+
+The exporter will instantly be available as a exporter for the command line.
+
+   ```bash
+   $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
+   ```
+
+### PluginPool
+The idea behind the plugin pool is, to be able to have different kind of plugins, which could possibly
+provide data based on a custom sql that queries additional data for the exported resource, such as the 
+preferred brand of a customer. 
+At the moment there are only 'ResourcePlugin's, which allow the complete export of all data of one resource at the moment.
+With the provided keys you can influence which fields of a resource are exported.
+
 ### Running plugin tests
 
   - Test application install
