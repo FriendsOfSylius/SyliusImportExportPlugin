@@ -47,9 +47,8 @@ final class ExportDataCommand extends ContainerAwareCommand
         $exporter = $input->getArgument('exporter');
 
         if (empty($exporter)) {
-            $this->listExporters($input, $output, $registry);
-            $output->writeln('choose an exporter');
-            exit(0);
+            $message = 'choose an exporter';
+            $this->listExporters($input, $output, $registry, $message);
         }
         $format = $input->getOption('format');
         $name = ExporterRegistry::buildServiceName($exporter, $format);
@@ -59,11 +58,8 @@ final class ExportDataCommand extends ContainerAwareCommand
                 "<error>There is no '%s' exporter.</error>",
                 $name
             );
-            $output->writeln($message);
 
-            $this->listExporters($input, $output, $registry);
-
-            return 1;
+            $this->listExporters($input, $output, $registry, $message);
         }
 
         $file = $input->getArgument('file');
@@ -96,9 +92,16 @@ final class ExportDataCommand extends ContainerAwareCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @param ServiceRegistry $registry
+     * @param string $message
      */
-    private function listExporters(InputInterface $input, OutputInterface $output, ServiceRegistry $registry): void
+    private function listExporters(
+        InputInterface $input,
+        OutputInterface $output,
+        ServiceRegistry $registry,
+        string $message
+    ): void
     {
+        $output->writeln($message);
         $output->writeln('<info>Available exporters:</info>');
         $all = array_keys($registry->all());
         $exporters = [];
@@ -118,5 +121,6 @@ final class ExportDataCommand extends ContainerAwareCommand
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
+        exit(0);
     }
 }
