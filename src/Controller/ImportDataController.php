@@ -84,8 +84,8 @@ final class ImportDataController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->importData($importer, $form);
         }
-
-        return new RedirectResponse($request->headers->get('referer'));
+        $referer = (string) $request->headers->get('referer');
+        return new RedirectResponse($referer);
     }
 
     /**
