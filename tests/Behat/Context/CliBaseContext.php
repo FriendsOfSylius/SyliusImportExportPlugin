@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
+use FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -74,5 +75,18 @@ class CliBaseContext implements Context
     public function iShouldSeeInTheMessage($messagePart)
     {
         Assert::assertContains($messagePart, $this->tester->getDisplay());
+    }
+
+    /**
+     * @When I export :exporterType data as :format to the file :filename with the cli-command
+     */
+    public function iExportDataToACsvFileFileWithTheCliCommand($exporterType, $format, $filename)
+    {
+        $this->cliArguments = [$exporterType, $filename];
+
+        $this->application->add(new ExportDataCommand());
+        $this->command = $this->application->find('sylius:export');
+        $this->tester = new CommandTester($this->command);
+        $this->tester->execute(['command' => 'sylius:export', 'exporter' => $exporterType, 'file' => $this->filePath . '/' . $filename, '--format' => $format]);
     }
 }

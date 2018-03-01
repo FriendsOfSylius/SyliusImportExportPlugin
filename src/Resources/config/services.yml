@@ -1,10 +1,5 @@
 services:
-    sylius.importers_registry:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry
-        arguments:
-            - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
-            - importer
-
+    # Controllers for Admin-Integration
     sylius.controller.import_data:
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
@@ -14,15 +9,44 @@ services:
             - "@form.factory"
             - "@twig"
 
+    # Registries for Importers / Exporters
+    sylius.exporters_registry:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry
+        arguments:
+            - FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface
+            - exporter
+
+    sylius.importers_registry:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry
+        arguments:
+            - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
+            - importer
+
+    # Plugins for Exporters
+    sylius.exporter.plugin.resource.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.country"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
+    # PluginPools for Exporters. Can contain multiple Plugins
+    sylius.exporter.pluginpool.countries:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.countries"]
+            - ["Id", "Code" ,"Enabled"]
+    # Service for gathering Information about Import
     sylius.importer.result:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult
         arguments:
             - "@debug.stopwatch"
 
+    # Service for validating the header-information of input-files.
     sylius.importer.metadata_validator:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidator
 
-    # Definition of the generic ResourceProcessors
+    # generic ResourceProcessors, which can work with just Property-Accessors
     sylius.processor.countries:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
         arguments:
@@ -50,7 +74,7 @@ services:
             - "@sylius.importer.metadata_validator"
             - ["Code", "Name"]
 
-    # Definition of the custom Processors
+    # Definition of custom Processors, which can have additional logic to handle dependencies to other resources
     sylius.processor.payment_methods:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
         arguments:

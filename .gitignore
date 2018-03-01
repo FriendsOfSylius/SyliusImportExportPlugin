@@ -1,4 +1,4 @@
-/bin/*
+/bin/
 !/bin/.gitkeep
 
 /vendor/
@@ -9,3 +9,4 @@
 !/etc/build/.gitkeep
 
 /tests/Application/yarn.lock
+/tests/Behat/Resources/fixtures/countries_export.csv

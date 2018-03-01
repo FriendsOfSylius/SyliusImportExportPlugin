@@ -75,6 +75,10 @@ sylius_import_export:
 * payment_method (csv, excel)
 * tax_category (csv, excel)
 
+### Available exporter types
+
+* country (csv)
+
 ## Example import files
 
 See the fixtures in the Behat tests: `tests/Behat/Resources/fixtures`
@@ -96,6 +100,11 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
     ```bash
     $ bin/console sylius:import tax_category my/tax/categories/csv/file.csv --format=csv
+    ```
+   
+  - Export data of resources to file using `country` exporter
+    ```bash
+    $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
     ```
 
 ## Development
@@ -186,6 +195,104 @@ class FooProcessor implements ResourceProcessorInterface
 Each Processor has defined mandatory 'HeaderKeys'. For basic validation of these HeaderKeys you can use 
 "@sylius.importer.metadata_validator". Of course it is also possible to implement you own Validator, by implementing the 
 MetadataValidatorInterface and injecting it in your FooProcessor instead of the generic one.
+
+### Defining new Exporters
+#### Notes
+  
+  - Replace `foo` with the name of the type you want to implement in the following examples.
+  - Replace `bar` with the name of the format you want to implement in the following examples.
+  - Note it is of course also possible to implement a dedicated exporter for `foo` type and format `bar`,
+    in case a generic type implementation is not possible.
+
+### Exporters
+#### Adding a ResourceExporter
+
+Define your ResourceExporter in services_bar.yml (at the moment only csv is supported for export)
+
+```yaml
+  sylius.exporter.foo.bar:
+     class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+     arguments:
+        - "@sylius.exporter.bar_writer"
+        - "@sylius.exporter.pluginpool.foo"
+        - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
+     tags:
+        - { name: sylius.exporter, type: foo, format: bar }
+```
+
+Define the PluginPool for your ResourceExporter in services.yml
+
+```yaml
+# PluginPools for Exporters. Can contain multiple Plugins
+  sylius.exporter.pluginpool.foo:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+      arguments:
+          - ["@sylius.exporter.plugin.resource.foo"]
+          - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
+```
+
+Define the Plugin for your FooResource in services.yml
+
+```yaml
+  # Plugins for Exporters
+  sylius.exporter.plugin.resource.foo:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+      arguments:
+          - "@sylius.repository.foo"
+          - "@property_accessor"
+          - "@doctrine.orm.entity_manager"
+
+```
+
+### A real example
+Define the Countries-Exporter in services_csv.yml
+```yaml
+  sylius.exporter.countries.csv:
+     class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+     arguments:
+        - "@sylius.exporter.csv_writer"
+        - "@sylius.exporter.pluginpool.countries"
+        - ["Id", "Code" ,"Enabled"]
+     tags:
+        - { name: sylius.exporter, type: country, format: csv }
+```
+
+Define the PluginPool for the Countries-Exporter in services.yml
+
+```yaml
+# PluginPools for Exporters. Can contain multiple Plugins
+  sylius.exporter.pluginpool.countries:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+      arguments:
+          - ["@sylius.exporter.plugin.resource.country"]
+          - ["Id", "Code" ,"Enabled"]
+```
+
+Define the Plugin for the Country-Resource in services.yml
+
+```yaml
+  # Plugins for Exporters
+  sylius.exporter.plugin.resource.countries:
+      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+      arguments:
+          - "@sylius.repository.country"
+          - "@property_accessor"
+          - "@doctrine.orm.entity_manager"
+
+```
+
+The exporter will instantly be available as a exporter for the command line.
+
+   ```bash
+   $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
+   ```
+
+### PluginPool
+The idea behind the plugin pool is, to be able to have different kind of plugins, which could possibly
+provide data based on a custom sql that queries additional data for the exported resource, such as the 
+preferred brand of a customer. 
+At the moment there are only 'ResourcePlugin's, which allow the complete export of all data of one resource at the moment.
+With the provided keys you can influence which fields of a resource are exported.
 
 ### Running plugin tests
 

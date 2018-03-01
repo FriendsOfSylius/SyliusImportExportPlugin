@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin;
 
+use FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler\RegisterExporterPass;
 use FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler\RegisterImporterPass;
 use Sylius\Bundle\CoreBundle\Application\SyliusPluginTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -20,5 +21,6 @@ final class FOSSyliusImportExportPlugin extends Bundle
     {
         parent::build($container);
         $container->addCompilerPass(new RegisterImporterPass());
+        $container->addCompilerPass(new RegisterExporterPass());
     }
 }
