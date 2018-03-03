@@ -49,7 +49,7 @@ final class RegisterImporterPass implements CompilerPassInterface
      */
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
-        $eventHookName = ImporterRegistry::buildEventHookName($type);
+        $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
 
         if ($container->has($eventHookName) === false) {
             $container
@@ -65,7 +65,8 @@ final class RegisterImporterPass implements CompilerPassInterface
                         'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
                         'method' => 'onBlockEvent',
                     ]
-                );
+                )
+            ;
         }
     }
 }

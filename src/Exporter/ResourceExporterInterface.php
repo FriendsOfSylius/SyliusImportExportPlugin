@@ -15,4 +15,6 @@ interface ResourceExporterInterface
      * @param string $filename
      */
     public function setExportFile(string $filename): void;
+
+    public function getExportedData(string $filename);
 }

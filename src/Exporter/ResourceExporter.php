@@ -46,6 +46,14 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * {@inheritdoc}
      */
+    public function getExportedData(string $filename)
+    {
+        return $this->writer->getFileContent($filename);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function export(array $idsToExport): void
     {
         $this->pluginPool->initPlugins($idsToExport);

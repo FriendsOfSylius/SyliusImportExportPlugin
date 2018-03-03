@@ -15,4 +15,6 @@ interface WriterInterface
      * @param string $filename
      */
     public function setFile(string $filename): void;
+
+    public function getFileContent(string $filename);
 }
