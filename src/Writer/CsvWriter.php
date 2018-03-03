@@ -36,4 +36,11 @@ class CsvWriter implements WriterInterface
     {
         $this->writer->setStream(fopen($filename, 'w+'));
     }
+
+    public function getFileContent(string $filename)
+    {
+        $this->writer->finish();
+
+        return file_get_contents($filename);
+    }
 }

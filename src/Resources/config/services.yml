@@ -8,6 +8,7 @@ services:
             - "@session"
             - "@form.factory"
             - "@twig"
+
     sylius.controller.export_data:
           class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
           arguments:
@@ -66,7 +67,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult
         arguments:
             - "@debug.stopwatch"
-
     # Service for validating the header-information of input-files.
     sylius.importer.metadata_validator:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidator
