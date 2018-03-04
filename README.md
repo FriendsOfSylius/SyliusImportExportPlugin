@@ -28,7 +28,7 @@
 
 2. Require and install the plugin
 
-  - Run `composer require friendsofsylius/sylius-import-export-plugin --dev`
+  - Run `composer require friendsofsylius/sylius-import-export-plugin`
 
 3. Add plugin dependencies to your AppKernel.php file:
 
