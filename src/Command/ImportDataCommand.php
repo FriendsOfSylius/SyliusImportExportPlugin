@@ -6,16 +6,30 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use Sylius\Component\Registry\ServiceRegistry;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ImportDataCommand extends ContainerAwareCommand
+final class ImportDataCommand extends Command
 {
+    /**
+     * @var ImporterRegistry
+     */
+    private $importerRegistry;
+
+    /**
+     * @param ImporterRegistry $importerRegistry
+     */
+    public function __construct(ImporterRegistry $importerRegistry)
+    {
+        $this->importerRegistry = $importerRegistry;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -29,9 +43,9 @@ final class ImportDataCommand extends ContainerAwareCommand
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
                 // @TODO try to guess the format from the file to make this optional
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to import'),
-                new InputOption('details', null, InputOption::VALUE_NONE, 'If to return details about skipped/failed rows'),
-            ])
-        ;
+                new InputOption('details', null, InputOption::VALUE_NONE,
+                    'If to return details about skipped/failed rows'),
+            ]);
     }
 
     /**
@@ -39,12 +53,9 @@ final class ImportDataCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        /** @var ServiceRegistry $registry */
-        $registry = $this->getContainer()->get('sylius.importers_registry');
-
         $importer = $input->getArgument('importer');
         if (empty($importer)) {
-            $this->listImporters($input, $output, $registry);
+            $this->listImporters($input, $output);
 
             return 0;
         }
@@ -52,14 +63,14 @@ final class ImportDataCommand extends ContainerAwareCommand
         $format = $input->getOption('format');
 
         $name = ImporterRegistry::buildServiceName($importer, $format);
-        if (!$registry->has($name)) {
+        if (!$this->importerRegistry->has($name)) {
             $message = sprintf(
                 "<error>There is no '%s' importer.</error>",
                 $name
             );
             $output->writeln($message);
 
-            $this->listImporters($input, $output, $registry);
+            $this->listImporters($input, $output);
 
             return 1;
         }
@@ -67,7 +78,7 @@ final class ImportDataCommand extends ContainerAwareCommand
         $file = $input->getArgument('file');
 
         /** @var ImporterInterface $service */
-        $service = $registry->get($name);
+        $service = $this->importerRegistry->get($name);
         $result = $service->import($file);
 
         $message = sprintf(
@@ -104,10 +115,14 @@ final class ImportDataCommand extends ContainerAwareCommand
         return 0;
     }
 
-    private function listImporters(InputInterface $input, OutputInterface $output, ServiceRegistry $registry): void
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     */
+    private function listImporters(InputInterface $input, OutputInterface $output): void
     {
         $output->writeln('<info>Available importers:</info>');
-        $all = array_keys($registry->all());
+        $all = array_keys($this->importerRegistry->all());
         $importers = [];
         foreach ($all as $importer) {
             $importer = explode('.', $importer);

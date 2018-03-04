@@ -32,24 +32,36 @@
         <service id="test.behat.context.cli_countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCountriesContext">
             <argument type="service" id="__symfony__.kernel" />
             <argument type="service" id="__symfony__.sylius.repository.country" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
         <service id="test.behat.context.cli_customer_groups_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCustomerGroupsContext">
             <argument type="service" id="__symfony__.kernel" />
             <argument type="service" id="__symfony__.sylius.repository.customer_group" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
         <service id="test.behat.context.cli_tax_categories_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliTaxCategoriesContext">
             <argument type="service" id="__symfony__.kernel" />
             <argument type="service" id="__symfony__.sylius.repository.tax_category" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
         <service id="test.behat.context.cli_payment_methods_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliPaymentMethodsContext">
             <argument type="service" id="__symfony__.kernel" />
             <argument type="service" id="__symfony__.sylius.repository.payment_method" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>

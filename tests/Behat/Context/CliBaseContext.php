@@ -7,46 +7,90 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 use Behat\Behat\Context\Context;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use PHPUnit\Framework\Assert;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Tester\CommandTester;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpKernel\KernelInterface;
 
 class CliBaseContext implements Context
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     protected $cliArguments = [];
 
-    /** @var KernelInterface */
+    /**
+     * @var KernelInterface
+     */
     protected $kernel;
 
-    /** @var Application */
+    /**
+     * @var Application
+     */
     protected $application;
 
-    /** @var CommandTester */
+    /**
+     * @var CommandTester
+     */
     protected $tester;
 
-    /** @var Command */
+    /**
+     * @var Command
+     */
     protected $command;
 
-    /** @var string */
+    /**
+     * @var string
+     */
     protected $filePath;
 
-    /** @var RepositoryInterface */
+    /**
+     * @var RepositoryInterface
+     */
     protected $repository;
 
     /**
-     * @param KernelInterface     $kernel
-     * @param string              $filePath
-     * @param RepositoryInterface $repository
+     * @var ImporterRegistry
      */
-    public function __construct(KernelInterface $kernel, RepositoryInterface $repository, string $filePath)
-    {
+    private $importerRegistry;
+
+    /**
+     * @var ExporterRegistry
+     */
+    private $exporterRegistry;
+
+    /**
+     * @var ContainerInterface
+     */
+    private $container;
+
+    /**
+     * @param KernelInterface $kernel
+     * @param RepositoryInterface $repository
+     * @param ImporterRegistry $importerRegistry
+     * @param ExporterRegistry $exporterRegistry
+     * @param ContainerInterface $container
+     * @param string $filePath
+     */
+    public function __construct(
+        KernelInterface $kernel,
+        RepositoryInterface $repository,
+        ImporterRegistry $importerRegistry,
+        ExporterRegistry $exporterRegistry,
+        ContainerInterface $container,
+        string $filePath
+    ) {
         $this->kernel = $kernel;
         $this->repository = $repository;
         $this->filePath = $filePath;
+        $this->importerRegistry = $importerRegistry;
+        $this->exporterRegistry = $exporterRegistry;
+        $this->container = $container;
     }
 
     /**
@@ -63,7 +107,7 @@ class CliBaseContext implements Context
     public function iImportDataFromFileWithTheCliCommand(string $importType, string $fileName, string $format)
     {
         $this->cliArguments = [$importType, $fileName];
-        $this->application->add(new ImportDataCommand());
+        $this->application->add(new ImportDataCommand($this->importerRegistry));
         $this->command = $this->application->find('sylius:import');
         $this->tester = new CommandTester($this->command);
         $this->tester->execute(['command' => 'sylius:import', 'importer' => $importType, 'file' => $this->filePath . '/' . $fileName, '--format' => $format]);
@@ -84,7 +128,9 @@ class CliBaseContext implements Context
     {
         $this->cliArguments = [$exporterType, $filename];
 
-        $this->application->add(new ExportDataCommand());
+        $command = new ExportDataCommand($this->exporterRegistry);
+        $command->setContainer($this->container);
+        $this->application->add($command);
         $this->command = $this->application->find('sylius:export');
         $this->tester = new CommandTester($this->command);
         $this->tester->execute(['command' => 'sylius:export', 'exporter' => $exporterType, 'file' => $this->filePath . '/' . $filename, '--format' => $format]);
