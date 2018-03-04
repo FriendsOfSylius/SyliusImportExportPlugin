@@ -1,6 +1,6 @@
 <p align="center">
     <a href="http://sylius.org" target="_blank">
-        <img src="http://demo.sylius.org/assets/shop/img/logo.png" />
+        <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
     </a>
 </p>
 <h1 align="center">FOSSyliusImportExportPlugin</h1>
