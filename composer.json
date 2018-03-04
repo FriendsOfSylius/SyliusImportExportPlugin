@@ -36,6 +36,9 @@
         "sylius-labs/coding-standard": "^1.0",
         "symplify/easy-coding-standard": "^2.4"
     },
+    "conflict": {
+        "symfony/symfony": "v3.4.5"
+    },
     "prefer-stable": true,
     "minimum-stability": "alpha",
     "autoload": {
