@@ -3,3 +3,4 @@ sylius:
 
 sylius_import_export:
     resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
+    prefix: /admin

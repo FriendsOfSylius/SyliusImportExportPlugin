@@ -64,6 +64,7 @@ fos_sylius_import_export:
 ```yaml
 sylius_import_export:
     resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
+    prefix: /admin
 ```
 
 ## Usage
