@@ -8,9 +8,14 @@ use Port\Csv\CsvWriter as PortCsvWriter;
 
 class CsvWriter implements WriterInterface
 {
-    /** @var PortCsvWriter */
+    /**
+     * @var PortCsvWriter
+     */
     private $writer;
 
+    /**
+     * @param PortCsvWriter $writer
+     */
     public function __construct(PortCsvWriter $writer)
     {
         $this->writer = $writer;
@@ -24,6 +29,9 @@ class CsvWriter implements WriterInterface
         $this->writer->writeItem($data);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setFile(string $filename): void
     {
         $this->writer->setStream(fopen($filename, 'w+'));
