@@ -1,0 +1,5 @@
+fos:
+    import_export:
+        ui:
+            import: 'Import'
+            import_data: 'Import Data'

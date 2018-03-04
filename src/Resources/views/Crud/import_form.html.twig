@@ -4,12 +4,12 @@
 <div class="ui styled fluid accordion">
     <div class="title active">
         <i class="dropdown icon"></i>
-        {{ header|trans }} import
+        {{ 'fos.import_export.ui.import'|trans }} {{ header|trans }}
     </div>
     <div class="content active">
         {{ form_start(form, {'action': path('app_import_data', {'resource': resource}), 'method': 'POST', 'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}}) }}
         {{ form_widget(form) }}
-        <button class="ui button" type="submit">Import Data</button>
+        <button class="ui button" type="submit">{{ 'fos.import_export.ui.import_data'|trans }}</button>
         {{ form_end(form) }}
     </div>
 </div>
