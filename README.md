@@ -273,7 +273,7 @@ Define the Plugin for the Country-Resource in services.yml
 
 ```yaml
   # Plugins for Exporters
-  sylius.exporter.plugin.resource.countries:
+  sylius.exporter.plugin.resource.country:
       class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
       arguments:
           - "@sylius.repository.country"
