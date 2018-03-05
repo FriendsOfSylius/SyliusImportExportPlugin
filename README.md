@@ -37,7 +37,7 @@ public function registerBundles()
 {
     return array_merge(parent::registerBundles(), [
         ...
-        new \FriendsOfSylius\SyliusImportExportPlugin\FOSSyliusImportExportPlugin(),
+        new FriendsOfSylius\SyliusImportExportPlugin\FOSSyliusImportExportPlugin(),
     ]);
 }
 ````
