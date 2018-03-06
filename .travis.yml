@@ -7,6 +7,7 @@ sudo: false
 php:
     - 7.1
     - 7.2
+    - nightly
 
 cache:
     yarn: true
@@ -20,7 +21,7 @@ env:
         - SYLIUS_BUILD_DIR=etc/build
 
 before_install:
-    - phpenv config-rm xdebug.ini
+    - phpenv config-rm xdebug.ini || true
     - echo "memory_limit=4096M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
     - mkdir -p "${SYLIUS_CACHE_DIR}"
 
