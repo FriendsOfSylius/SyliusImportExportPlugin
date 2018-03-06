@@ -6,21 +6,35 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
-use Sylius\Component\Registry\ServiceRegistry;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-/**
- * Class ExportDataCommand
- */
-final class ExportDataCommand extends ContainerAwareCommand
+final class ExportDataCommand extends Command
 {
+    use ContainerAwareTrait;
+
+    /**
+     * @var ExporterRegistry
+     */
+    private $exporterRegistry;
+
+    /**
+     * @param ExporterRegistry $exporterRegistry
+     */
+    public function __construct(ExporterRegistry $exporterRegistry)
+    {
+        $this->exporterRegistry = $exporterRegistry;
+
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -34,38 +48,38 @@ final class ExportDataCommand extends ContainerAwareCommand
                 new InputArgument('file', InputArgument::OPTIONAL, 'The target file to export to.'),
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to export to'),
                 /** @todo Extracting details to show with this option. At the moment it will have no effect */
-                new InputOption('details', null, InputOption::VALUE_NONE, 'If to return details about skipped/failed rows'),
-            ])
-        ;
+                new InputOption('details', null, InputOption::VALUE_NONE,
+                    'If to return details about skipped/failed rows'),
+            ]);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        /** @var ServiceRegistry $registry */
-        $registry = $this->getContainer()->get('sylius.exporters_registry');
-
         $exporter = $input->getArgument('exporter');
 
         if (empty($exporter)) {
             $message = 'choose an exporter';
-            $this->listExporters($input, $output, $registry, $message);
+            $this->listExporters($input, $output, $message);
         }
         $format = $input->getOption('format');
         $name = ExporterRegistry::buildServiceName($exporter, $format);
 
-        if (!$registry->has($name)) {
+        if (!$this->exporterRegistry->has($name)) {
             $message = sprintf(
                 "<error>There is no '%s' exporter.</error>",
                 $name
             );
 
-            $this->listExporters($input, $output, $registry, $message);
+            $this->listExporters($input, $output, $message);
         }
 
         $file = $input->getArgument('file');
 
         /** @var RepositoryInterface $repository */
-        $repository = $this->getContainer()->get('sylius.repository.' . $exporter);
+        $repository = $this->container->get('sylius.repository.' . $exporter);
         $allItems = $repository->findAll();
         $idsToExport = [];
         foreach ($allItems as $item) {
@@ -74,7 +88,7 @@ final class ExportDataCommand extends ContainerAwareCommand
         }
 
         /** @var ResourceExporterInterface $service */
-        $service = $registry->get($name);
+        $service = $this->exporterRegistry->get($name);
         $service->setExportFile($file);
 
         $service->export($idsToExport);
@@ -91,19 +105,16 @@ final class ExportDataCommand extends ContainerAwareCommand
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param ServiceRegistry $registry
      * @param string $message
      */
     private function listExporters(
         InputInterface $input,
         OutputInterface $output,
-        ServiceRegistry $registry,
         string $message
-    ): void
-    {
+    ): void {
         $output->writeln($message);
         $output->writeln('<info>Available exporters:</info>');
-        $all = array_keys($registry->all());
+        $all = array_keys($this->exporterRegistry->all());
         $exporters = [];
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
