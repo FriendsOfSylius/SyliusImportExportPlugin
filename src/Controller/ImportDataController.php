@@ -8,7 +8,6 @@ use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use Sylius\Component\Registry\ServiceRegistry;
-use Symfony\Component\Form\Form;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -79,15 +78,14 @@ final class ImportDataController
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
-
         $form = $this->getForm();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->importData($importer, $form);
         }
-
-        return new RedirectResponse($this->router->generate('sylius_admin_' . $importer . '_index'));
+        $referer = (string) $request->headers->get('referer');
+        return new RedirectResponse($referer);
     }
 
     /**
