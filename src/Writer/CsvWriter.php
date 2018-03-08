@@ -37,7 +37,10 @@ class CsvWriter implements WriterInterface
         $this->writer->setStream(fopen($filename, 'w+'));
     }
 
-    public function getFileContent(string $filename)
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileContent(string $filename): string
     {
         $this->writer->finish();
 

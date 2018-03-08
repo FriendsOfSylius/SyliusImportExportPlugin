@@ -12,18 +12,22 @@ use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
  */
 class ResourceExporter implements ResourceExporterInterface
 {
-    /** @var array */
+    /**
+     * @var array
+     */
     private $resourceKeys;
 
-    /** @var WriterInterface */
+    /**
+     * @var WriterInterface
+     */
     private $writer;
 
-    /** @var PluginPoolInterface */
+    /**
+     * @var PluginPoolInterface
+     */
     private $pluginPool;
 
     /**
-     * ResourceExporter constructor.
-     *
      * @param WriterInterface $writer
      * @param PluginPoolInterface $pluginPool
      * @param array $resourceKeys
@@ -46,7 +50,7 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * {@inheritdoc}
      */
-    public function getExportedData(string $filename)
+    public function getExportedData(string $filename): string
     {
         return $this->writer->getFileContent($filename);
     }

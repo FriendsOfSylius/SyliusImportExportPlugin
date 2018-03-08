@@ -38,30 +38,36 @@ final class RegisterExporterPass implements CompilerPassInterface
             $exportersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
             if ($container->getParameter('sylius.importer.web_ui')) {
-                $this->registerImportFormBlockEvent($container, $type);
+                $this->registerExportFormBlockEvent($container, $type);
             }
         }
     }
 
-    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
+    /**
+     * @param ContainerBuilder $container
+     * @param string $type
+     */
+    private function registerExportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
         $eventHookName = ExporterRegistry::buildEventHookName($type) . '.export';
 
-        if ($container->has($eventHookName) === false) {
-            $container
-                ->register(
-                    $eventHookName,
-                    BlockEventListener::class
-                )
-                ->setAutowired(false)
-                ->addArgument('@FOSSyliusImportExportPlugin/Crud/export.html.twig')
-                ->addTag(
-                    'kernel.event_listener',
-                    [
-                        'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                        'method' => 'onBlockEvent',
-                    ]
-                );
+        if ($container->has($eventHookName)) {
+            return;
         }
+
+        $container
+            ->register(
+                $eventHookName,
+                BlockEventListener::class
+            )
+            ->setAutowired(false)
+            ->addArgument('@FOSSyliusImportExportPlugin/Crud/export.html.twig')
+            ->addTag(
+                'kernel.event_listener',
+                [
+                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
+                    'method' => 'onBlockEvent',
+                ]
+            );
     }
 }
