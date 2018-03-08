@@ -51,22 +51,24 @@ final class RegisterImporterPass implements CompilerPassInterface
     {
         $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
 
-        if ($container->has($eventHookName) === false) {
-            $container
-                ->register(
-                    $eventHookName,
-                    BlockEventListener::class
-                )
-                ->setAutowired(false)
-                ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
-                ->addTag(
-                    'kernel.event_listener',
-                    [
-                        'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                        'method' => 'onBlockEvent',
-                    ]
-                )
-            ;
+        if ($container->has($eventHookName)) {
+            return;
         }
+
+        $container
+            ->register(
+                $eventHookName,
+                BlockEventListener::class
+            )
+            ->setAutowired(false)
+            ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
+            ->addTag(
+                'kernel.event_listener',
+                [
+                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
+                    'method' => 'onBlockEvent',
+                ]
+            )
+        ;
     }
 }

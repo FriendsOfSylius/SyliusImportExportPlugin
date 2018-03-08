@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Form\ExportType;
-use Sylius\Component\Registry\ServiceRegistry;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -17,37 +17,48 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
-/**
- * Class ExportDataController
- */
+
 final class ExportDataController extends Controller
 {
-    /** @var ServiceRegistry */
+    /**
+     * @var ServiceRegistryInterface
+     */
     private $registry;
 
-    /** @var UrlGeneratorInterface */
+    /**
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var Session */
+    /**
+     * @var SessionInterface|Session
+     */
     private $session;
 
-    /** @var FormFactoryInterface */
+    /**
+     * @var FormFactoryInterface
+     */
     private $formFactory;
 
-    /** @var \Twig_Environment */
+    /**
+     * @var \Twig_Environment
+     */
     private $twig;
 
     /**
-     * @param ServiceRegistry $registry
+     * @param ServiceRegistryInterface $registry
      * @param UrlGeneratorInterface $router
-     * @param Session $session
+     * @param SessionInterface $session
+     * @param FormFactoryInterface $formFactory
+     * @param \Twig_Environment $twig
      */
     public function __construct(
-        ServiceRegistry $registry,
+        ServiceRegistryInterface $registry,
         UrlGeneratorInterface $router,
-        Session $session,
+        SessionInterface $session,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
@@ -60,7 +71,6 @@ final class ExportDataController extends Controller
 
     /**
      * @param Request $request
-     *
      * @return Response
      */
     public function exportFormAction(Request $request): Response
@@ -75,6 +85,10 @@ final class ExportDataController extends Controller
         return new Response($content);
     }
 
+    /**
+     * @param Request $request
+     * @return Response
+     */
     public function exportAction(Request $request): Response
     {
         $exporter = $request->attributes->get('resource');
@@ -104,12 +118,17 @@ final class ExportDataController extends Controller
         return $this->formFactory->create(ExportType::class);
     }
 
-    private function exportData(string $exporter, FormInterface $form)
+    /**
+     * @param string $exporter
+     * @param FormInterface $form
+     * @return Response
+     */
+    private function exportData(string $exporter, FormInterface $form): Response
     {
         $format = $form->get('format')->getData();
         $name = ExporterRegistry::buildServiceName($exporter, $format);
         if (!$this->registry->has($name)) {
-            $message = sprintf("No importer found of type '%s' for format '%s'", $exporter, $format);
+            $message = sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format);
             $this->session->getFlashBag()->add('error', $message);
         }
 
@@ -143,12 +162,12 @@ final class ExportDataController extends Controller
         $message = sprintf(
             'successfully exported via %s exporter',
             $name
-            /*'Exported via %s exporter (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
-            $name,
-            $result->getDuration(),
-            count($result->getSuccessRows()),
-            count($result->getSkippedRows()),
-            count($result->getFailedRows())*/
+        /*'Exported via %s exporter (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
+        $name,
+        $result->getDuration(),
+        count($result->getSuccessRows()),
+        count($result->getSkippedRows()),
+        count($result->getFailedRows())*/
         );
 
         $this->session->getFlashBag()->add('success', $message);
