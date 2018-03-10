@@ -13,10 +13,6 @@ services:
           class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
           arguments:
               - "@sylius.exporters_registry"
-              - "@router"
-              - "@session"
-              - "@form.factory"
-              - "@twig"
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:

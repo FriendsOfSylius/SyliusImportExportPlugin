@@ -29,117 +29,48 @@ final class ExportDataController extends Controller
     private $registry;
 
     /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
-
-    /**
-     * @var SessionInterface|Session
-     */
-    private $session;
-
-    /**
-     * @var FormFactoryInterface
-     */
-    private $formFactory;
-
-    /**
-     * @var \Twig_Environment
-     */
-    private $twig;
-
-    /**
      * @param ServiceRegistryInterface $registry
-     * @param UrlGeneratorInterface $router
-     * @param SessionInterface $session
-     * @param FormFactoryInterface $formFactory
-     * @param \Twig_Environment $twig
      */
     public function __construct(
-        ServiceRegistryInterface $registry,
-        UrlGeneratorInterface $router,
-        SessionInterface $session,
-        FormFactoryInterface $formFactory,
-        \Twig_Environment $twig
+        ServiceRegistryInterface $registry
     ) {
         $this->registry = $registry;
-        $this->router = $router;
-        $this->session = $session;
-        $this->formFactory = $formFactory;
-        $this->twig = $twig;
     }
 
     /**
      * @param Request $request
+     * @param string $resource
+     * @param string $format
      * @return Response
      */
-    public function exportFormAction(Request $request): Response
+    public function exportAction(Request $request, string $resource, string $format): Response
     {
-        $form = $this->getForm();
+        $filename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
 
-        $content = $this->twig->render(
-            '@FOSSyliusImportExportPlugin/Crud/export_form.html.twig',
-            ['form' => $form->createView(), 'resource' => $request->attributes->get('resource')]
-        );
-
-        return new Response($content);
-    }
-
-    /**
-     * @param Request $request
-     * @return Response
-     */
-    public function exportAction(Request $request): Response
-    {
-        $exporter = $request->attributes->get('resource');
-
-        $form = $this->getForm();
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $response = $this->exportData($exporter, $form);
-
-            return $response;
-            /*return new RedirectResponse(
-                $this->router->generate('sylius_admin_' . $exporter . '_index'),
-                302,
-                $response->headers ? : []
-            );*/
-        }
-
-        return new RedirectResponse($this->router->generate('sylius_admin_' . $exporter . '_index'));
-    }
-
-    /**
-     * @return FormInterface
-     */
-    private function getForm(): FormInterface
-    {
-        return $this->formFactory->create(ExportType::class);
+        return $this->exportData($resource, $format, $filename);
     }
 
     /**
      * @param string $exporter
-     * @param FormInterface $form
+     * @param string $format
+     * @param string $filename
      * @return Response
      */
-    private function exportData(string $exporter, FormInterface $form): Response
+    private function exportData(string $exporter, string $format, string $filename): Response
     {
-        $format = $form->get('format')->getData();
         $name = ExporterRegistry::buildServiceName($exporter, $format);
         if (!$this->registry->has($name)) {
             $message = sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format);
             $this->session->getFlashBag()->add('error', $message);
         }
 
-        $file = $form->get('export-file-name')->getData();
         /** @var ResourceExporterInterface $service */
         $service = $this->registry->get($name);
 
         /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
         $repository = $this->get('sylius.repository.' . $exporter);
 
-        $service->setExportFile($file);
+        $service->setExportFile($filename);
         $allItems = $repository->findAll();
         $idsToExport = [];
         foreach ($allItems as $item) {
@@ -148,29 +79,16 @@ final class ExportDataController extends Controller
         }
         $service->export($idsToExport);
 
-        $exportedData = $service->getExportedData($file);
+        $exportedData = $service->getExportedData($filename);
 
         $response = new Response($exportedData);
 
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $file . '.' . $format
+            $filename
         );
 
         $response->headers->set('Content-Disposition', $disposition);
-
-        $message = sprintf(
-            'successfully exported via %s exporter',
-            $name
-        /*'Exported via %s exporter (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
-        $name,
-        $result->getDuration(),
-        count($result->getSuccessRows()),
-        count($result->getSkippedRows()),
-        count($result->getFailedRows())*/
-        );
-
-        $this->session->getFlashBag()->add('success', $message);
 
         return $response;
     }
