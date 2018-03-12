@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
-use Sylius\Bundle\UiBundle\Block\BlockEventListener;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonListenerGridListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -37,8 +37,8 @@ final class RegisterExporterPass implements CompilerPassInterface
 
             $exportersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
-            if ($container->getParameter('sylius.importer.web_ui')) {
-                $this->registerExportFormBlockEvent($container, $type);
+            if ($container->getParameter('sylius.exporter.web_ui')) {
+                $this->registerEventListenerForExportButton($container, $type, $format);
             }
         }
     }
@@ -47,9 +47,9 @@ final class RegisterExporterPass implements CompilerPassInterface
      * @param ContainerBuilder $container
      * @param string $type
      */
-    private function registerExportFormBlockEvent(ContainerBuilder $container, string $type): void
+    private function registerEventListenerForExportButton(ContainerBuilder $container, string $type, string $format): void
     {
-        $eventHookName = ExporterRegistry::buildEventHookName($type) . '.export';
+        $eventHookName = ExporterRegistry::buildGridButtonsEventHookName($type, $format) . '_export';
 
         if ($container->has($eventHookName)) {
             return;
@@ -58,15 +58,16 @@ final class RegisterExporterPass implements CompilerPassInterface
         $container
             ->register(
                 $eventHookName,
-                BlockEventListener::class
+                ExportButtonListenerGridListener::class
             )
             ->setAutowired(false)
-            ->addArgument('@FOSSyliusImportExportPlugin/Crud/export.html.twig')
+            ->addArgument($type)
+            ->addArgument($format)
             ->addTag(
                 'kernel.event_listener',
                 [
-                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                    'method' => 'onBlockEvent',
+                    'event' => 'sylius.grid.admin_' . $type,
+                    'method' => 'onSyliusGridAdmin',
                 ]
             );
     }

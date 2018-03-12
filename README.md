@@ -57,6 +57,9 @@ fos_sylius_import_export:
         fail_on_incomplete:   false
         # if to stop the import process in case of a failure
         stop_on_failure:      false
+    exporter:
+      # set to false to not add export buttons
+        web_ui:               true      
 ```
 
 ### Routing configuration (only necessary if `web_ui` is set to `true`):

@@ -23,6 +23,8 @@ class FOSSyliusImportExportExtension extends Extension
         $container->setParameter('sylius.importer.fail_on_incomplete', $config['importer']['fail_on_incomplete']);
         $container->setParameter('sylius.importer.stop_on_failure', $config['importer']['stop_on_failure']);
 
+        $container->setParameter('sylius.exporter.web_ui', $config['exporter']['web_ui']);
+
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
 
