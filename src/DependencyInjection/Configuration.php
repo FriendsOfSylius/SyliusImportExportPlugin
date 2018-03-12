@@ -28,6 +28,13 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('stop_on_failure')->defaultFalse()->end()
                     ->end()
                 ->end()
+                ->arrayNode('exporter')
+                    ->addDefaultsIfNotSet()
+                        ->children()
+                            ->booleanNode('web_ui')->defaultTrue()->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 
