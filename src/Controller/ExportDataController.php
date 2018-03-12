@@ -31,9 +31,8 @@ final class ExportDataController extends Controller
     /**
      * @param ServiceRegistryInterface $registry
      */
-    public function __construct(
-        ServiceRegistryInterface $registry
-    ) {
+    public function __construct(ServiceRegistryInterface $registry)
+    {
         $this->registry = $registry;
     }
 
@@ -59,9 +58,9 @@ final class ExportDataController extends Controller
     private function exportData(string $exporter, string $format, string $filename): Response
     {
         $name = ExporterRegistry::buildServiceName($exporter, $format);
+
         if (!$this->registry->has($name)) {
-            $message = sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format);
-            $this->session->getFlashBag()->add('error', $message);
+            throw new \Exception(sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format));
         }
 
         /** @var ResourceExporterInterface $service */

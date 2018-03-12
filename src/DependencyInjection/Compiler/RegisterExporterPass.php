@@ -37,7 +37,7 @@ final class RegisterExporterPass implements CompilerPassInterface
 
             $exportersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
-            if ($container->getParameter('sylius.importer.web_ui')) {
+            if ($container->getParameter('sylius.exporter.web_ui')) {
                 $this->registerEventListenerForExportButton($container, $type, $format);
             }
         }
