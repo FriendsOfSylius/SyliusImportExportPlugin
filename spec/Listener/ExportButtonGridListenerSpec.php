@@ -9,6 +9,9 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Component\Grid\Definition\ActionGroup;
 use Sylius\Component\Grid\Definition\Grid;
 use Sylius\Component\Grid\Event\GridDefinitionConverterEvent;
+use Symfony\Component\HttpFoundation\ParameterBag;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Webmozart\Assert\Assert;
 
 class ExportButtonGridListenerSpec extends ObjectBehavior
@@ -23,8 +26,16 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
         $this->beConstructedWith('country', ['csv', 'xlsx']);
     }
 
-    function it_should_add_the_export_action()
-    {
+    function it_should_add_the_export_action(
+        RequestStack $requestStack,
+        Request $request
+    ) {
+        $parameters = new ParameterBag(['criteria' => ['test' => 1]]);
+        $request->query = $parameters;
+
+        $requestStack->getCurrentRequest()->willReturn($request);
+        $this->setRequest($requestStack);
+
         $actionGroup = ActionGroup::named('main');
 
         $grid = Grid::fromCodeAndDriverConfiguration('country', 'doctrine', []);
@@ -40,8 +51,16 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
         Assert::count($action->getOptions()['links'], 2);
     }
 
-    function it_should_add_the_export_action_when_main_action_group_is_not_present()
-    {
+    function it_should_add_the_export_action_when_main_action_group_is_not_present(
+        RequestStack $requestStack,
+        Request $request
+    ) {
+        $parameters = new ParameterBag(['criteria' => ['test' => 1]]);
+        $request->query = $parameters;
+
+        $requestStack->getCurrentRequest()->willReturn($request);
+        $this->setRequest($requestStack);
+
         $grid = Grid::fromCodeAndDriverConfiguration('country', 'doctrine', []);
 
         $gridDefinitionConverterEvent = new GridDefinitionConverterEvent($grid);

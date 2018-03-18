@@ -222,7 +222,15 @@ Define your ResourceExporter in services_bar.yml (at the moment only csv is supp
         - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
         - "@sylius.exporters_transformer_pool" # Optional
      tags:
-        - { name: sylius.exporter, type: foo, format: bar }
+        - { name: sylius.exporter, type: app.foo, format: bar }
+```
+
+Note that `app.foo` is the alias as you have named your resource:
+
+```yaml
+sylius_resource:
+    resources:
+        app.foo:
 ```
 
 Define the PluginPool for your ResourceExporter in services.yml
@@ -260,7 +268,7 @@ Define the Countries-Exporter in services_csv.yml
         - ["Id", "Code" ,"Enabled"]
         - "@sylius.exporters_transformer_pool" # Optional
      tags:
-        - { name: sylius.exporter, type: country, format: csv }
+        - { name: sylius.exporter, type: sylius.country, format: csv }
 ```
 
 Define the PluginPool for the Countries-Exporter in services.yml

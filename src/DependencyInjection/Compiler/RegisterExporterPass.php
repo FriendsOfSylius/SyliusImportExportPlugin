@@ -98,12 +98,27 @@ final class RegisterExporterPass implements CompilerPassInterface
             ->setAutowired(false)
             ->addArgument($type)
             ->addArgument($formats)
+            ->addMethodCall('setRequest', [new Reference('request_stack')])
             ->addTag(
                 'kernel.event_listener',
                 [
-                    'event' => 'sylius.grid.admin_' . $type,
+                    'event' => $this->getEventName($type),
                     'method' => 'onSyliusGridAdmin',
                 ]
             );
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return string
+     */
+    private function getEventName(string $type): string
+    {
+        if (strpos($type, '.') !== false) {
+            $type = substr($type, strpos($type, '.') + 1);
+        }
+
+        return 'sylius.grid.admin_' . $type;
     }
 }

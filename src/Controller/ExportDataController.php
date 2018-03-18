@@ -6,9 +6,15 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
+use Pagerfanta\Pagerfanta;
+use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
+use Sylius\Bundle\ResourceBundle\Controller\ResourcesCollectionProviderInterface;
+use Sylius\Bundle\ResourceBundle\Grid\View\ResourceGridView;
 use Sylius\Component\Registry\ServiceRegistryInterface;
+use Sylius\Component\Resource\Metadata\Metadata;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -20,11 +26,28 @@ final class ExportDataController extends Controller
     private $registry;
 
     /**
-     * @param ServiceRegistryInterface $registry
+     * @var RequestConfigurationFactoryInterface
      */
-    public function __construct(ServiceRegistryInterface $registry)
-    {
+    private $requestConfigurationFactory;
+
+    /**
+     * @var ResourcesCollectionProviderInterface
+     */
+    private $resourcesCollectionProvider;
+
+    /**
+     * @param ServiceRegistryInterface $registry
+     * @param RequestConfigurationFactoryInterface $requestConfigurationFactory
+     * @param ResourcesCollectionProviderInterface $resourcesCollectionProvider
+     */
+    public function __construct(
+        ServiceRegistryInterface $registry,
+        RequestConfigurationFactoryInterface $requestConfigurationFactory,
+        ResourcesCollectionProviderInterface $resourcesCollectionProvider
+    ) {
         $this->registry = $registry;
+        $this->requestConfigurationFactory = $requestConfigurationFactory;
+        $this->resourcesCollectionProvider = $resourcesCollectionProvider;
     }
 
     /**
@@ -33,51 +56,101 @@ final class ExportDataController extends Controller
      *
      * @return Response
      */
-    public function exportAction(string $resource, string $format): Response
+    public function exportAction(Request $request, string $resource, string $format): Response
     {
         $outputFilename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
 
-        return $this->exportData($resource, $format, $outputFilename);
+        return $this->exportData($request, $resource, $format, $outputFilename);
     }
 
     /**
+     * @param Request $request
      * @param string $exporter
      * @param string $format
      * @param string $outputFilename
      *
      * @return Response
+     *
+     * @throws \Exception
      */
-    private function exportData(string $exporter, string $format, string $outputFilename): Response
+    private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
     {
-        $name = ExporterRegistry::buildServiceName($exporter, $format);
+        [$applicationName, $resource] = explode('.', $exporter);
+        $metadata = Metadata::fromAliasAndConfiguration($exporter,
+            $this->container->getParameter('sylius.resources')[$exporter]);
+        $configuration = $this->requestConfigurationFactory->create($metadata, $request);
 
+        $name = ExporterRegistry::buildServiceName($exporter, $format);
         if (!$this->registry->has($name)) {
             throw new \Exception(sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format));
         }
 
+        /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
+        $repository = $this->get('sylius.repository.' . $resource);
+        /** @var ResourceGridView|array $resources */
+        $resources = $this->resourcesCollectionProvider->get($configuration, $repository);
+
         /** @var ResourceExporterInterface $service */
         $service = $this->registry->get($name);
-
-        /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
-        $repository = $this->get('sylius.repository.' . $exporter);
-
-        $allItems = $repository->findAll();
-        $idsToExport = [];
-        foreach ($allItems as $item) {
-            /** @var ResourceInterface $item */
-            $idsToExport[] = $item->getId();
-        }
-        $service->export($idsToExport);
+        $service->export($this->getResourceIds($resources));
 
         $response = new Response($service->getExportedData());
-
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $outputFilename
         );
-
         $response->headers->set('Content-Disposition', $disposition);
 
         return $response;
+    }
+
+    /**
+     * @param ResourceGridView|array $resources
+     *
+     * @return array
+     */
+    private function getResourceIds($resources): array
+    {
+        return array_map(function (ResourceInterface $resource) {
+            return $resource->getId();
+        }, $this->getResources($resources));
+    }
+
+    /**
+     * @param ResourceGridView|array $resources
+     *
+     * @return array
+     */
+    private function getResources($resources): array
+    {
+        return is_array($resources) ? $resources : $this->getResourcesItems($resources);
+    }
+
+    /**
+     * @param ResourceGridView $resources
+     *
+     * @return array
+     */
+    private function getResourcesItems(ResourceGridView $resources): array
+    {
+        $data = $resources->getData();
+
+        if (is_array($data)) {
+            return $data;
+        }
+
+        if ($data instanceof Pagerfanta) {
+            $results = [];
+
+            for ($i = 0; $i < $data->getNbPages(); ++$i) {
+                $results = array_merge($results, iterator_to_array($data->getCurrentPageResults()));
+
+                if ($data->hasNextPage()) {
+                    $data->getNextPage();
+                }
+            }
+
+            return $results;
+        }
     }
 }
