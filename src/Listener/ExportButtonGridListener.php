@@ -14,18 +14,23 @@ final class ExportButtonGridListener
     private $resource;
 
     /**
-     * @var string
+     * @var array
      */
-    private $format;
+    private $formats;
+
+    /**
+     * @var array
+     */
+    private $links = [];
 
     /**
      * @param string $resource
-     * @param string $format
+     * @param array $formats
      */
-    public function __construct(string $resource, string $format)
+    public function __construct(string $resource, array $formats)
     {
         $this->resource = $resource;
-        $this->format = $format;
+        $this->formats = $formats;
     }
 
     /**
@@ -54,19 +59,39 @@ final class ExportButtonGridListener
                 'icon' => 'file code outline',
                 'label' => 'sylius.ui.type',
             ],
-            'links' => [
-                $this->format => [
-                    'label' => 'fos.import_export.ui.types.' . $this->format,
-                    'icon' => 'file archive',
-                    'route' => 'app_export_data',
-                    'parameters' => [
-                        'resource' => $this->resource,
-                        'format' => $this->format,
-                    ]
-                ]
-            ],
+            'links' => $this->createLinks(),
         ]);
 
         $actionGroup->addAction($action);
+    }
+
+    /**
+     * @return array
+     */
+    private function createLinks(): array
+    {
+        if (empty($this->links)) {
+            foreach ($this->formats as $format) {
+                $this->addLink($format);
+            }
+        }
+
+        return $this->links;
+    }
+
+    /**
+     * @param string $format
+     */
+    private function addLink(string $format): void
+    {
+        $this->links[$format] = [
+            'label' => 'fos.import_export.ui.types.' . $format,
+            'icon' => 'file archive',
+            'route' => 'app_export_data',
+            'parameters' => [
+                'resource' => $this->resource,
+                'format' => $format,
+            ]
+        ];
     }
 }

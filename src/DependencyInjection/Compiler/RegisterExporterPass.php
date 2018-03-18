@@ -13,6 +13,11 @@ use Symfony\Component\DependencyInjection\Reference;
 final class RegisterExporterPass implements CompilerPassInterface
 {
     /**
+     * @var array
+     */
+    private $typesAndFormats = [];
+
+    /**
      * {@inheritdoc}
      */
     public function process(ContainerBuilder $container)
@@ -33,23 +38,53 @@ final class RegisterExporterPass implements CompilerPassInterface
             }
             $type = $attributes[0]['type'];
             $format = $attributes[0]['format'];
-            $name = ExporterRegistry::buildServiceName($type, $format);
 
+            $name = ExporterRegistry::buildServiceName($type, $format);
             $exportersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
             if ($container->getParameter('sylius.exporter.web_ui')) {
-                $this->registerEventListenerForExportButton($container, $type, $format);
+                $this->registerTypeAndFormat($type, $format);
             }
+        }
+
+        if ($container->getParameter('sylius.exporter.web_ui') && !empty($this->typesAndFormats)) {
+            $this->registerEventListenersForExportButton($container);
+        }
+    }
+
+    /**
+     * @param string $type
+     * @param string $format
+     */
+    private function registerTypeAndFormat(string $type, string $format): void
+    {
+        if (!isset($this->typesAndFormats[$type])) {
+            $this->typesAndFormats[$type] = [];
+        }
+
+        if (!isset($this->typesAndFormats[$type][$format])) {
+            $this->typesAndFormats[$type][] = $format;
+        }
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     */
+    private function registerEventListenersForExportButton(ContainerBuilder $container): void
+    {
+        foreach($this->typesAndFormats as $type => $formats) {
+            $this->registerSingleEventListenerForExportButton($container, $type, $formats);
         }
     }
 
     /**
      * @param ContainerBuilder $container
      * @param string $type
+     * @param array $formats
      */
-    private function registerEventListenerForExportButton(ContainerBuilder $container, string $type, string $format): void
+    private function registerSingleEventListenerForExportButton(ContainerBuilder $container, string $type, array $formats): void
     {
-        $eventHookName = ExporterRegistry::buildGridButtonsEventHookName($type, $format) . '_export';
+        $eventHookName = ExporterRegistry::buildGridButtonsEventHookName($type, $formats) . '_export';
 
         if ($container->has($eventHookName)) {
             return;
@@ -62,7 +97,7 @@ final class RegisterExporterPass implements CompilerPassInterface
             )
             ->setAutowired(false)
             ->addArgument($type)
-            ->addArgument($format)
+            ->addArgument($formats)
             ->addTag(
                 'kernel.event_listener',
                 [
