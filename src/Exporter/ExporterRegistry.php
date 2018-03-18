@@ -26,11 +26,13 @@ class ExporterRegistry extends ServiceRegistry
 
     /**
      * @param string $type
-     * @param string $format
+     * @param array $formats
      * @return string
      */
-    public static function buildGridButtonsEventHookName(string $type, string $format): string
+    public static function buildGridButtonsEventHookName(string $type, array $formats): string
     {
+        $format = implode('_', $formats);
+
         return sprintf('%s_%s_%s', self::EVENT_HOOK_NAME_PREFIX_GRID_BUTTONS, $type, $format);
     }
 }
