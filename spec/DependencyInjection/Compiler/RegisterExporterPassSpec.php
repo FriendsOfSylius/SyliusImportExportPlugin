@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler\RegisterExporterPass;
-use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonListenerGridListener;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -49,7 +49,7 @@ class RegisterExporterPassSpec extends ObjectBehavior
 
         $container->register(
             'app.grid_event_listener.admin.crud_csv_exporter_format_export',
-            ExportButtonListenerGridListener::class
+            ExportButtonGridListener::class
         )->willReturn($blockEventDefinition);
 
         $blockEventDefinition->setAutowired(false)->willReturn($blockEventDefinition);

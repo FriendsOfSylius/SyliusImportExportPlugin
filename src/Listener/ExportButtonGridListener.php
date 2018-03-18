@@ -6,7 +6,7 @@ use Sylius\Component\Grid\Definition\Action;
 use Sylius\Component\Grid\Definition\ActionGroup;
 use Sylius\Component\Grid\Event\GridDefinitionConverterEvent;
 
-final class ExportButtonListenerGridListener
+final class ExportButtonGridListener
 {
     /**
      * @var string
@@ -19,7 +19,6 @@ final class ExportButtonListenerGridListener
     private $format;
 
     /**
-     * ExportButtonListenerGridListener constructor.
      * @param string $resource
      * @param string $format
      */
@@ -46,7 +45,7 @@ final class ExportButtonListenerGridListener
             return;
         }
 
-        $action = Action::fromNameAndType('name', 'links');
+        $action = Action::fromNameAndType('export', 'links');
         $action->setLabel('fos.import_export.ui.export');
         $action->setOptions([
             'class' => '',
