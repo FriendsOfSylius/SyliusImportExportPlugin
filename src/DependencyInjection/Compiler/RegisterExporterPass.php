@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
-use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonListenerGridListener;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -58,7 +58,7 @@ final class RegisterExporterPass implements CompilerPassInterface
         $container
             ->register(
                 $eventHookName,
-                ExportButtonListenerGridListener::class
+                ExportButtonGridListener::class
             )
             ->setAutowired(false)
             ->addArgument($type)
