@@ -21,6 +21,7 @@ services:
             - ["Id", "Code" ,"Enabled"]
         tags:
             - { name: sylius.exporter, type: country, format: csv }
+
     # CSV-Importers
     sylius.importer.countries.csv:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter

@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\CountryContext;
+use Sylius\Behat\Page\SymfonyPage;
+use Symfony\Component\Routing\RouterInterface;
 use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
-class CountriesContext implements Context
+final class CountriesContext extends SymfonyPage implements Context
 {
     /** @var ResourceIndexPageInterface */
     private $countryIndexPage;
@@ -17,10 +20,25 @@ class CountriesContext implements Context
     /** @var CountryContext */
     private $countryContext;
 
-    public function __construct(ResourceIndexPageInterface $countryIndexPage, CountryContext $countryContext)
-    {
+    public function __construct(
+        ResourceIndexPageInterface $countryIndexPage,
+        CountryContext $countryContext,
+        Session $session,
+        array $parameters,
+        RouterInterface $router
+    ) {
         $this->countryIndexPage = $countryIndexPage;
         $this->countryContext = $countryContext;
+
+        parent::__construct($session, $parameters, $router);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteName()
+    {
+        return 'sylius_admin_country_index';
     }
 
     /**
@@ -28,8 +46,37 @@ class CountriesContext implements Context
      */
     public function iImportCountryDataFromCsvFile(string $file, string $format)
     {
-        $this->countryIndexPage->open();
         $this->countryIndexPage->importData($file, $format);
+    }
+
+    /**
+     * @When I open the country admin index page
+     */
+    public function iOpenTheCountryIndexPage()
+    {
+        $this->countryIndexPage->open();
+    }
+
+    /**
+     * @Then I should see an export button
+     */
+    public function iShouldSeeExportButton()
+    {
+        Assert::assertEquals(
+            'Export',
+            $this->getElement('export_button_text')->getText()
+        );
+    }
+
+    /**
+     * @Then I should see a link to export countries to CSV
+     */
+    public function iShouldSeeExportCSVLink()
+    {
+        Assert::assertContains(
+            'CSV',
+            $this->getElement('export_links')->find('css', 'a.item')->getText()
+        );
     }
 
     /**
@@ -56,5 +103,16 @@ class CountriesContext implements Context
             $country,
             sprintf('Country with name "%s" does not exist', $countryname)
         );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedElements()
+    {
+        return array_merge(parent::getDefinedElements(), [
+            'export_button_text' => '.buttons div.dropdown span.text',
+            'export_links' => '.buttons div.dropdown div.menu'
+        ]);
     }
 }
