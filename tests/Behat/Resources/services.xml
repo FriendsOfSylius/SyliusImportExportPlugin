@@ -13,6 +13,9 @@
         <service id="test.behat.context.countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CountriesContext">
             <argument type="service" id="test.behat.page.country_index_page"/>
             <argument type="service" id="sylius.behat.context.transform.country"/>
+            <argument type="service" id="mink.default_session" />
+            <argument>%__behat__.mink.parameters%</argument>
+            <argument type="service" id="__symfony_shared__.router" />
             <tag name="fob.context_service" />
         </service>
         <service id="test.behat.context.customer_groups_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CustomerGroupsContext">

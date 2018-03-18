@@ -9,7 +9,8 @@ Feature: Importing countries from csv
 
   @ui
   Scenario: Importing countries based on a valid csv-file
-    When I import country data from "countries.csv" csv file
+    When I open the country admin index page
+    And I import country data from "countries.csv" csv file
     Then I should see a notification that the import was successful
     And I should see 2 countries in the list
     And the country "Germany" should appear in the registry
