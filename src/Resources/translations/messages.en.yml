@@ -6,3 +6,4 @@ fos:
             export: 'Export'
             types:
                 csv: 'CSV'
+                excel: 'Excel'

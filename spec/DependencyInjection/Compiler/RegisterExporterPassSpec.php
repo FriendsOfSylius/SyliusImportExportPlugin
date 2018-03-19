@@ -54,8 +54,7 @@ class RegisterExporterPassSpec extends ObjectBehavior
 
         $blockEventDefinition->setAutowired(false)->willReturn($blockEventDefinition);
 
-
-        $blockEventDefinition->addArgument('exporter_format')->willReturn($blockEventDefinition);
+        $blockEventDefinition->addArgument(['exporter_format'])->willReturn($blockEventDefinition);
         $blockEventDefinition->addArgument('csv')->willReturn($blockEventDefinition);
         $blockEventDefinition->addTag('kernel.event_listener',
             [
@@ -63,15 +62,10 @@ class RegisterExporterPassSpec extends ObjectBehavior
                 'method' => 'onSyliusGridAdmin',
             ])->willReturn($blockEventDefinition);
 
-
-                       $exporterRegistry->addMethodCall(
-                           'register',
-                           Argument::type('array')
-                       )->shouldBeCalled();
-
-
-
-
+       $exporterRegistry->addMethodCall(
+           'register',
+           Argument::type('array')
+       )->shouldBeCalled();
 
         /**
          * run the test

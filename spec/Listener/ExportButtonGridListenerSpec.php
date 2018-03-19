@@ -21,7 +21,7 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
 
     function let()
     {
-        $this->beConstructedWith('country', 'csv');
+        $this->beConstructedWith('country', ['csv', 'excel']);
     }
 
     function it_should_add_the_export_action()
@@ -38,6 +38,7 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
         $action = $actionGroup->getAction('export');
         Assert::same('fos.import_export.ui.export', $action->getLabel());
         Assert::isArray($action->getOptions()['links']);
+        Assert::count($action->getOptions()['links'], 2);
     }
 
     function it_should_add_the_export_action_when_main_action_group_is_not_present()
@@ -51,5 +52,6 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
         $action = $grid->getActionGroup('main')->getAction('export');
         Assert::same('fos.import_export.ui.export', $action->getLabel());
         Assert::isArray($action->getOptions()['links']);
+        Assert::count($action->getOptions()['links'], 2);
     }
 }
