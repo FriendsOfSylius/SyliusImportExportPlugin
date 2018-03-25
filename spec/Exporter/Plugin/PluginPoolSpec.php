@@ -51,6 +51,10 @@ class PluginPoolSpec extends ObjectBehavior
             'id2',
             'id3',
         ];
+
+        $plugin1->getFieldNames()->willReturn(['bla']);
+        $plugin2->getFieldNames()->willReturn(['test']);
+
         $plugin1->init($ids)->shouldBeCalled();
         $plugin2->init($ids)->shouldBeCalled();
         $this->initPlugins($ids);
@@ -77,6 +81,9 @@ class PluginPoolSpec extends ObjectBehavior
               ]
             );
 
+        $plugin1->getFieldNames()->willReturn(['description', 'name']);
+        $plugin2->getFieldNames()->willReturn(['description', 'name']);
+
         $this->getDataForId('id1')
             ->shouldReturn(
                 [
@@ -84,5 +91,23 @@ class PluginPoolSpec extends ObjectBehavior
                     'name' => 'testName',
                 ]
             );
+    }
+
+    function it_errors_if_not_all_keys_are_serviced(PluginInterface $plugin1)
+    {
+        $this->beConstructedWith([$plugin1], ['description', 'name', 'blabla']);
+
+        $plugin1->getFieldNames()->willReturn(['description', 'name']);
+
+        $plugin1
+            ->getData('id1', ['description', 'name', 'blabla'])
+            ->willReturn(
+                [
+                    'description' => '',
+                    'name' => 'testName',
+                ]
+            );
+
+        $this->shouldThrow(new \InvalidArgumentException('Not all defined export keys have been found: "blabla". Choose from: ""'))->during('getDataForId', ['id1']);
     }
 }
