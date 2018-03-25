@@ -6,10 +6,15 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 class PluginFactory implements PluginFactoryInterface
 {
-    public function create(string $namespaceOfPlugin): PluginInterface
+    /**
+     * {@inheritdoc}
+     */
+    public function create(string $pluginNamespace): PluginInterface
     {
-        if (class_exists($namespaceOfPlugin)) {
-            return new $namespaceOfPlugin();
+        if (!class_exists($pluginNamespace)) {
+            throw new \InvalidArgumentException(sprintf('Class "%s" does not exist', $pluginNamespace));
         }
+
+        return new $pluginNamespace();
     }
 }

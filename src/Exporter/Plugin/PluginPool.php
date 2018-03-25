@@ -9,20 +9,40 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
  */
 class PluginPool implements PluginPoolInterface
 {
-    /** @var PluginInterface[] */
+    /**
+     * @var PluginInterface[]
+     */
     private $plugins;
 
-    /** @var array */
+    /**
+     * @var array
+     */
     private $exportKeys;
 
+    /**
+     * @var array
+     */
+    private $exportKeysNotFound;
+
+    /**
+     * @var array
+     */
+    private $exportKeysAvailable = [];
+
+    /**
+     * @param array $plugins
+     * @param array $exportKeys
+     */
     public function __construct(array $plugins, array $exportKeys)
     {
         $this->plugins = $plugins;
         $this->exportKeys = $exportKeys;
+
+        $this->exportKeysNotFound = $exportKeys;
     }
 
     /**
-     * @return PluginInterface[]
+     * @inheritdoc
      */
     public function getPlugins(): array
     {
@@ -30,25 +50,34 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @param array $ids
+     * @inheritdoc
      */
     public function initPlugins(array $ids): void
     {
         foreach ($this->plugins as $plugin) {
             $plugin->init($ids);
+
+            $this->exportKeysAvailable = array_merge($this->exportKeysAvailable, $plugin->getFieldNames());
         }
     }
 
     /**
-     * @param string $id
-     *
-     * @return array
+     * @inheritdoc
      */
     public function getDataForId(string $id): array
     {
         $result = [];
+
         foreach ($this->plugins as $index => $plugin) {
             $result = $this->getDataForIdFromPlugin($id, $plugin, $result);
+        }
+
+        if (!empty($this->exportKeysNotFound)) {
+            throw new \InvalidArgumentException(sprintf(
+                'Not all defined export keys have been found: "%s". Choose from: "%s"',
+                implode(', ', $this->exportKeysNotFound),
+                implode(', ', $this->exportKeysAvailable)
+            ));
         }
 
         return $result;
@@ -67,6 +96,9 @@ class PluginPool implements PluginPoolInterface
             if (true === empty($result[$exportKey])) {
                 // no other plugin has delivered a value till now
                 $result[$exportKey] = $exportValue;
+
+                $foundKey = array_search($exportKey, $this->exportKeysNotFound);
+                unset($this->exportKeysNotFound[$foundKey]);
             }
         }
 
