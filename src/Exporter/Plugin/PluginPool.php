@@ -93,13 +93,15 @@ class PluginPool implements PluginPoolInterface
     private function getDataForIdFromPlugin(string $id, PluginInterface $plugin, array $result): array
     {
         foreach ($plugin->getData($id, $this->exportKeys) as $exportKey => $exportValue) {
-            if (true === empty($result[$exportKey])) {
-                // no other plugin has delivered a value till now
-                $result[$exportKey] = $exportValue;
-
-                $foundKey = array_search($exportKey, $this->exportKeysNotFound);
-                unset($this->exportKeysNotFound[$foundKey]);
+            if (false === empty($result[$exportKey])) {
+                continue;
             }
+
+            // no other plugin has delivered a value till now
+            $result[$exportKey] = $exportValue;
+
+            $foundKey = array_search($exportKey, $this->exportKeysNotFound);
+            unset($this->exportKeysNotFound[$foundKey]);
         }
 
         return $result;

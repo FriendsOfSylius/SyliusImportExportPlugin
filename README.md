@@ -220,6 +220,7 @@ Define your ResourceExporter in services_bar.yml (at the moment only csv is supp
         - "@sylius.exporter.bar_writer"
         - "@sylius.exporter.pluginpool.foo"
         - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
+        - "@sylius.exporters_transformer_pool" # Optional
      tags:
         - { name: sylius.exporter, type: foo, format: bar }
 ```
@@ -257,6 +258,7 @@ Define the Countries-Exporter in services_csv.yml
         - "@sylius.exporter.csv_writer"
         - "@sylius.exporter.pluginpool.countries"
         - ["Id", "Code" ,"Enabled"]
+        - "@sylius.exporters_transformer_pool" # Optional
      tags:
         - { name: sylius.exporter, type: country, format: csv }
 ```
