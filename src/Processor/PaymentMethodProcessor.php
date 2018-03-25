@@ -27,6 +27,7 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     /**
      * @param PaymentMethodFactoryInterface $factory
      * @param RepositoryInterface           $repository
+     * @param MetadataValidatorInterface    $metadataValidator
      * @param array                         $headerKeys
      */
     public function __construct(

@@ -34,6 +34,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
      * @param FactoryInterface $resourceFactory
      * @param RepositoryInterface $resourceRepository
      * @param PropertyAccessorInterface $propertyAccessor
+     * @param MetadataValidatorInterface $metadataValidator
      * @param array $headerKeys
      */
     public function __construct(

@@ -6,20 +6,12 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
-use FriendsOfSylius\SyliusImportExportPlugin\Form\ExportType;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
-use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
 
 final class ExportDataController extends Controller
 {
@@ -37,12 +29,11 @@ final class ExportDataController extends Controller
     }
 
     /**
-     * @param Request $request
      * @param string $resource
      * @param string $format
      * @return Response
      */
-    public function exportAction(Request $request, string $resource, string $format): Response
+    public function exportAction(string $resource, string $format): Response
     {
         $filename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
 
