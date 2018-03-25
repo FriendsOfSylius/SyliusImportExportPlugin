@@ -35,7 +35,12 @@ class ResourcePlugin implements ResourcePluginInterface
     /**
      * @var array
      */
-    private $data;
+    protected $data;
+
+    /**
+     * @var ResourceInterface[]
+     */
+    protected $resources;
 
     /**
      * @param RepositoryInterface $repository
@@ -67,6 +72,9 @@ class ResourcePlugin implements ResourcePluginInterface
             if ($this->hasPluginDataForExportKey($id, $exportKey)) {
                 $result[$exportKey] = $this->getDataForExportKey($id, $exportKey);
             }
+            else {
+                $result[$exportKey] = '';
+            }
         }
 
         return $result;
@@ -77,9 +85,9 @@ class ResourcePlugin implements ResourcePluginInterface
      */
     public function init(array $idsToExport): void
     {
-        $resources = $this->repository->findBy(['id' => $idsToExport]);
+        $this->resources = $this->repository->findBy(['id' => $idsToExport]);
 
-        foreach ($resources as $resource) {
+        foreach ($this->resources as $resource) {
             /** @var ResourceInterface $resource */
             $this->addDataForId($resource);
         }
@@ -91,6 +99,49 @@ class ResourcePlugin implements ResourcePluginInterface
     public function getFieldNames(): array
     {
         return $this->fieldNames;
+    }
+
+    /**
+     * @param string $id
+     * @param string $exportKey
+     *
+     * @return bool
+     */
+    protected function hasPluginDataForExportKey(string $id, string $exportKey): bool
+    {
+        return isset($this->data[$id][$exportKey]);
+    }
+
+    /**
+     * @param ResourceInterface $resource
+     * @param string $exportKey
+     *
+     * @return mixed
+     */
+    protected function getDataForResourceAndExportKey(ResourceInterface $resource, string $exportKey)
+    {
+        return $this->getDataForExportKey((string) $resource->getId(), $exportKey);
+    }
+
+    /**
+     * @param string $id
+     * @param string $exportKey
+     *
+     * @return mixed
+     */
+    protected function getDataForExportKey(string $id, string $exportKey)
+    {
+        return $this->data[$id][$exportKey];
+    }
+
+    /**
+     * @param ResourceInterface $resource
+     * @param string $field
+     * @param mixed $value
+     */
+    protected function addDataForResource(ResourceInterface $resource, string $field, $value): void
+    {
+        $this->data[$resource->getId()][$field] = $value;
     }
 
     /**
@@ -107,31 +158,15 @@ class ResourcePlugin implements ResourcePluginInterface
         foreach ($fields->getColumnNames() as $index => $field) {
             $this->fieldNames[$index] = ucfirst($field);
 
-            if ($this->propertyAccessor->isReadable($resource, $field)) {
-                $this->data[$resource->getId()][ucfirst($field)] = $this->propertyAccessor->getValue($resource, $field);
+            if (!$this->propertyAccessor->isReadable($resource, $field)) {
+                continue;
             }
+
+            $this->addDataForResource(
+                $resource,
+                ucfirst($field),
+                $this->propertyAccessor->getValue($resource, $field)
+            );
         }
-    }
-
-    /**
-     * @param string $id
-     * @param string $exportKey
-     *
-     * @return bool
-     */
-    private function hasPluginDataForExportKey(string $id, string $exportKey): bool
-    {
-        return isset($this->data[$id][$exportKey]);
-    }
-
-    /**
-     * @param string $id
-     * @param string $exportKey
-     *
-     * @return mixed
-     */
-    private function getDataForExportKey(string $id, string $exportKey)
-    {
-        return $this->data[$id][$exportKey];
     }
 }
