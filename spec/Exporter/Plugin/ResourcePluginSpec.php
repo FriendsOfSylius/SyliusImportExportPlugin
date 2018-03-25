@@ -45,11 +45,11 @@ class ResourcePluginSpec extends ObjectBehavior
         EntityManagerInterface $entityManager,
         ClassMetadata $classMetadata
     ) {
-        $idsToExport = [1, 2, 3];
+        $idsToExport = [1, 2];
 
         $repository->findBy(
             [
-                'id' => [1, 2, 3],
+                'id' => [1, 2],
             ]
         )->willReturn(
             [
@@ -138,7 +138,8 @@ class ResourcePluginSpec extends ObjectBehavior
                 'Description' => 'tax category for cars',
                 'Rates' => $carRates,
             ]);
-        $this->getData('3', ['Code', 'Name', 'Description', 'Rates'])
-            ->shouldReturn([]);
+
+        // Should error when unknown ID is asked
+        $this->shouldThrow()->during('getData', ['3', ['Code', 'Name', 'Description', 'Rates']]);
     }
 }
