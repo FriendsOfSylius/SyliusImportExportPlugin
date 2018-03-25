@@ -27,6 +27,23 @@ services:
             - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
             - importer
 
+    # Default export transformers and a default transformers pool
+    sylius.exporters_transformer_pool:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool
+        arguments: [!tagged sylius.exporter_transformer]
+
+    sylius.exporters_transformer_datetime:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\DateTimeToStringHandler
+        tags:
+            - { name: sylius.exporter_transformer }
+
+    sylius.exporters_transformer_integer_money_format:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\IntegerToMoneyFormatHandler
+        arguments:
+            - ['Total']
+        tags:
+            - { name: sylius.exporter_transformer }
+
     # Commands
     sylius.command.import_data:
         class: FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand
