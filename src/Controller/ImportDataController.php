@@ -19,25 +19,37 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class ImportDataController
 {
-    /** @var ServiceRegistry */
+    /**
+     * @var ServiceRegistry
+     */
     private $registry;
 
-    /** @var UrlGeneratorInterface */
+    /**
+     * @var UrlGeneratorInterface
+     */
     private $router;
 
-    /** @var Session */
+    /**
+     * @var Session
+     */
     private $session;
 
-    /** @var FormFactoryInterface */
+    /**
+     * @var FormFactoryInterface
+     */
     private $formFactory;
 
-    /** @var \Twig_Environment */
+    /**
+     * @var \Twig_Environment
+     */
     private $twig;
 
     /**
      * @param ServiceRegistry $registry
      * @param UrlGeneratorInterface $router
      * @param Session $session
+     * @param FormFactoryInterface $formFactory
+     * @param \Twig_Environment $twig
      */
     public function __construct(
         ServiceRegistry $registry,
