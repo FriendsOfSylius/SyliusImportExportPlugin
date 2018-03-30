@@ -71,8 +71,7 @@ class ResourcePlugin implements PluginInterface
         foreach ($keysToExport as $exportKey) {
             if ($this->hasPluginDataForExportKey($id, $exportKey)) {
                 $result[$exportKey] = $this->getDataForExportKey($id, $exportKey);
-            }
-            else {
+            } else {
                 $result[$exportKey] = '';
             }
         }

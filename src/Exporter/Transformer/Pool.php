@@ -25,7 +25,7 @@ final class Pool implements TransformerPoolInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function handle($key, $value)
     {
@@ -41,6 +41,7 @@ final class Pool implements TransformerPoolInterface
         foreach ($this->generator->getIterator() as $key => $handler) {
             if ($key === 0) {
                 $this->handler = $handler;
+
                 continue;
             }
 

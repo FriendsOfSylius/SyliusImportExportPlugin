@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer;
 
 interface HandlerInterface
@@ -9,7 +11,7 @@ interface HandlerInterface
      *
      * @param HandlerInterface $handler
      */
-    public function setSuccessor(HandlerInterface $handler): void;
+    public function setSuccessor(self $handler): void;
 
     /**
      * Loops through handlers until it gets satisfying result

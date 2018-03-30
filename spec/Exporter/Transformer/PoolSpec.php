@@ -1,14 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\DateTimeToStringHandler;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\HandlerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 
 class PoolSpec extends ObjectBehavior
@@ -25,7 +24,7 @@ class PoolSpec extends ObjectBehavior
 
     function let(HandlerInterface $dateTimeToStringHandler)
     {
-        $generator = new RewindableGenerator(function() use ($dateTimeToStringHandler) {
+        $generator = new RewindableGenerator(function () use ($dateTimeToStringHandler) {
             return [$dateTimeToStringHandler];
         }, $count = 1);
 

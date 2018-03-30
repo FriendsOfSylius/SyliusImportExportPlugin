@@ -24,7 +24,8 @@ final class DateTimeToStringHandler extends Handler
     /**
      * @param mixed $key
      * @param \DateTimeInterface $value
-     * @return null|string
+     *
+     * @return string|null
      */
     protected function process($key, $value)
     {
@@ -34,6 +35,7 @@ final class DateTimeToStringHandler extends Handler
     /**
      * @param mixed $key
      * @param mixed $value
+     *
      * @return bool
      */
     protected function allows($key, $value): bool

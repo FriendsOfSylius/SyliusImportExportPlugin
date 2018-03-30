@@ -12,12 +12,13 @@ abstract class Handler implements HandlerInterface
     private $successor;
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     final public function setSuccessor(HandlerInterface $handler): void
     {
         if ($this->successor === null) {
             $this->successor = $handler;
+
             return;
         }
 
@@ -25,7 +26,7 @@ abstract class Handler implements HandlerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     final public function handle($key, $value)
     {
@@ -47,7 +48,7 @@ abstract class Handler implements HandlerInterface
      *
      * @param mixed $value
      *
-     * @return null|mixed
+     * @return mixed|null
      */
     abstract protected function process($key, $value);
 
@@ -56,6 +57,7 @@ abstract class Handler implements HandlerInterface
      *
      * @param mixed $key
      * @param mixed $value
+     *
      * @return bool
      */
     abstract protected function allows($key, $value): bool;

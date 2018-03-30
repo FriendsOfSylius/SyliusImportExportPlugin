@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FriendsOfSylius\SyliusImportExportPlugin\Listener;
 
 use Sylius\Component\Grid\Definition\Action;
@@ -91,7 +93,7 @@ final class ExportButtonGridListener
             'parameters' => [
                 'resource' => $this->resource,
                 'format' => $format,
-            ]
+            ],
         ];
     }
 }

@@ -72,7 +72,7 @@ final class RegisterExporterPass implements CompilerPassInterface
      */
     private function registerEventListenersForExportButton(ContainerBuilder $container): void
     {
-        foreach($this->typesAndFormats as $type => $formats) {
+        foreach ($this->typesAndFormats as $type => $formats) {
             $this->registerSingleEventListenerForExportButton($container, $type, $formats);
         }
     }

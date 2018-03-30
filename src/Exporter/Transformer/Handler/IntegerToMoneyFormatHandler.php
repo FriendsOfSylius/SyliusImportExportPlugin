@@ -31,6 +31,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * @param mixed $key
      * @param mixed $value
+     *
      * @return mixed
      */
     protected function process($key, $value)
@@ -41,6 +42,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * @param mixed $key
      * @param mixed $value
+     *
      * @return bool
      */
     protected function allows($key, $value): bool

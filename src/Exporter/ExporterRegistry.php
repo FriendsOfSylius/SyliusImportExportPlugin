@@ -27,6 +27,7 @@ class ExporterRegistry extends ServiceRegistry
     /**
      * @param string $type
      * @param array $formats
+     *
      * @return string
      */
     public static function buildGridButtonsEventHookName(string $type, array $formats): string

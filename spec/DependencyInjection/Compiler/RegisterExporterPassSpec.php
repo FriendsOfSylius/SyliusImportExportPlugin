@@ -62,7 +62,7 @@ class RegisterExporterPassSpec extends ObjectBehavior
                 'method' => 'onSyliusGridAdmin',
             ])->willReturn($blockEventDefinition);
 
-       $exporterRegistry->addMethodCall(
+        $exporterRegistry->addMethodCall(
            'register',
            Argument::type('array')
        )->shouldBeCalled();

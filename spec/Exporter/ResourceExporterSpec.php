@@ -10,7 +10,6 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\DateTimeToStringHandler;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
@@ -39,8 +38,7 @@ class ResourceExporterSpec extends ObjectBehavior
         WriterInterface $writer,
         PluginPoolInterface $pluginPool,
         PluginInterface $plugin
-    )
-    {
+    ) {
         $generator = new RewindableGenerator(function () {
             return [new DateTimeToStringHandler()];
         }, $count = 1);

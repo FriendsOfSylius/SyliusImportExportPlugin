@@ -9,7 +9,6 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
@@ -31,6 +30,7 @@ final class ExportDataController extends Controller
     /**
      * @param string $resource
      * @param string $format
+     *
      * @return Response
      */
     public function exportAction(string $resource, string $format): Response
@@ -44,6 +44,7 @@ final class ExportDataController extends Controller
      * @param string $exporter
      * @param string $format
      * @param string $filename
+     *
      * @return Response
      */
     private function exportData(string $exporter, string $format, string $filename): Response

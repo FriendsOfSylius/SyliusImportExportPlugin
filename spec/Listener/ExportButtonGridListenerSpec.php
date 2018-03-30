@@ -1,12 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Listener;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
-use spec\Sylius\Component\Grid\Definition\ActionGroupSpec;
-use Sylius\Component\Grid\Definition\Action;
 use Sylius\Component\Grid\Definition\ActionGroup;
 use Sylius\Component\Grid\Definition\Grid;
 use Sylius\Component\Grid\Event\GridDefinitionConverterEvent;

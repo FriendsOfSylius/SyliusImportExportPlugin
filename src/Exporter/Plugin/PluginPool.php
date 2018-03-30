@@ -42,7 +42,7 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getPlugins(): array
     {
@@ -50,7 +50,7 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function initPlugins(array $ids): void
     {
@@ -62,7 +62,7 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function getDataForId(string $id): array
     {

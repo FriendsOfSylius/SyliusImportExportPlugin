@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
@@ -7,7 +9,6 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\DateTi
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\HandlerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Webmozart\Assert\Assert;
 

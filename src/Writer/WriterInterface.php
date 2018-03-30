@@ -18,6 +18,7 @@ interface WriterInterface
 
     /**
      * @param string $filename
+     *
      * @return string
      */
     public function getFileContent(string $filename): string;

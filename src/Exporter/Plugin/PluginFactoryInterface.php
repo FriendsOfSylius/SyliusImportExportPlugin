@@ -8,6 +8,7 @@ interface PluginFactoryInterface
 {
     /**
      * @param string $pluginNamespace
+     *
      * @return PluginInterface
      */
     public function create(string $pluginNamespace): PluginInterface;
