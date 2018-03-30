@@ -10,8 +10,8 @@
         "symfony/stopwatch": "^3.3"
     },
     "suggest": {
-        "portphp/excel": "To support importing excel files, use dev-master",
-        "portphp/csv": "To support importing csv files, use dev-master"
+        "portphp/excel": "To support importing excel files, use version ^1.1",
+        "portphp/csv": "To support importing csv files, use version ^1.1"
     },
     "require-dev": {
         "portphp/excel": "^1.1.0",
