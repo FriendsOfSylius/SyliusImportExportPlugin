@@ -100,7 +100,7 @@ class ResourceExporter implements ResourceExporterInterface
         $data = $this->pluginPool->getDataForId($id);
 
         if (null !== $this->transformerPool) {
-            foreach($data as $key => $value) {
+            foreach ($data as $key => $value) {
                 $data[$key] = $this->transformerPool->handle($key, $value);
             }
         }

@@ -38,7 +38,7 @@ final class Pool implements TransformerPoolInterface
 
     private function registerHandlers(): void
     {
-        foreach($this->generator->getIterator() as $key => $handler) {
+        foreach ($this->generator->getIterator() as $key => $handler) {
             if ($key === 0) {
                 $this->handler = $handler;
                 continue;
