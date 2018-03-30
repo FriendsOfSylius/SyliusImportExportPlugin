@@ -85,6 +85,7 @@ final class ImportDataController
             $this->importData($importer, $form);
         }
         $referer = (string) $request->headers->get('referer');
+
         return new RedirectResponse($referer);
     }
 

@@ -66,6 +66,7 @@ before_script:
 script:
     - composer validate --strict
     - bin/phpstan.phar analyse -c phpstan.neon -l max src/
+    - bin/easy-coding-standard check src/ spec/
 
 #    - bin/phpunit
     - bin/phpspec run
