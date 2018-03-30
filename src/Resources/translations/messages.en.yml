@@ -3,3 +3,7 @@ fos:
         ui:
             import: 'Import'
             import_data: 'Import Data'
+            export: 'Export'
+            types:
+                csv: 'CSV'
+                excel: 'Excel'

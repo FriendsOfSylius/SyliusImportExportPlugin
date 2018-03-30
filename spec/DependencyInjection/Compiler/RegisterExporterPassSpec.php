@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler\RegisterExporterPass;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -29,13 +30,11 @@ class RegisterExporterPassSpec extends ObjectBehavior
         Definition $blockEventDefinition
     ) {
         $exporterType = 'csv';
-        /**
-         * prepare the mock for the container builder
-         */
-        $container->getParameter('sylius.importer.web_ui')->willReturn(true);
+
         $container->has('sylius.exporters_registry')->willReturn(true);
-        $container->has(Argument::type('string'))->willReturn(false);
+
         $container->findDefinition('sylius.exporters_registry')->willReturn($exporterRegistry);
+
         $container->findTaggedServiceIds('sylius.exporter')->willReturn([
             'exporter_id' => [
                 [
@@ -45,13 +44,28 @@ class RegisterExporterPassSpec extends ObjectBehavior
             ],
         ]);
 
-        /**
-         * prepare the mock for the exporterRegistry
-         */
+        $container->getParameter('sylius.exporter.web_ui')->willReturn(true);
+        $container->has('app.grid_event_listener.admin.crud_csv_exporter_format_export')->willReturn(false);
+
+        $container->register(
+            'app.grid_event_listener.admin.crud_csv_exporter_format_export',
+            ExportButtonGridListener::class
+        )->willReturn($blockEventDefinition);
+
+        $blockEventDefinition->setAutowired(false)->willReturn($blockEventDefinition);
+
+        $blockEventDefinition->addArgument(['exporter_format'])->willReturn($blockEventDefinition);
+        $blockEventDefinition->addArgument('csv')->willReturn($blockEventDefinition);
+        $blockEventDefinition->addTag('kernel.event_listener',
+            [
+                'event' => 'sylius.grid.admin_csv',
+                'method' => 'onSyliusGridAdmin',
+            ])->willReturn($blockEventDefinition);
+
         $exporterRegistry->addMethodCall(
-            'register',
-            Argument::type('array')
-        )->shouldBeCalled();
+           'register',
+           Argument::type('array')
+       )->shouldBeCalled();
 
         /**
          * run the test

@@ -7,8 +7,8 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePluginInterface;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -32,7 +32,7 @@ class ResourcePluginSpec extends ObjectBehavior
 
     function it_implements_the_resource_plugin_interface()
     {
-        $this->shouldImplement(ResourcePluginInterface::class);
+        $this->shouldImplement(PluginInterface::class);
     }
 
     function it_loads_data_for_tax_category_on_init(
@@ -45,11 +45,11 @@ class ResourcePluginSpec extends ObjectBehavior
         EntityManagerInterface $entityManager,
         ClassMetadata $classMetadata
     ) {
-        $idsToExport = [1, 2, 3];
+        $idsToExport = [1, 2];
 
         $repository->findBy(
             [
-                'id' => [1, 2, 3],
+                'id' => [1, 2],
             ]
         )->willReturn(
             [
@@ -138,7 +138,8 @@ class ResourcePluginSpec extends ObjectBehavior
                 'Description' => 'tax category for cars',
                 'Rates' => $carRates,
             ]);
-        $this->getData('3', ['Code', 'Name', 'Description', 'Rates'])
-            ->shouldReturn([]);
+
+        // Should error when unknown ID is asked
+        $this->shouldThrow()->during('getData', ['3', ['Code', 'Name', 'Description', 'Rates']]);
     }
 }

@@ -27,4 +27,9 @@ interface PluginInterface
      * @throws \UnexpectedValueException
      */
     public function init(array $idsToExport): void;
+
+    /**
+     * @return array
+     */
+    public function getFieldNames(): array;
 }

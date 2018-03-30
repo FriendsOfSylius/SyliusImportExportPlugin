@@ -57,6 +57,9 @@ fos_sylius_import_export:
         fail_on_incomplete:   false
         # if to stop the import process in case of a failure
         stop_on_failure:      false
+    exporter:
+      # set to false to not add export buttons
+        web_ui:               true      
 ```
 
 ### Routing configuration (only necessary if `web_ui` is set to `true`):
@@ -217,6 +220,7 @@ Define your ResourceExporter in services_bar.yml (at the moment only csv is supp
         - "@sylius.exporter.bar_writer"
         - "@sylius.exporter.pluginpool.foo"
         - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
+        - "@sylius.exporters_transformer_pool" # Optional
      tags:
         - { name: sylius.exporter, type: foo, format: bar }
 ```
@@ -254,6 +258,7 @@ Define the Countries-Exporter in services_csv.yml
         - "@sylius.exporter.csv_writer"
         - "@sylius.exporter.pluginpool.countries"
         - ["Id", "Code" ,"Enabled"]
+        - "@sylius.exporters_transformer_pool" # Optional
      tags:
         - { name: sylius.exporter, type: country, format: csv }
 ```
