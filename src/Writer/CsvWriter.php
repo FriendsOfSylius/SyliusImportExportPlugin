@@ -40,10 +40,15 @@ class CsvWriter implements WriterInterface
     /**
      * {@inheritdoc}
      */
-    public function getFileContent(string $filename): string
+    public function getFileContent(): string
     {
+        $this->writer->setCloseStreamOnFinish(true);
+
+        rewind($this->writer->getStream());
+        $contents = stream_get_contents($this->writer->getStream());
+
         $this->writer->finish();
 
-        return file_get_contents($filename);
+        return $contents;
     }
 }

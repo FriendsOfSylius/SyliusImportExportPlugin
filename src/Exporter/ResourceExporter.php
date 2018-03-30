@@ -62,9 +62,9 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * {@inheritdoc}
      */
-    public function getExportedData(string $filename): string
+    public function getExportedData(): string
     {
-        return $this->writer->getFileContent($filename);
+        return $this->writer->getFileContent();
     }
 
     /**
