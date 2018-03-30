@@ -10,7 +10,7 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class ResourcePlugin implements ResourcePluginInterface
+class ResourcePlugin implements PluginInterface
 {
     /**
      * @var array
