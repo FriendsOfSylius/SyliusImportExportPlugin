@@ -35,19 +35,19 @@ final class ExportDataController extends Controller
      */
     public function exportAction(string $resource, string $format): Response
     {
-        $filename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
+        $outputFilename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
 
-        return $this->exportData($resource, $format, $filename);
+        return $this->exportData($resource, $format, $outputFilename);
     }
 
     /**
      * @param string $exporter
      * @param string $format
-     * @param string $filename
+     * @param string $outputFilename
      *
      * @return Response
      */
-    private function exportData(string $exporter, string $format, string $filename): Response
+    private function exportData(string $exporter, string $format, string $outputFilename): Response
     {
         $name = ExporterRegistry::buildServiceName($exporter, $format);
 
@@ -61,7 +61,6 @@ final class ExportDataController extends Controller
         /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
         $repository = $this->get('sylius.repository.' . $exporter);
 
-        $service->setExportFile($filename);
         $allItems = $repository->findAll();
         $idsToExport = [];
         foreach ($allItems as $item) {
@@ -70,13 +69,11 @@ final class ExportDataController extends Controller
         }
         $service->export($idsToExport);
 
-        $exportedData = $service->getExportedData($filename);
-
-        $response = new Response($exportedData);
+        $response = new Response($service->getExportedData());
 
         $disposition = $response->headers->makeDisposition(
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
-            $filename
+            $outputFilename
         );
 
         $response->headers->set('Content-Disposition', $disposition);
