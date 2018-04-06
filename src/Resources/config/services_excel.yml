@@ -1,8 +1,27 @@
 services:
+    sylius.exporter.excel_writer_factory:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Writer\PortExcelWriterFactory
+
+    sylius.exporter.excel_writer:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Writer\ExcelWriter
+        arguments:
+            - '@sylius.exporter.excel_writer_factory'
+
     sylius.factory.excel_reader:
         class: Port\Excel\ExcelReaderFactory
         arguments:
             - 1
+
+    # Excel-Exporters
+    sylius.exporter.countries.xlsx:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+        arguments:
+            - "@sylius.exporter.excel_writer"
+            - "@sylius.exporter.pluginpool.countries"
+            - ["Id", "Code" ,"Enabled"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: country, format: xlsx }
 
     # Excel-Importers
     sylius.importer.countries.excel:

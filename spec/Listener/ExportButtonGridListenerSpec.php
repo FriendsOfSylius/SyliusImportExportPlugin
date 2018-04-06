@@ -20,7 +20,7 @@ class ExportButtonGridListenerSpec extends ObjectBehavior
 
     function let()
     {
-        $this->beConstructedWith('country', ['csv', 'excel']);
+        $this->beConstructedWith('country', ['csv', 'xlsx']);
     }
 
     function it_should_add_the_export_action()

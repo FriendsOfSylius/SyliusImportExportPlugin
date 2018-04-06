@@ -17,7 +17,7 @@ class ImportType extends AbstractType
             ->add('format', ChoiceType::class, [
                 'choices' => [
                     'CSV' => 'csv',
-                    'Excel' => 'excel',
+                    'Excel' => 'xlsx',
                 ],
                 'expanded' => false,
                 'multiple' => false,

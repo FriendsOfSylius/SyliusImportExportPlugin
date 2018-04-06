@@ -11,6 +11,7 @@
     },
     "suggest": {
         "portphp/excel": "To support importing excel files, use version ^1.1",
+        "ext-zip": "To support writing of Excel files",
         "portphp/csv": "To support importing csv files, use version ^1.1"
     },
     "require-dev": {
