@@ -10,7 +10,7 @@ Feature: Importing payment methods from excel with the user interface
     @ui
     Scenario: Importing payment methods based on a valid excel file
         When I browse payment methods
-        And I import payment methods data from "payment-methods.xlsx" excel file
+        And I import payment methods data from "payment-methods.xlsx" xlsx file
         Then I should see a notification that the import was successful
         And I should see 2 payment methods in the list
         And the payment method "Offline" should be in the registry

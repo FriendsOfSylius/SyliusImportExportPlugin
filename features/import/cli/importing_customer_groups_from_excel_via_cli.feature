@@ -9,7 +9,7 @@ Feature: Importing customer-groups from excel with the command-line-interface
 
   @cli_importer
   Scenario: Importing defined customer-groups with the cli-command
-    When I import "customer_group" data from excel file "customer_groups.xlsx" file with the cli-command
+    When I import "customer_group" data from xlsx file "customer_groups.xlsx" file with the cli-command
     Then I should see "Imported" in the output
     And I should have at least the following customer-group ids in the database:
       | PREMIUM |
