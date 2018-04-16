@@ -32,7 +32,7 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_csv.yml');
         }
 
-        if (class_exists('Port\Excel\ExcelReaderFactory')) {
+        if (class_exists('Port\Excel\ExcelReaderFactory') && extension_loaded('zip')) {
             $loader->load('services_excel.yml');
         }
     }

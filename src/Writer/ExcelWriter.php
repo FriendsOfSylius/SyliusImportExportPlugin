@@ -55,7 +55,7 @@ class ExcelWriter implements WriterInterface
     public function setFile(string $filename): void
     {
         if (null !== $this->writer) {
-            throw new InvalidOrderException('Make sure `setFile` is called before performing any write actions');
+            throw new InvalidOrderException('Make sure method `setFile` is called before calling the `write` method');
         }
 
         $this->filename = $filename;
