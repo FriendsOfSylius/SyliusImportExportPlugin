@@ -1,33 +1,14 @@
 services:
-    sylius.csv_writer:
-        class: Port\Csv\CsvWriter
-
-    sylius.exporter.csv_writer:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Writer\CsvWriter
+    sylius.factory.excel_reader:
+        class: Port\Excel\ExcelReaderFactory
         arguments:
-            - '@sylius.csv_writer'
+            - 1
 
-    sylius.factory.csv_reader:
-        class: Port\Csv\CsvReaderFactory
-        arguments:
-            - 0
-
-    # CSV-Exporters
-    sylius.exporter.countries.csv:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
-        arguments:
-            - "@sylius.exporter.csv_writer"
-            - "@sylius.exporter.pluginpool.countries"
-            - ["Id", "Code" ,"Enabled"]
-            - "@sylius.exporters_transformer_pool"
-        tags:
-            - { name: sylius.exporter, type: country, format: csv }
-
-    # CSV-Importers
-    sylius.importer.countries.csv:
+    # Excel-Importers
+    sylius.importer.countries.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.excel_reader"
             - "@sylius.manager.country"
             - "@sylius.processor.countries"
             - "@sylius.importer.result"
@@ -35,12 +16,12 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: country, format: csv }
+            - { name: sylius.importer, type: country, format: xlsx }
 
-    sylius.importer.customer_group.csv:
+    sylius.importer.customer_group.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.excel_reader"
             - "@sylius.manager.customer_group"
             - "@sylius.processor.customer_groups"
             - "@sylius.importer.result"
@@ -48,12 +29,12 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: customer_group, format: csv }
+            - { name: sylius.importer, type: customer_group, format: xlsx }
 
-    sylius.importer.payment_methods.csv:
+    sylius.importer.payment_methods.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.excel_reader"
             - "@sylius.manager.payment_method"
             - "@sylius.processor.payment_methods"
             - "@sylius.importer.result"
@@ -61,12 +42,12 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: payment_method, format: csv }
+            - { name: sylius.importer, type: payment_method, format: xlsx }
 
-    sylius.importer.tax_categories.csv:
+    sylius.importer.tax_categories.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.csv_reader"
+            - "@sylius.factory.excel_reader"
             - "@sylius.manager.tax_category"
             - "@sylius.processor.tax_categories"
             - "@sylius.importer.result"
@@ -74,4 +55,4 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: tax_category, format: csv }
+            - { name: sylius.importer, type: tax_category, format: xlsx }
