@@ -24,7 +24,7 @@
 1. Require relevant portphp format support
 
   - Run `composer require portphp/csv --no-update` to add CSV format support
-  - Run `composer require portphp/excel --no-update` to add Excel format support
+  - Run `composer require portphp/excel --no-update` to add Excel format support (also install the `zip` PHP extension)
 
 2. Require and install the plugin
 

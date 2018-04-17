@@ -1,27 +1,8 @@
 services:
-    sylius.csv_writer:
-        class: Port\Csv\CsvWriter
-
-    sylius.exporter.csv_writer:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Writer\CsvWriter
-        arguments:
-            - '@sylius.csv_writer'
-
     sylius.factory.csv_reader:
         class: Port\Csv\CsvReaderFactory
         arguments:
             - 0
-
-    # CSV-Exporters
-    sylius.exporter.countries.csv:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
-        arguments:
-            - "@sylius.exporter.csv_writer"
-            - "@sylius.exporter.pluginpool.countries"
-            - ["Id", "Code" ,"Enabled"]
-            - "@sylius.exporters_transformer_pool"
-        tags:
-            - { name: sylius.exporter, type: country, format: csv }
 
     # CSV-Importers
     sylius.importer.countries.csv:

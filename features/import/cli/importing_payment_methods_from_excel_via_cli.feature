@@ -9,7 +9,7 @@ Feature: Importing payment methods from excel with the command-line-interface
 
     @cli_importer
     Scenario: Importing defined payment-methods with the cli-command
-        When I import "payment_method" data from excel file "payment-methods.xlsx" file with the cli-command
+        When I import "payment_method" data from xlsx file "payment-methods.xlsx" file with the cli-command
         Then I should see "Imported" in the output
         And I should have at least the following payment-method ids in the database:
           | OFFLINE |
