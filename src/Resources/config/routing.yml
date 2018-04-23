@@ -24,4 +24,4 @@ app_export_data:
         _controller: sylius.controller.export_data:exportAction
         _sylius:
             paginate: false
-            filterable: true
+            filterable: false

@@ -7,12 +7,14 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Pagerfanta\Pagerfanta;
+use Sylius\Bundle\ResourceBundle\Controller\RequestConfiguration;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourcesCollectionProviderInterface;
 use Sylius\Bundle\ResourceBundle\Grid\View\ResourceGridView;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Metadata\Metadata;
 use Sylius\Component\Resource\Model\ResourceInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -84,14 +86,10 @@ final class ExportDataController extends Controller
         if (!$this->registry->has($name)) {
             throw new \Exception(sprintf("No exporter found of type '%s' for format '%s'", $exporter, $format));
         }
-
-        /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
-        $repository = $this->get('sylius.repository.' . $resource);
-        /** @var ResourceGridView|array $resources */
-        $resources = $this->resourcesCollectionProvider->get($configuration, $repository);
-
         /** @var ResourceExporterInterface $service */
         $service = $this->registry->get($name);
+
+        $resources = $this->findResources($configuration, $this->findRepository($resource));
         $service->export($this->getResourceIds($resources));
 
         $response = new Response($service->getExportedData());
@@ -102,6 +100,26 @@ final class ExportDataController extends Controller
         $response->headers->set('Content-Disposition', $disposition);
 
         return $response;
+    }
+
+    /**
+     * @param string $resource
+     *
+     * @return RepositoryInterface
+     *
+     * @throws \Exception
+     */
+    private function findRepository(string $resource): RepositoryInterface
+    {
+        $repositoryName = sprintf('sylius.repository.%s', $resource);
+        if (!$this->has($repositoryName)) {
+            throw new \Exception(sprintf("No repository found with id '%s'", $repositoryName));
+        }
+
+        /** @var \Sylius\Component\Resource\Repository\RepositoryInterface $repository */
+        $repository = $this->get($repositoryName);
+
+        return $repository;
     }
 
     /**
@@ -152,5 +170,16 @@ final class ExportDataController extends Controller
 
             return $results;
         }
+    }
+
+    /**
+     * @param RequestConfiguration $configuration
+     * @param RepositoryInterface $repository
+     *
+     * @return ResourceGridView|array
+     */
+    private function findResources(RequestConfiguration $configuration, RepositoryInterface $repository)
+    {
+        return $this->resourcesCollectionProvider->get($configuration, $repository);
     }
 }
