@@ -32,6 +32,7 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('web_ui')->defaultTrue()->end()
+                        ->booleanNode('zip_extension_optional')->defaultFalse()->end()
                     ->end()
                 ->end()
             ->end()
