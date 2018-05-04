@@ -58,8 +58,10 @@ fos_sylius_import_export:
         # if to stop the import process in case of a failure
         stop_on_failure:      false
     exporter:
-      # set to false to not add export buttons
-        web_ui:               true      
+        # set to false to not add export buttons
+        web_ui:               true   
+        # set to true to load excel export services without checking for the zip extension
+        zip_extension_optional:   false 
 ```
 
 ### Routing configuration (only necessary if `web_ui` is set to `true`):
