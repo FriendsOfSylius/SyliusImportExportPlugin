@@ -222,7 +222,15 @@ Define your ResourceExporter in services_bar.yml (at the moment only csv is supp
         - ["HeaderKey0", "HeaderKey1" ,"HeaderKey2"]
         - "@sylius.exporters_transformer_pool" # Optional
      tags:
-        - { name: sylius.exporter, type: foo, format: bar }
+        - { name: sylius.exporter, type: app.foo, format: bar }
+```
+
+Note that `app.foo` is the alias as you have named your resource:
+
+```yaml
+sylius_resource:
+    resources:
+        app.foo:
 ```
 
 Define the PluginPool for your ResourceExporter in services.yml
@@ -246,8 +254,23 @@ Define the Plugin for your FooResource in services.yml
           - "@sylius.repository.foo"
           - "@property_accessor"
           - "@doctrine.orm.entity_manager"
-
 ```
+
+In case you want to use the grid filters (in the admin) to filter your output, add to your routing:
+
+```yaml
+app_export_data_foo:
+    path: /export/sylius.resource/{format}
+    methods: [GET]
+    defaults:
+        resource: sylius.foo
+        _controller: sylius.controller.export_data:exportAction
+        _sylius:
+            filterable: true
+            grid: sylius_admin_foo # Name of defined grid here
+```
+
+In case you don't add it, the UI exporters will still function. They will simply load all data of that resource for the export (similar as CLI).
 
 ### A real example
 Define the Countries-Exporter in services_csv.yml
@@ -260,7 +283,7 @@ Define the Countries-Exporter in services_csv.yml
         - ["Id", "Code" ,"Enabled"]
         - "@sylius.exporters_transformer_pool" # Optional
      tags:
-        - { name: sylius.exporter, type: country, format: csv }
+        - { name: sylius.exporter, type: sylius.country, format: csv }
 ```
 
 Define the PluginPool for the Countries-Exporter in services.yml
@@ -292,6 +315,21 @@ The exporter will instantly be available as a exporter for the command line.
    ```bash
    $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
    ```
+   
+Optional add the routing:
+
+```yaml
+app_export_data_country:
+    path: /admin/export/sylius.country/{format}
+    methods: [GET]
+    defaults:
+        resource: sylius.country
+        _controller: sylius.controller.export_data:exportAction
+        _sylius:
+            filterable: true
+            grid: sylius_admin_country
+```   
+   
 
 ### PluginPool
 The idea behind the plugin pool is, to be able to have different kind of plugins, which could possibly

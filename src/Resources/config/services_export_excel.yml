@@ -16,4 +16,4 @@ services:
             - ["Id", "Code" ,"Enabled"]
             - "@sylius.exporters_transformer_pool"
         tags:
-            - { name: sylius.exporter, type: country, format: xlsx }
+            - { name: sylius.exporter, type: sylius.country, format: xlsx }

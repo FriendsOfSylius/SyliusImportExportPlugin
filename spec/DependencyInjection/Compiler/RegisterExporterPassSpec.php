@@ -56,6 +56,9 @@ class RegisterExporterPassSpec extends ObjectBehavior
 
         $blockEventDefinition->addArgument(['exporter_format'])->willReturn($blockEventDefinition);
         $blockEventDefinition->addArgument('csv')->willReturn($blockEventDefinition);
+        $blockEventDefinition->addMethodCall('setRequest', Argument::that(function ($input) {
+            return is_array($input);
+        }))->willReturn($blockEventDefinition);
         $blockEventDefinition->addTag('kernel.event_listener',
             [
                 'event' => 'sylius.grid.admin_csv',

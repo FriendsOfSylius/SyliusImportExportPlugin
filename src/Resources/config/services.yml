@@ -13,6 +13,8 @@ services:
           class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
           arguments:
               - "@sylius.exporters_registry"
+              - "@sylius.resource_controller.request_configuration_factory"
+              - "@sylius.resource_controller.resources_collection_provider"
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:

@@ -7,9 +7,15 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Listener;
 use Sylius\Component\Grid\Definition\Action;
 use Sylius\Component\Grid\Definition\ActionGroup;
 use Sylius\Component\Grid\Event\GridDefinitionConverterEvent;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 final class ExportButtonGridListener
 {
+    /**
+     * @var RequestStack
+     */
+    private $requestStack;
+
     /**
      * @var string
      */
@@ -33,6 +39,14 @@ final class ExportButtonGridListener
     {
         $this->resource = $resource;
         $this->formats = $formats;
+    }
+
+    /**
+     * @param RequestStack $requestStack
+     */
+    public function setRequest(RequestStack $requestStack)
+    {
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -86,14 +100,22 @@ final class ExportButtonGridListener
      */
     private function addLink(string $format): void
     {
+        $parameters = [
+            'resource' => $this->resource,
+            'format' => $format,
+        ];
+
+        $currentRequest = $this->requestStack->getCurrentRequest();
+        if ($currentRequest) {
+            // @TODO Find way to validate the list of criteria injected
+            $parameters['criteria'] = $currentRequest->query->get('criteria');
+        }
+
         $this->links[$format] = [
             'label' => 'fos.import_export.ui.types.' . $format,
             'icon' => 'file archive',
             'route' => 'app_export_data',
-            'parameters' => [
-                'resource' => $this->resource,
-                'format' => $format,
-            ],
+            'parameters' => $parameters,
         ];
     }
 }
