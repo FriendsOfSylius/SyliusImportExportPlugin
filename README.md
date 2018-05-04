@@ -320,7 +320,7 @@ Optional add the routing:
 
 ```yaml
 app_export_data_country:
-    path: /export/sylius.country/{format}
+    path: /admin/export/sylius.country/{format}
     methods: [GET]
     defaults:
         resource: sylius.country
