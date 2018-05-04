@@ -260,7 +260,7 @@ In case you want to use the grid filters (in the admin) to filter your output, a
 
 ```yaml
 app_export_data_foo:
-    path: /export/sylius.resource/{format}
+    path: /admin/export/sylius.resource/{format}
     methods: [GET]
     defaults:
         resource: sylius.foo
