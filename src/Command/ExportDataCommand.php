@@ -65,7 +65,7 @@ final class ExportDataCommand extends Command
             $this->listExporters($input, $output, $message);
         }
         $format = $input->getOption('format');
-        $name = ExporterRegistry::buildServiceName($exporter, $format);
+        $name = ExporterRegistry::buildServiceName(('sylius.' . $exporter), $format);
 
         if (!$this->exporterRegistry->has($name)) {
             $message = sprintf(
@@ -118,7 +118,7 @@ final class ExportDataCommand extends Command
         $exporters = [];
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
-            $exporters[$exporter[0]][] = $exporter[1];
+            $exporters[$exporter[1]][] = $exporter[2];
         }
 
         $list = [];
