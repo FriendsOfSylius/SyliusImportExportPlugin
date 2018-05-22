@@ -31,14 +31,14 @@ class DateTimeToStringHandlerSpec extends ObjectBehavior
 
     function it_should_process_directly()
     {
-        $date = \DateTime::createFromFormat('Y-m-d', '2018-01-01');
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', '2018-01-01 13:02:26');
         $this->handle('test', $date)->shouldBeString();
-        $this->handle('test', $date)->shouldBe('2018-01-01');
+        $this->handle('test', $date)->shouldBe('2018-01-01 13:02:26');
     }
 
     function it_should_process_via_pool()
     {
-        $date = \DateTime::createFromFormat('Y-m-d', '2018-01-01');
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s', '2018-01-01 13:02:26');
 
         $generator = new RewindableGenerator(function () {
             return [$this->getWrappedObject()];
@@ -48,6 +48,6 @@ class DateTimeToStringHandlerSpec extends ObjectBehavior
 
         $result = $pool->handle('test', $date);
 
-        Assert::same('2018-01-01', $result);
+        Assert::same('2018-01-01 13:02:26', $result);
     }
 }
