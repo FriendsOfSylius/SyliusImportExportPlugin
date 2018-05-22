@@ -65,7 +65,7 @@ final class ExportDataCommand extends Command
             $this->listExporters($input, $output, $message);
         }
         $format = $input->getOption('format');
-        $name = ExporterRegistry::buildServiceName(('sylius.' . $exporter), $format);
+        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
 
         if (!$this->exporterRegistry->has($name)) {
             $message = sprintf(
