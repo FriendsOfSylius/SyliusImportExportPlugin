@@ -124,7 +124,7 @@ class CliBaseContext implements Context
     /**
      * @When I export :exporterType data as :format to the file :filename with the cli-command
      */
-    public function iExportDataToACsvFileFileWithTheCliCommand($exporterType, $format, $filename)
+    public function iExportDataToSpecificFiletypeFileWithTheCliCommand($exporterType, $format, $filename)
     {
         $this->cliArguments = [$exporterType, $filename];
 
