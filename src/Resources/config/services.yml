@@ -42,7 +42,7 @@ services:
     sylius.exporters_transformer_integer_money_format:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\IntegerToMoneyFormatHandler
         arguments:
-            - ['Total']
+            - ['Items_total', 'Adjustments_total', 'Total']
         tags:
             - { name: sylius.exporter_transformer }
 
@@ -71,12 +71,26 @@ services:
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
 
+    sylius.exporter.plugin.resource.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.order"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
     # PluginPools for Exporters. Can contain multiple Plugins
     sylius.exporter.pluginpool.countries:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.countries"]
             - ["Id", "Code" ,"Enabled"]
+
+    sylius.exporter.pluginpool.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.orders"]
+            - ["Id", "Number" ,"Notes", "State", "Checkout_completed_at", "Items_total", "Adjustments_total", "Total", "Created_at", "Updated_at", "Currency_code", "Locale_code", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Customer_ip"]
+
     # Service for gathering Information about Import
     sylius.importer.result:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult

@@ -17,3 +17,14 @@ services:
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.country, format: xlsx }
+
+    sylius.exporter.orders.xlsx:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+        arguments:
+            - "@sylius.exporter.excel_writer"
+            - "@sylius.exporter.pluginpool.orders"
+            - ["Id", "Number" ,"Notes", "State", "Checkout_completed_at", "Items_total", "Adjustments_total", "Total", "Created_at", "Updated_at", "Currency_code", "Locale_code", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Customer_ip"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.order, format: xlsx }
+    
