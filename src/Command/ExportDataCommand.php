@@ -65,7 +65,7 @@ final class ExportDataCommand extends Command
             $this->listExporters($input, $output, $message);
         }
         $format = $input->getOption('format');
-        $name = ExporterRegistry::buildServiceName($exporter, $format);
+        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
 
         if (!$this->exporterRegistry->has($name)) {
             $message = sprintf(
@@ -116,13 +116,16 @@ final class ExportDataCommand extends Command
         $output->writeln('<info>Available exporters:</info>');
         $all = array_keys($this->exporterRegistry->all());
         $exporters = [];
+        // "sylius.country.csv" is an example of an exporter
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
-            $exporters[$exporter[0]][] = $exporter[1];
+            // saves the exporter in the exporters array, sets the exporterentity as the first key of the 2d array and the exportertypes each in the second array
+            $exporters[$exporter[1]][] = $exporter[2];
         }
 
         $list = [];
         foreach ($exporters as $exporter => $formats) {
+            // prints the exporterentity, implodes the types and outputs them in a form
             $list[] = sprintf(
                 '%s (formats: %s)',
                 $exporter,
