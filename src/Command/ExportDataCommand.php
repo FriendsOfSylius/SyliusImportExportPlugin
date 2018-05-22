@@ -116,13 +116,16 @@ final class ExportDataCommand extends Command
         $output->writeln('<info>Available exporters:</info>');
         $all = array_keys($this->exporterRegistry->all());
         $exporters = [];
+        // "sylius.country.csv" is an example of an exporter
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
+            // saves the exporter in the exporters array, sets the exporterentity as the first key of the 2d array and the exportertypes each in the second array
             $exporters[$exporter[1]][] = $exporter[2];
         }
 
         $list = [];
         foreach ($exporters as $exporter => $formats) {
+            // prints the exporterentity, implodes the types and outputs them in a form
             $list[] = sprintf(
                 '%s (formats: %s)',
                 $exporter,
