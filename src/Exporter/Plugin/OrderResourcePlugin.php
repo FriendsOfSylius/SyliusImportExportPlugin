@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Entities\Address;
-use Sylius\Component\Order\Model\Order;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Doctrine\ORM\EntityManagerInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
-
     /**
      * @param RepositoryInterface $repository
      * @param PropertyAccessorInterface $propertyAccessor
@@ -38,10 +35,10 @@ class OrderResourcePlugin extends ResourcePlugin
         foreach ($this->resources as $resource) {
             // insert customer information to specific fields
             if ($resource->getCustomer()) {
-                $this->addDataForResource($resource, 'Gender', $resource->getCustomer()->getGender()?$resource->getCustomer()->getGender():'');
-                $this->addDataForResource($resource, 'Full_name', $resource->getCustomer()->getFullName()?$resource->getCustomer()->getFullName():'');
-                $this->addDataForResource($resource, 'Telephone', $resource->getCustomer()->getPhoneNumber()?$resource->getCustomer()->getPhoneNumber():'');
-                $this->addDataForResource($resource, 'Email', $resource->getCustomer()->getEmail()?$resource->getCustomer()->getEmail():'');
+                $this->addDataForResource($resource, 'Gender', $resource->getCustomer()->getGender() ? $resource->getCustomer()->getGender() : '');
+                $this->addDataForResource($resource, 'Full_name', $resource->getCustomer()->getFullName() ? $resource->getCustomer()->getFullName() : '');
+                $this->addDataForResource($resource, 'Telephone', $resource->getCustomer()->getPhoneNumber() ? $resource->getCustomer()->getPhoneNumber() : '');
+                $this->addDataForResource($resource, 'Email', $resource->getCustomer()->getEmail() ? $resource->getCustomer()->getEmail() : '');
             }
 
             // insert shippingadress to the address field
@@ -49,10 +46,10 @@ class OrderResourcePlugin extends ResourcePlugin
                 $shippingAddress = $resource->getShippingAddress();
                 $this->addDataForResource($resource, 'Address', sprintf(
                     '%s %s, %s, %s',
-                    $shippingAddress->getStreet()?$shippingAddress->getStreet():'',
-                    $shippingAddress->getPostcode()?$shippingAddress->getPostcode():'',
-                    $shippingAddress->getCity()?$shippingAddress->getCity():'',
-                    $shippingAddress->getCountryCode()?$shippingAddress->getCountryCode():''
+                    $shippingAddress->getStreet() ? $shippingAddress->getStreet() : '',
+                    $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
+                    $shippingAddress->getCity() ? $shippingAddress->getCity() : '',
+                    $shippingAddress->getCountryCode() ? $shippingAddress->getCountryCode() : ''
                 ));
             }
 
@@ -84,5 +81,4 @@ class OrderResourcePlugin extends ResourcePlugin
             $this->addDataForResource($resource, 'Product_list', $str);
         }
     }
-
 }
