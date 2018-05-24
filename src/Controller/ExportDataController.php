@@ -89,8 +89,16 @@ final class ExportDataController extends Controller
         /** @var ResourceExporterInterface $service */
         $service = $this->registry->get($name);
 
-        $resources = $this->findResources($configuration, $this->findRepository($resource));
-        $service->export($this->getResourceIds($resources));
+        /** @var RepositoryInterface $repository */
+        $repository = $this->container->get('sylius.repository.' . $resource);
+        $allItems = $repository->findAll();
+        $idsToExport = [];
+        foreach ($allItems as $item) {
+            /** @var ResourceInterface $item */
+            $idsToExport[] = $item->getId();
+        }
+
+        $service->export($idsToExport);
 
         $response = new Response($service->getExportedData());
         $disposition = $response->headers->makeDisposition(
