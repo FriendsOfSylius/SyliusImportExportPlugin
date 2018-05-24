@@ -58,7 +58,7 @@ class ResourceExporterSpec extends ObjectBehavior
         $data = [
             'key1' => 'value1',
             'key2' => 'value2',
-            'key3' => \DateTime::createFromFormat('Y-m-d', '2018-01-01'),
+            'key3' => \DateTime::createFromFormat('Y-m-d H:i:s', '2018-01-01 13:02:26'),
         ];
 
         $pluginPool->getDataForId('id_of_data')->willReturn($data);
@@ -76,7 +76,7 @@ class ResourceExporterSpec extends ObjectBehavior
         $dataTransformed = [
             'key1' => 'value1',
             'key2' => 'value2',
-            'key3' => '2018-01-01',
+            'key3' => '2018-01-01 13:02:26',
         ];
 
         $writer

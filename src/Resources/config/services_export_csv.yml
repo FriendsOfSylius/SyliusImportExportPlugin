@@ -17,3 +17,14 @@ services:
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.country, format: csv }
+
+    sylius.exporter.orders.csv:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
+        arguments:
+            - "@sylius.exporter.csv_writer"
+            - "@sylius.exporter.pluginpool.orders"
+            - ["Number", "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.order, format: csv }
+    

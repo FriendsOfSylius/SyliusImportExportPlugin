@@ -16,6 +16,16 @@ app_export_data_country:
             filterable: true
             grid: sylius_admin_country
 
+app_export_data_order:
+    path: /export/sylius.order/{format}
+    methods: [GET]
+    defaults:
+        resource: sylius.order
+        _controller: sylius.controller.export_data:exportAction
+        _sylius:
+            filterable: true
+            grid: sylius_admin_order
+
 ## Backup route
 app_export_data:
     path: /export/{resource}/{format}
