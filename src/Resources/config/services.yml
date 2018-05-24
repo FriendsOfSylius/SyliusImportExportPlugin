@@ -89,7 +89,7 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.orders"]
-            - ["Number", "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Address" , "Customer_ip", "Notes"]
+            - ["Number", "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
 
     # Service for gathering Information about Import
     sylius.importer.result:

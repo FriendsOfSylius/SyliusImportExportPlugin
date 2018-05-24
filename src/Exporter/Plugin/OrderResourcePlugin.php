@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Entities\Address;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -41,15 +40,29 @@ class OrderResourcePlugin extends ResourcePlugin
                 $this->addDataForResource($resource, 'Email', $resource->getCustomer()->getEmail() ? $resource->getCustomer()->getEmail() : '');
             }
 
-            // insert shippingadress to the address field
+            // insert shippingaddress to the specific field
             if ($resource->getShippingAddress()) {
                 $shippingAddress = $resource->getShippingAddress();
-                $this->addDataForResource($resource, 'Address', sprintf(
-                    '%s %s, %s, %s',
+                $this->addDataForResource($resource, 'Shipping_address', sprintf(
+                    '%s, %s, %s, %s, %s',
+                    $shippingAddress->getFullName() ? $shippingAddress->getFullName() : '',
                     $shippingAddress->getStreet() ? $shippingAddress->getStreet() : '',
-                    $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
                     $shippingAddress->getCity() ? $shippingAddress->getCity() : '',
+                    $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
                     $shippingAddress->getCountryCode() ? $shippingAddress->getCountryCode() : ''
+                ));
+            }
+
+            // insert billingaddress to the specific field
+            if ($resource->getBillingAddress()) {
+                $billingAddress = $resource->getBillingAddress();
+                $this->addDataForResource($resource, 'Billing_address', sprintf(
+                    '%s, %s, %s, %s, %s',
+                    $billingAddress->getFullName() ? $billingAddress->getFullName() : '',
+                    $billingAddress->getStreet() ? $billingAddress->getStreet() : '',
+                    $billingAddress->getCity() ? $billingAddress->getCity() : '',
+                    $billingAddress->getPostcode() ? $billingAddress->getPostcode() : '',
+                    $billingAddress->getCountryCode() ? $billingAddress->getCountryCode() : ''
                 ));
             }
 
