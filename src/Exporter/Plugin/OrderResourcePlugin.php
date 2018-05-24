@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Core\Model\OrderItemInterface;
+use Sylius\Component\Product\Model\ProductInterface;
+use Sylius\Component\Product\Model\ProductVariantInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -34,10 +38,11 @@ class OrderResourcePlugin extends ResourcePlugin
         foreach ($this->resources as $resource) {
             // insert customer information to specific fields
             if ($resource->getCustomer()) {
-                $this->addDataForResource($resource, 'Gender', $resource->getCustomer()->getGender() ? $resource->getCustomer()->getGender() : '');
-                $this->addDataForResource($resource, 'Full_name', $resource->getCustomer()->getFullName() ? $resource->getCustomer()->getFullName() : '');
-                $this->addDataForResource($resource, 'Telephone', $resource->getCustomer()->getPhoneNumber() ? $resource->getCustomer()->getPhoneNumber() : '');
-                $this->addDataForResource($resource, 'Email', $resource->getCustomer()->getEmail() ? $resource->getCustomer()->getEmail() : '');
+                $customer = $resource->getCustomer();
+                $this->addDataForResource($resource, 'Gender', $customer->getGender() ? $customer->getGender() : '');
+                $this->addDataForResource($resource, 'Full_name', $customer->getFullName() ? $customer->getFullName() : '');
+                $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber() ? $customer->getPhoneNumber() : '');
+                $this->addDataForResource($resource, 'Email', $customer->getEmail() ? $customer->getEmail() : '');
             }
 
             // insert shippingaddress to the specific field
