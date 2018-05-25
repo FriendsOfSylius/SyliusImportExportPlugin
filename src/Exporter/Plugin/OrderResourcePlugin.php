@@ -4,17 +4,13 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
-
     /**
      * {@inheritdoc}
      */
@@ -131,5 +127,4 @@ class OrderResourcePlugin extends ResourcePlugin
 
         $this->addDataForResource($resource, 'Product_list', $str);
     }
-
 }
