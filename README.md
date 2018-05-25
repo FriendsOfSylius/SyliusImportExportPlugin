@@ -81,7 +81,8 @@ sylius_import_export:
 
 ### Available exporter types
 
-* country (csv)
+* country (csv, excel)
+* order (csv, excel)
 
 ## Example import files
 
