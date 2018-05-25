@@ -38,7 +38,7 @@ class OrderResourcePlugin extends ResourcePlugin
     /**
      * @param OrderInterface $resource
      */
-    private function addCustomerData(OrderInterface $resource)
+    private function addCustomerData(OrderInterface $resource): void
     {
         $customer = $resource->getCustomer();
         if (null !== $customer) {
@@ -52,7 +52,7 @@ class OrderResourcePlugin extends ResourcePlugin
     /**
      * @param OrderInterface $resource
      */
-    private function addShippingAddressData(OrderInterface $resource)
+    private function addShippingAddressData(OrderInterface $resource): void
     {
         $shippingAddress = $resource->getShippingAddress();
         if (null !== $shippingAddress) {
@@ -70,7 +70,7 @@ class OrderResourcePlugin extends ResourcePlugin
     /**
      * @param OrderInterface $resource
      */
-    private function addBillingAddressData(OrderInterface $resource)
+    private function addBillingAddressData(OrderInterface $resource): void
     {
         $billingAddress = $resource->getBillingAddress();
         if (null !== $billingAddress) {
@@ -90,7 +90,7 @@ class OrderResourcePlugin extends ResourcePlugin
      *
      * @return array
      */
-    private function getItemsAndCount(OrderInterface $resource)
+    private function getItemsAndCount(OrderInterface $resource): array
     {
         $items = [];
 
@@ -114,7 +114,7 @@ class OrderResourcePlugin extends ResourcePlugin
     /**
      * @param OrderInterface $resource
      */
-    private function addOrderItemData(array $items, OrderInterface $resource)
+    private function addOrderItemData(array $items, OrderInterface $resource): void
     {
         $str = '';
 
