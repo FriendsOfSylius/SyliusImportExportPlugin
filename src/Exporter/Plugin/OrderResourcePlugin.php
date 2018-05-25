@@ -21,19 +21,13 @@ class OrderResourcePlugin extends ResourcePlugin
         /** @var OrderInterface $resource */
         foreach ($this->resources as $resource) {
             // insert customer information to specific fields
-            if ($resource->getCustomer()) {
-                $this->addCustomerData($resource);
-            }
+            $this->addCustomerData($resource);
 
             // insert shippingaddress to the specific field
-            if ($resource->getShippingAddress()) {
-                $this->addShippingAddressData($resource);
-            }
+            $this->addShippingAddressData($resource);
 
             // insert billingaddress to the specific field
-            if ($resource->getBillingAddress()) {
-                $this->addBillingAddressData($resource);
-            }
+            $this->addBillingAddressData($resource);
 
             $items = $this->getItemsAndCount($resource);
 
@@ -47,10 +41,12 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addCustomerData(OrderInterface $resource)
     {
         $customer = $resource->getCustomer();
-        $this->addDataForResource($resource, 'Gender', $customer->getGender() ? $customer->getGender() : '');
-        $this->addDataForResource($resource, 'Full_name', $customer->getFullName() ? $customer->getFullName() : '');
-        $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber() ? $customer->getPhoneNumber() : '');
-        $this->addDataForResource($resource, 'Email', $customer->getEmail() ? $customer->getEmail() : '');
+        if (null !== $customer) {
+            $this->addDataForResource($resource, 'Gender', $customer->getGender() ? $customer->getGender() : '');
+            $this->addDataForResource($resource, 'Full_name', $customer->getFullName() ? $customer->getFullName() : '');
+            $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber() ? $customer->getPhoneNumber() : '');
+            $this->addDataForResource($resource, 'Email', $customer->getEmail() ? $customer->getEmail() : '');
+        }
     }
 
     /**
@@ -59,14 +55,16 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addShippingAddressData(OrderInterface $resource)
     {
         $shippingAddress = $resource->getShippingAddress();
-        $this->addDataForResource($resource, 'Shipping_address', sprintf(
-            '%s, %s, %s, %s, %s',
-            $shippingAddress->getFullName() ? $shippingAddress->getFullName() : '',
-            $shippingAddress->getStreet() ? $shippingAddress->getStreet() : '',
-            $shippingAddress->getCity() ? $shippingAddress->getCity() : '',
-            $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
-            $shippingAddress->getCountryCode() ? $shippingAddress->getCountryCode() : ''
-        ));
+        if (null !== $shippingAddress) {
+            $this->addDataForResource($resource, 'Shipping_address', sprintf(
+                '%s, %s, %s, %s, %s',
+                $shippingAddress->getFullName() ? $shippingAddress->getFullName() : '',
+                $shippingAddress->getStreet() ? $shippingAddress->getStreet() : '',
+                $shippingAddress->getCity() ? $shippingAddress->getCity() : '',
+                $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
+                $shippingAddress->getCountryCode() ? $shippingAddress->getCountryCode() : ''
+            ));
+        }
     }
 
     /**
@@ -75,14 +73,16 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addBillingAddressData(OrderInterface $resource)
     {
         $billingAddress = $resource->getBillingAddress();
-        $this->addDataForResource($resource, 'Billing_address', sprintf(
-            '%s, %s, %s, %s, %s',
-            $billingAddress->getFullName() ? $billingAddress->getFullName() : '',
-            $billingAddress->getStreet() ? $billingAddress->getStreet() : '',
-            $billingAddress->getCity() ? $billingAddress->getCity() : '',
-            $billingAddress->getPostcode() ? $billingAddress->getPostcode() : '',
-            $billingAddress->getCountryCode() ? $billingAddress->getCountryCode() : ''
-        ));
+        if (null !== $billingAddress) {
+            $this->addDataForResource($resource, 'Billing_address', sprintf(
+                '%s, %s, %s, %s, %s',
+                $billingAddress->getFullName() ? $billingAddress->getFullName() : '',
+                $billingAddress->getStreet() ? $billingAddress->getStreet() : '',
+                $billingAddress->getCity() ? $billingAddress->getCity() : '',
+                $billingAddress->getPostcode() ? $billingAddress->getPostcode() : '',
+                $billingAddress->getCountryCode() ? $billingAddress->getCountryCode() : ''
+            ));
+        }
     }
 
     /**
