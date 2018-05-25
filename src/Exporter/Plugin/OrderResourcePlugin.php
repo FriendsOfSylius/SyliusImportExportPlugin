@@ -14,18 +14,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
-    /**
-     * @param RepositoryInterface $repository
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param EntityManagerInterface $entityManager
-     */
-    public function __construct(
-        RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor,
-        EntityManagerInterface $entityManager
-    ) {
-        parent::__construct($repository, $propertyAccessor, $entityManager);
-    }
 
     /**
      * {@inheritdoc}
