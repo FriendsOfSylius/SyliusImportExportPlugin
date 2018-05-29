@@ -66,7 +66,7 @@ class ExcelWriter implements WriterInterface
      */
     public function getFileContent(): string
     {
-        $this->writer->finish();
+        $this->finish();
 
         $contents = file_get_contents($this->filename);
 
@@ -85,5 +85,13 @@ class ExcelWriter implements WriterInterface
             $this->writer = $this->portExcelWriterFactory->get($this->filename);
             $this->writer->prepare();
         }
+    }
+
+    /**
+     * Wrap up the writer after all items have been written
+     */
+    public function finish()
+    {
+        $this->writer->finish();
     }
 }

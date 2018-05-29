@@ -20,4 +20,9 @@ interface WriterInterface
      * @return string
      */
     public function getFileContent(): string;
+
+    /**
+     * Wrap up the writer after all items have been written
+     */
+    public function finish(): void;
 }

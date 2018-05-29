@@ -92,6 +92,7 @@ final class ExportDataCommand extends Command
         $service->setExportFile($file);
 
         $service->export($idsToExport);
+        $service->finish();
 
         $message = sprintf(
             "<info>Exported %d item(s) to '%s' via the %s exporter</info>",

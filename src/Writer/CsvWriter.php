@@ -52,8 +52,16 @@ class CsvWriter implements WriterInterface
         rewind($this->writer->getStream());
         $contents = stream_get_contents($this->writer->getStream());
 
-        $this->writer->finish();
+        $this->finish();
 
         return $contents;
+    }
+
+    /**
+     * Wrap up the writer after all items have been written
+     */
+    public function finish()
+    {
+        $this->writer->finish();
     }
 }
