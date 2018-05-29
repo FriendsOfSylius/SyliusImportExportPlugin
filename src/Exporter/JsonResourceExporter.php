@@ -9,7 +9,6 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
  */
 class JsonResourceExporter extends ResourceExporter
 {
-
     /**
      * {@inheritdoc}
      */
@@ -38,5 +37,4 @@ class JsonResourceExporter extends ResourceExporter
 
         $this->writer->write($dataForId);
     }
-
 }

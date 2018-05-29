@@ -34,7 +34,6 @@ class JsonWriter implements WriterInterface
             $this->writer->writeObjectProperty($dataName, $dataValue);
         }
         $this->writer->writeEndObject();
-
     }
 
     /**
@@ -55,5 +54,4 @@ class JsonWriter implements WriterInterface
 
         return $this->writer->getEncoded();
     }
-
 }
