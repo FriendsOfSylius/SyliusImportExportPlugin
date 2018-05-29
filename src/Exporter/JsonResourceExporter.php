@@ -16,7 +16,7 @@ class JsonResourceExporter extends ResourceExporter
     public function export(array $idsToExport): void
     {
         $this->pluginPool->initPlugins($idsToExport);
-
+        $this->writer->prepare();
         foreach ($idsToExport as $id) {
             $this->writeDataForId((string) $id);
         }
