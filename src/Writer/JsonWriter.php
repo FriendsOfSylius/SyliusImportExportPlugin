@@ -20,6 +20,8 @@ class JsonWriter implements WriterInterface
         JsonWriterPlus $writer
     ) {
         $this->writer = $writer;
+        $this->writer->startJson();
+        $this->writer->writeStartArray();
     }
 
     /**
@@ -54,9 +56,4 @@ class JsonWriter implements WriterInterface
         return $this->writer->getEncoded();
     }
 
-    public function prepare(): void
-    {
-        $this->writer->startJson();
-        $this->writer->writeStartArray();
-    }
 }
