@@ -41,7 +41,7 @@ class JsonWriter implements WriterInterface
      */
     public function setFile(string $filename): void
     {
-        // not in use
+        // used by the command not controller
     }
 
     /**
