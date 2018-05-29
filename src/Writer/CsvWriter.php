@@ -58,9 +58,9 @@ class CsvWriter implements WriterInterface
     }
 
     /**
-     * Wrap up the writer after all items have been written
+     * {@inheritdoc}
      */
-    public function finish()
+    public function finish(): void
     {
         $this->writer->finish();
     }
