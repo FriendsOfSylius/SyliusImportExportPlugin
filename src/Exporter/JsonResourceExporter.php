@@ -12,13 +12,17 @@ class JsonResourceExporter extends ResourceExporter
     /**
      * {@inheritdoc}
      */
-    public function export(array $idsToExport): void
+    public function export(array $idsToExport, string $filename = 'exportfile'): void
     {
         $this->pluginPool->initPlugins($idsToExport);
 
         foreach ($idsToExport as $id) {
             $this->writeDataForId((string) $id);
         }
+
+        $myfile = fopen($filename, "w") or die("Unable to open file!");
+        fwrite($myfile, $this->writer->getFileContent());
+        fclose($myfile);
     }
 
     /**

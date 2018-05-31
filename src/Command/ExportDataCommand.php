@@ -91,7 +91,7 @@ final class ExportDataCommand extends Command
         $service = $this->exporterRegistry->get($name);
         $service->setExportFile($file);
 
-        $service->export($idsToExport);
+        $service->export($idsToExport, $file);
 
         $message = sprintf(
             "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
