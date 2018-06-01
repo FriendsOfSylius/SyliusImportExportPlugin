@@ -20,7 +20,11 @@ class JsonResourceExporter extends ResourceExporter
             $this->writeDataForId((string) $id);
         }
 
-        $myfile = fopen($filename, "w") or die("Unable to open file!");
+        $myfile = fopen($filename, 'w');
+        if (!$myfile) {
+            throw new Exception('File open failed.');
+        }
+
         fwrite($myfile, $this->writer->getFileContent());
         fclose($myfile);
     }
