@@ -16,22 +16,22 @@ class ResourceImporter implements ImporterInterface
     private $readerFactory;
 
     /** @var ObjectManager */
-    private $objectManager;
+    protected $objectManager;
 
     /** @var ResourceProcessorInterface */
-    private $resourceProcessor;
+    protected $resourceProcessor;
 
     /** @var ImporterResultInterface */
-    private $result;
+    protected $result;
 
     /** @var int */
-    private $batchSize;
+    protected $batchSize;
 
     /** @var bool */
-    private $failOnIncomplete;
+    protected $failOnIncomplete;
 
     /** @var bool */
-    private $stopOnFailure;
+    protected $stopOnFailure;
 
     public function __construct(
         ReaderFactory $readerFactory,
