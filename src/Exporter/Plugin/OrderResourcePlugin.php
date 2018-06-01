@@ -4,15 +4,40 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Service\StringArrayConcatenation;
-use FriendsOfSylius\SyliusImportExportPlugin\Service\StringArrayConcatenationInterface;
+use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\AddressConcatenationInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
+    /**
+     * @var AddressConcatenationInterface
+     */
+    private $addressConcatenation;
+
+    /**
+     * @param RepositoryInterface $repository
+     * @param PropertyAccessorInterface $propertyAccessor
+     * @param EntityManagerInterface $entityManager
+     * @param AddressConcatenationInterface $addressConcatenation
+     */
+    public function __construct(
+        RepositoryInterface $repository,
+        PropertyAccessorInterface $propertyAccessor,
+        EntityManagerInterface $entityManager,
+        AddressConcatenationInterface $addressConcatenation
+    ) {
+        $this->repository = $repository;
+        $this->propertyAccessor = $propertyAccessor;
+        $this->entityManager = $entityManager;
+        $this->addressConcatenation = $addressConcatenation;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -43,12 +68,15 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addCustomerData(OrderInterface $resource): void
     {
         $customer = $resource->getCustomer();
-        if (null !== $customer) {
-            $this->addDataForResource($resource, 'Gender', $customer->getGender());
-            $this->addDataForResource($resource, 'Full_name', $customer->getFullName());
-            $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber());
-            $this->addDataForResource($resource, 'Email', $customer->getEmail());
+
+        if (null === $customer) {
+            return;
         }
+
+        $this->addDataForResource($resource, 'Gender', $customer->getGender());
+        $this->addDataForResource($resource, 'Full_name', $customer->getFullName());
+        $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber());
+        $this->addDataForResource($resource, 'Email', $customer->getEmail());
     }
 
     /**
@@ -57,20 +85,14 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addShippingAddressData(OrderInterface $resource): void
     {
         $shippingAddress = $resource->getShippingAddress();
-        if (null !== $shippingAddress) {
-            /** @var StringArrayConcatenationInterface $stringArrayConcatenation */
-            $stringArrayConcatenation = new StringArrayConcatenation();
 
-            $shippingInfoString = $stringArrayConcatenation->getConcatenatedString([
-                $shippingAddress->getFullName(),
-                $shippingAddress->getStreet(),
-                $shippingAddress->getCity(),
-                $shippingAddress->getPostcode(),
-                $shippingAddress->getCountryCode(),
-            ]);
-
-            $this->addDataForResource($resource, 'Shipping_address', $shippingInfoString);
+        if (null === $shippingAddress) {
+            return;
         }
+
+        $shippingInfoString = $this->addressConcatenation->getString($shippingAddress);
+
+        $this->addDataForResource($resource, 'Shipping_address', $shippingInfoString);
     }
 
     /**
@@ -79,20 +101,14 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addBillingAddressData(OrderInterface $resource): void
     {
         $billingAddress = $resource->getBillingAddress();
-        if (null !== $billingAddress) {
-            /** @var StringArrayConcatenationInterface $stringArrayConcatenation */
-            $stringArrayConcatenation = new StringArrayConcatenation();
 
-            $billingInfoString = $stringArrayConcatenation->getConcatenatedString([
-                $billingAddress->getFullName(),
-                $billingAddress->getStreet(),
-                $billingAddress->getCity(),
-                $billingAddress->getPostcode(),
-                $billingAddress->getCountryCode(),
-            ]);
-
-            $this->addDataForResource($resource, 'Billing_address', $billingInfoString);
+        if (null === $billingAddress) {
+            return;
         }
+
+        $billingInfoString = $this->addressConcatenation->getString($billingAddress);
+
+        $this->addDataForResource($resource, 'Billing_address', $billingInfoString);
     }
 
     /**
