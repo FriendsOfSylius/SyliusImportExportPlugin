@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Service\StringArrayConcatenation;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\StringArrayConcatenationInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
@@ -42,10 +44,10 @@ class OrderResourcePlugin extends ResourcePlugin
     {
         $customer = $resource->getCustomer();
         if (null !== $customer) {
-            $this->addDataForResource($resource, 'Gender', $customer->getGender() ?? '');
-            $this->addDataForResource($resource, 'Full_name', $customer->getFullName() ?? '');
-            $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber() ?? '');
-            $this->addDataForResource($resource, 'Email', $customer->getEmail() ?? '');
+            $this->addDataForResource($resource, 'Gender', $customer->getGender());
+            $this->addDataForResource($resource, 'Full_name', $customer->getFullName());
+            $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber());
+            $this->addDataForResource($resource, 'Email', $customer->getEmail());
         }
     }
 
@@ -56,14 +58,18 @@ class OrderResourcePlugin extends ResourcePlugin
     {
         $shippingAddress = $resource->getShippingAddress();
         if (null !== $shippingAddress) {
-            $this->addDataForResource($resource, 'Shipping_address', sprintf(
-                '%s, %s, %s, %s, %s',
-                $shippingAddress->getFullName() ?? '',
-                $shippingAddress->getStreet() ?? '',
-                $shippingAddress->getCity() ?? '',
-                $shippingAddress->getPostcode() ?? '',
-                $shippingAddress->getCountryCode() ?? ''
-            ));
+            /** @var StringArrayConcatenationInterface $stringArrayConcatenation */
+            $stringArrayConcatenation = new StringArrayConcatenation();
+
+            $shippingInfoString = $stringArrayConcatenation->getConcatenatedString([
+                $shippingAddress->getFullName(),
+                $shippingAddress->getStreet(),
+                $shippingAddress->getCity(),
+                $shippingAddress->getPostcode(),
+                $shippingAddress->getCountryCode(),
+            ]);
+
+            $this->addDataForResource($resource, 'Shipping_address', $shippingInfoString);
         }
     }
 
@@ -74,14 +80,18 @@ class OrderResourcePlugin extends ResourcePlugin
     {
         $billingAddress = $resource->getBillingAddress();
         if (null !== $billingAddress) {
-            $this->addDataForResource($resource, 'Billing_address', sprintf(
-                '%s, %s, %s, %s, %s',
-                $billingAddress->getFullName() ?? '',
-                $billingAddress->getStreet() ?? '',
-                $billingAddress->getCity() ?? '',
-                $billingAddress->getPostcode() ?? '',
-                $billingAddress->getCountryCode() ?? ''
-            ));
+            /** @var StringArrayConcatenationInterface $stringArrayConcatenation */
+            $stringArrayConcatenation = new StringArrayConcatenation();
+
+            $billingInfoString = $stringArrayConcatenation->getConcatenatedString([
+                $billingAddress->getFullName(),
+                $billingAddress->getStreet(),
+                $billingAddress->getCity(),
+                $billingAddress->getPostcode(),
+                $billingAddress->getCountryCode(),
+            ]);
+
+            $this->addDataForResource($resource, 'Billing_address', $billingInfoString);
         }
     }
 
