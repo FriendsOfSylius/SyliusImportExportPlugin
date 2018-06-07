@@ -59,9 +59,9 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_export_excel.yml');
         }
 
-//        if (class_exists(self::CLASS_JSON_READER)) {
-//            $loader->load('services_import_json.yml');
-//        }
+        if (class_exists(self::CLASS_JSON_READER)) {
+            $loader->load('services_import_json.yml');
+        }
 
         if (class_exists(self::CLASS_JSON_WRITER)) {
             $loader->load('services_export_json.yml');

@@ -5,6 +5,11 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use pcrov\JsonReader\JsonReader;
+use Doctrine\Common\Persistence\ObjectManager;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
+use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
+use Port\Reader\ReaderFactory;
 
 class JsonResourceImporter extends ResourceImporter
 {

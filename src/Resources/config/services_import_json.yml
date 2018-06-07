@@ -1,57 +1,57 @@
-#services:
-#    sylius.factory.json_reader:
-#        class: pcrov\JsonReader\JsonReader
-#
-#    # JSON-Importers
-#    sylius.importer.countries.json:
-#        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
-#        arguments:
-#            - "@sylius.factory.json_reader"
-#            - "@sylius.manager.country"
-#            - "@sylius.processor.countries"
-#            - "@sylius.importer.result"
-#            - "%sylius.importer.batch_size%"
-#            - "%sylius.importer.fail_on_incomplete%"
-#            - "%sylius.importer.stop_on_failure%"
-#        tags:
-#            - { name: sylius.importer, type: country, format: json }
-#
-#    sylius.importer.customer_group.json:
-#        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
-#        arguments:
-#            - "@sylius.factory.json_reader"
-#            - "@sylius.manager.customer_group"
-#            - "@sylius.processor.customer_groups"
-#            - "@sylius.importer.result"
-#            - "%sylius.importer.batch_size%"
-#            - "%sylius.importer.fail_on_incomplete%"
-#            - "%sylius.importer.stop_on_failure%"
-#        tags:
-#            - { name: sylius.importer, type: customer_group, format: json }
-#
-#    sylius.importer.payment_methods.json:
-#        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
-#        arguments:
-#            - "@sylius.factory.json_reader"
-#            - "@sylius.manager.payment_method"
-#            - "@sylius.processor.payment_methods"
-#            - "@sylius.importer.result"
-#            - "%sylius.importer.batch_size%"
-#            - "%sylius.importer.fail_on_incomplete%"
-#            - "%sylius.importer.stop_on_failure%"
-#        tags:
-#            - { name: sylius.importer, type: payment_method, format: json }
-#
-#    sylius.importer.tax_categories.json:
-#        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
-#        arguments:
-#            - "@sylius.factory.json_reader"
-#            - "@sylius.manager.tax_category"
-#            - "@sylius.processor.tax_categories"
-#            - "@sylius.importer.result"
-#            - "%sylius.importer.batch_size%"
-#            - "%sylius.importer.fail_on_incomplete%"
-#            - "%sylius.importer.stop_on_failure%"
-#        tags:
-#            - { name: sylius.importer, type: tax_category, format: json }
-#
+services:
+    sylius.factory.json_reader:
+        class: pcrov\JsonReader\JsonReader
+
+    # JSON-Importers
+    sylius.importer.countries.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.factory.json_reader"
+            - "@sylius.manager.country"
+            - "@sylius.processor.countries"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: country, format: json }
+
+    sylius.importer.customer_group.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.factory.json_reader"
+            - "@sylius.manager.customer_group"
+            - "@sylius.processor.customer_groups"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: customer_group, format: json }
+
+    sylius.importer.payment_methods.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.factory.json_reader"
+            - "@sylius.manager.payment_method"
+            - "@sylius.processor.payment_methods"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: payment_method, format: json }
+
+    sylius.importer.tax_categories.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
+        arguments:
+            - "@sylius.factory.json_reader"
+            - "@sylius.manager.tax_category"
+            - "@sylius.processor.tax_categories"
+            - "@sylius.importer.result"
+            - "%sylius.importer.batch_size%"
+            - "%sylius.importer.fail_on_incomplete%"
+            - "%sylius.importer.stop_on_failure%"
+        tags:
+            - { name: sylius.importer, type: tax_category, format: json }
+
