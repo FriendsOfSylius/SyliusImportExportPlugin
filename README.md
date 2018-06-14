@@ -25,7 +25,8 @@
 
   - Run `composer require portphp/csv --no-update` to add CSV format support
   - Run `composer require portphp/excel --no-update` to add Excel format support (also install the `zip` PHP extension)
-  - Run `composer require dcarbone/json-writer-plus --no-update` to add JSON format support
+  - Run `composer require dcarbone/json-writer-plus --no-update` to add JSON export support
+  - Run `composer require pcrov/jsonreader --no-update` to add JSON import support
 
 2. Require and install the plugin
 
@@ -75,15 +76,15 @@ sylius_import_export:
 
 ### Available importer types
 
-* country (csv, excel)
-* customer_group (csv, excel)
-* payment_method (csv, excel)
-* tax_category (csv, excel)
+* country (csv, excel, json)
+* customer_group (csv, excel, json)
+* payment_method (csv, excel, json)
+* tax_category (csv, excel, json)
 
 ### Available exporter types
 
-* country (csv, excel)
-* order (csv, excel)
+* country (csv, excel, json)
+* order (csv, excel, json)
 
 ## Example import files
 

@@ -33,6 +33,9 @@ class ResourceImporter implements ImporterInterface
     /** @var bool */
     protected $stopOnFailure;
 
+    /** @var int */
+    private $batchCount;
+
     public function __construct(
         ReaderFactory $readerFactory,
         ObjectManager $objectManager,
@@ -62,40 +65,58 @@ class ResourceImporter implements ImporterInterface
 
         $this->result->start();
 
-        $batchCount = 0;
+        $this->batchCount = 0;
         foreach ($reader as $i => $row) {
-            try {
-                $this->resourceProcessor->process($row);
-                $this->result->success($i);
-
-                ++$batchCount;
-                if ($this->batchSize && $batchCount === $this->batchSize) {
-                    $this->objectManager->flush();
-                    $batchCount = 0;
-                }
-            } catch (ItemIncompleteException $e) {
-                if ($this->failOnIncomplete) {
-                    $this->result->failed($i);
-                    if ($this->stopOnFailure) {
-                        break;
-                    }
-                } else {
-                    $this->result->skipped($i);
-                }
-            } catch (ImporterException $e) {
-                $this->result->failed($i);
-                if ($this->stopOnFailure) {
-                    break;
-                }
+            $breakBool = $this->importData($i, $row);
+            if ($breakBool) {
+                break;
             }
         }
 
-        if ($batchCount) {
+        if ($this->batchCount) {
             $this->objectManager->flush();
         }
 
         $this->result->stop();
 
         return $this->result;
+    }
+
+    /**
+     * @param int $i
+     * @param array $row
+     *
+     * @return bool
+     */
+    public function importData($i, $row): bool
+    {
+        $breakBool = false;
+
+        try {
+            $this->resourceProcessor->process($row);
+            $this->result->success($i);
+
+            ++$this->batchCount;
+            if ($this->batchSize && $this->batchCount === $this->batchSize) {
+                $this->objectManager->flush();
+                $this->batchCount = 0;
+            }
+        } catch (ItemIncompleteException $e) {
+            if ($this->failOnIncomplete) {
+                $this->result->failed($i);
+                if ($this->stopOnFailure) {
+                    $breakBool = true;
+                }
+            } else {
+                $this->result->skipped($i);
+            }
+        } catch (ImporterException $e) {
+            $this->result->failed($i);
+            if ($this->stopOnFailure) {
+                $breakBool = true;
+            }
+        }
+
+        return $breakBool;
     }
 }

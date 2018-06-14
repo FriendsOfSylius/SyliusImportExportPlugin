@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
-use pcrov\JsonReader\JsonReader;
 use Doctrine\Common\Persistence\ObjectManager;
-use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
-use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
-use Port\Reader\ReaderFactory;
+use pcrov\JsonReader\JsonReader;
 
 class JsonResourceImporter extends ResourceImporter
 {
@@ -34,47 +31,38 @@ class JsonResourceImporter extends ResourceImporter
         $this->stopOnFailure = $stopOnFailure;
     }
 
-//    /**
-//     * {@inheritdoc}
-//     */
-//    public function import(string $fileName)
-//    {
-//        $this->result->start();
-//
-//        $batchCount = 0;
-//        foreach ($reader as $i => $row) {
-//            try {
-//                $this->resourceProcessor->process($row);
-//                $this->result->success($i);
-//
-//                ++$batchCount;
-//                if ($this->batchSize && $batchCount === $this->batchSize) {
-//                    $this->objectManager->flush();
-//                    $batchCount = 0;
-//                }
-//            } catch (ItemIncompleteException $e) {
-//                if ($this->failOnIncomplete) {
-//                    $this->result->failed($i);
-//                    if ($this->stopOnFailure) {
-//                        break;
-//                    }
-//                } else {
-//                    $this->result->skipped($i);
-//                }
-//            } catch (ImporterException $e) {
-//                $this->result->failed($i);
-//                if ($this->stopOnFailure) {
-//                    break;
-//                }
-//            }
-//        }
-//
-//        if ($batchCount) {
-//            $this->objectManager->flush();
-//        }
-//
-//        $this->result->stop();
-//
-//        return $this->result;
-//    }
+    /**
+     * {@inheritdoc}
+     */
+    public function import(string $fileName): ImporterResultInterface
+    {
+        $reader = $this->reader;
+
+        $reader->open($fileName);
+
+        $this->result->start();
+
+        $batchCount = 0;
+
+        $depth = $reader->depth(); // Check in a moment to break when the array is done
+
+        $reader->read(); // Step to the first element
+
+        foreach ($reader->value() as $i => $row) {
+            $breakBool = $this->importData($i, $row);
+            if ($breakBool) {
+                break;
+            }
+        }
+
+        $reader->close(); // Close the reader
+
+        if ($batchCount) {
+            $this->objectManager->flush();
+        }
+
+        $this->result->stop();
+
+        return $this->result;
+    }
 }

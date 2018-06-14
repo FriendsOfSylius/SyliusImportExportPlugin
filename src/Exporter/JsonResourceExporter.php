@@ -22,7 +22,7 @@ class JsonResourceExporter extends ResourceExporter
 
         $myfile = fopen($filename, 'w');
         if (!$myfile) {
-            throw new Exception('File open failed.');
+            throw new \Exception('File open failed.');
         }
 
         fwrite($myfile, $this->writer->getFileContent());

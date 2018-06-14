@@ -10,3 +10,4 @@ parameters:
     ignoreErrors:
         - '/Parameter #1 $configuration of method Symfony\Component\DependencyInjection\Extension\Extension::processConfiguration() expects Symfony\Component\Config\Definition\ConfigurationInterface, Symfony\Component\Config\Definition\ConfigurationInterface|null given./'
         - '/Parameter #1 $iterator of function iterator_to_array expects Traversable, array|Traversable given./'
+        - '#[a-zA-Z0-9\\_]JsonResourceImporter::__construct()#'
