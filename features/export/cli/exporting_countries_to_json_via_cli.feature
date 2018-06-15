@@ -1,11 +1,11 @@
 @managing_countries
 Feature: exporting countries to json-file
   In order to have my countries exported to an external target
-  As a Developer
+  As a developer
   I want to be able to export country data to json file from the commandline
 
   Background:
-    Given I have a working command-line-interface
+    Given I have a working command-line interface
 
   @cli_importer_exporter
   Scenario: Exporting countries to json-file

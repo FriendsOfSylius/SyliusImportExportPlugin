@@ -12,9 +12,7 @@
     "suggest": {
         "portphp/excel": "To support importing excel files, use version ^1.1",
         "ext-zip": "To support writing of Excel files",
-        "portphp/csv": "To support importing csv files, use version ^1.1",
-        "dcarbone/json-writer-plus": "To support exporting json files",
-        "pcrov/jsonreader": "To support importing json files"
+        "portphp/csv": "To support importing csv files, use version ^1.1"
     },
     "require-dev": {
         "portphp/excel": "^1.1.0",
@@ -37,9 +35,7 @@
         "phpunit/phpunit": "^5.6",
         "se/selenium-server-standalone": "^2.52",
         "sylius-labs/coding-standard": "^1.0",
-        "symplify/easy-coding-standard": "^2.4",
-        "dcarbone/json-writer-plus": "^0.3.0",
-        "pcrov/jsonreader": "^0.7.1"
+        "symplify/easy-coding-standard": "^2.4"
     },
     "prefer-stable": true,
     "minimum-stability": "alpha",

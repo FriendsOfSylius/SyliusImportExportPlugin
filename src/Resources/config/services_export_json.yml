@@ -1,17 +1,8 @@
 services:
-    sylius.json_writer:
-        class: DCarbone\JsonWriterPlus
-
-    sylius.exporter.json_writer:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Writer\JsonWriter
-        arguments:
-            - '@sylius.json_writer'
-
     # json-Exporters
     sylius.exporter.countries.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
-            - "@sylius.exporter.json_writer"
             - "@sylius.exporter.pluginpool.countries"
             - ["Id", "Code" ,"Enabled"]
             - "@sylius.exporters_transformer_pool"
@@ -21,7 +12,6 @@ services:
     sylius.exporter.orders.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
-            - "@sylius.exporter.json_writer"
             - "@sylius.exporter.pluginpool.orders"
             - [ "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
             - "@sylius.exporters_transformer_pool"

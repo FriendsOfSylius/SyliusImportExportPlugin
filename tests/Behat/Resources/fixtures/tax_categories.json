@@ -1,0 +1,12 @@
+[
+  {
+    "Code":"BOOKS",
+    "Name":"books",
+    "Description":"tax category for books"
+  },
+  {
+    "Code":"CARS",
+    "Name":"cars",
+    "Description":"tax category for cars"
+  }
+]

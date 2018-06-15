@@ -4,45 +4,64 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPoolInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
+
 /**
  * Class JsonResourceExporter
  */
-class JsonResourceExporter extends ResourceExporter
+final class JsonResourceExporter extends ResourceExporter
 {
+    /** @var array */
+    private $data = [];
+
+    /** @var string */
+    private $filename;
+
+    /**
+     * @param PluginPoolInterface $pluginPool
+     * @param array $resourceKeys
+     * @param TransformerPoolInterface|null $transformerPool
+     */
+    public function __construct(
+        PluginPoolInterface $pluginPool,
+        array $resourceKeys,
+        ?TransformerPoolInterface $transformerPool
+    ) {
+        $this->pluginPool = $pluginPool;
+        $this->transformerPool = $transformerPool;
+        $this->resourceKeys = $resourceKeys;
+    }
+
     /**
      * {@inheritdoc}
      */
-    public function export(array $idsToExport, string $filename = 'exportfile'): void
+    public function export(array $idsToExport): void
     {
         $this->pluginPool->initPlugins($idsToExport);
 
         foreach ($idsToExport as $id) {
-            $this->writeDataForId((string) $id);
+            $this->data[] = $this->getDataForId((string) $id);
         }
 
-        $myfile = fopen($filename, 'w');
-        if (!$myfile) {
-            throw new \Exception('File open failed.');
+        if ($this->filename !== null) { // only true if command is used to export
+            file_put_contents($this->filename, $this->getExportedData());
         }
-
-        fwrite($myfile, $this->writer->getFileContent());
-        fclose($myfile);
     }
 
     /**
-     * @param string $id
+     * {@inheritdoc}
      */
-    protected function writeDataForId(string $id): void
+    public function getExportedData(): string
     {
-        $dataForId = $this->getDataForId($id);
+        return json_encode($this->data);
+    }
 
-        // filter out only resourcekeys
-        foreach ($dataForId as $dataName => $data) {
-            if (!in_array($dataName, $this->resourceKeys)) {
-                unset($dataForId[$dataName]);
-            }
-        }
-
-        $this->writer->write($dataForId);
+    /**
+     * {@inheritdoc}
+     */
+    public function setExportFile(string $filename): void
+    {
+        $this->filename = $filename;
     }
 }

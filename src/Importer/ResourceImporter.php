@@ -67,8 +67,7 @@ class ResourceImporter implements ImporterInterface
 
         $this->batchCount = 0;
         foreach ($reader as $i => $row) {
-            $breakBool = $this->importData($i, $row);
-            if ($breakBool) {
+            if ($this->importData($i, $row)) {
                 break;
             }
         }
@@ -90,8 +89,6 @@ class ResourceImporter implements ImporterInterface
      */
     public function importData($i, $row): bool
     {
-        $breakBool = false;
-
         try {
             $this->resourceProcessor->process($row);
             $this->result->success($i);
@@ -105,7 +102,7 @@ class ResourceImporter implements ImporterInterface
             if ($this->failOnIncomplete) {
                 $this->result->failed($i);
                 if ($this->stopOnFailure) {
-                    $breakBool = true;
+                    return true;
                 }
             } else {
                 $this->result->skipped($i);
@@ -113,10 +110,10 @@ class ResourceImporter implements ImporterInterface
         } catch (ImporterException $e) {
             $this->result->failed($i);
             if ($this->stopOnFailure) {
-                $breakBool = true;
+                return true;
             }
         }
 
-        return $breakBool;
+        return false;
     }
 }

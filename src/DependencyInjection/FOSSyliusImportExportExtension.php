@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection;
 
-use DCarbone\JsonWriterPlus;
-use pcrov\JsonReader\JsonReader;
 use Port\Csv\CsvReaderFactory;
 use Port\Csv\CsvWriter;
 use Port\Excel\ExcelReaderFactory;
@@ -22,9 +20,6 @@ class FOSSyliusImportExportExtension extends Extension
 
     private const CLASS_EXCEL_READER = ExcelReaderFactory::class;
     private const CLASS_EXCEL_WRITER = ExcelWriter::class;
-
-    private const CLASS_JSON_READER = JsonReader::class;
-    private const CLASS_JSON_WRITER = JsonWriterPlus::class;
 
     /**
      * {@inheritdoc}
@@ -59,12 +54,8 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_export_excel.yml');
         }
 
-        if (class_exists(self::CLASS_JSON_READER)) {
-            $loader->load('services_import_json.yml');
-        }
+        $loader->load('services_import_json.yml');
 
-        if (class_exists(self::CLASS_JSON_WRITER)) {
-            $loader->load('services_export_json.yml');
-        }
+        $loader->load('services_export_json.yml');
     }
 }

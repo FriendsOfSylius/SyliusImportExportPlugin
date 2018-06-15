@@ -25,8 +25,6 @@
 
   - Run `composer require portphp/csv --no-update` to add CSV format support
   - Run `composer require portphp/excel --no-update` to add Excel format support (also install the `zip` PHP extension)
-  - Run `composer require dcarbone/json-writer-plus --no-update` to add JSON export support
-  - Run `composer require pcrov/jsonreader --no-update` to add JSON import support
 
 2. Require and install the plugin
 

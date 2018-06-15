@@ -1,0 +1,14 @@
+[
+  {
+    "Code":"OFFLINE",
+    "Name":"Offline",
+    "Instructions":"Offline payment method instructions",
+    "Gateway":"offline"
+  },
+  {
+    "Code":"PAYPAL",
+    "Name":"PayPal",
+    "Instructions":"PayPal payment method instructions",
+    "Gateway":"paypal_express_checkout"
+  }
+]

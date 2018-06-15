@@ -31,7 +31,7 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * @var TransformerPoolInterface|null
      */
-    private $transformerPool;
+    protected $transformerPool;
 
     /**
      * @param WriterInterface $writer

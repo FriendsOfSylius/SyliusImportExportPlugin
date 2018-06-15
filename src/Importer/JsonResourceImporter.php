@@ -6,15 +6,10 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
-use pcrov\JsonReader\JsonReader;
 
-class JsonResourceImporter extends ResourceImporter
+final class JsonResourceImporter extends ResourceImporter
 {
-    /** @var JsonReader */
-    private $reader;
-
     public function __construct(
-        JsonReader $reader,
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
         ImporterResultInterface $importerResult,
@@ -22,7 +17,6 @@ class JsonResourceImporter extends ResourceImporter
         bool $failOnIncomplete,
         bool $stopOnFailure
     ) {
-        $this->reader = $reader;
         $this->objectManager = $objectManager;
         $this->resourceProcessor = $resourceProcessor;
         $this->result = $importerResult;
@@ -36,29 +30,14 @@ class JsonResourceImporter extends ResourceImporter
      */
     public function import(string $fileName): ImporterResultInterface
     {
-        $reader = $this->reader;
-
-        $reader->open($fileName);
-
         $this->result->start();
 
-        $batchCount = 0;
+        $dataAsArray = json_decode(file_get_contents($fileName), true);
 
-        $depth = $reader->depth(); // Check in a moment to break when the array is done
-
-        $reader->read(); // Step to the first element
-
-        foreach ($reader->value() as $i => $row) {
-            $breakBool = $this->importData($i, $row);
-            if ($breakBool) {
+        foreach ($dataAsArray as $i => $row) {
+            if ($this->importData($i, $row)) {
                 break;
             }
-        }
-
-        $reader->close(); // Close the reader
-
-        if ($batchCount) {
-            $this->objectManager->flush();
         }
 
         $this->result->stop();
