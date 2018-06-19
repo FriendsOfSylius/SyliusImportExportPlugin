@@ -64,4 +64,12 @@ final class JsonResourceExporter extends ResourceExporter
     {
         $this->filename = $filename;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function finish(): void
+    {
+        // no finish needed
+    }
 }

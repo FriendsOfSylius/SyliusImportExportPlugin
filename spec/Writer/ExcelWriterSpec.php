@@ -36,6 +36,8 @@ class ExcelWriterSpec extends ObjectBehavior
         ];
         $excelWriter->prepare()->shouldBeCalled();
         $excelWriter->writeItem($data)->shouldBeCalled();
+        $excelWriter->finish()->shouldBeCalled();
         $this->write($data);
+        $this->finish();
     }
 }
