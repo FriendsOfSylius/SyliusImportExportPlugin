@@ -89,16 +89,8 @@ final class ExportDataController extends Controller
         /** @var ResourceExporterInterface $service */
         $service = $this->registry->get($name);
 
-        /** @var RepositoryInterface $repository */
-        $repository = $this->container->get('sylius.repository.' . $resource);
-        $allItems = $repository->findAll();
-        $idsToExport = [];
-        foreach ($allItems as $item) {
-            /** @var ResourceInterface $item */
-            $idsToExport[] = $item->getId();
-        }
-
-        $service->export($idsToExport);
+        $resources = $this->findResources($configuration, $this->findRepository($resource));
+        $service->export($this->getResourceIds($resources));
 
         $response = new Response($service->getExportedData());
         $disposition = $response->headers->makeDisposition(
@@ -169,11 +161,8 @@ final class ExportDataController extends Controller
             $results = [];
 
             for ($i = 0; $i < $data->getNbPages(); ++$i) {
+                $data->setCurrentPage($i + 1);
                 $results = array_merge($results, iterator_to_array($data->getCurrentPageResults()));
-
-                if ($data->hasNextPage()) {
-                    $data->getNextPage();
-                }
             }
 
             return $results;

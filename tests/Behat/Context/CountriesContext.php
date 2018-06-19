@@ -58,6 +58,14 @@ final class CountriesContext extends SymfonyPage implements Context
     }
 
     /**
+     * @When I open the country admin index second page
+     */
+    public function iOpenTheCountryIndexSecondPage()
+    {
+        $this->countryIndexPage->open(['page'=> 2]);
+    }
+
+    /**
      * @Then I should see an export button
      */
     public function iShouldSeeExportButton()
@@ -66,6 +74,20 @@ final class CountriesContext extends SymfonyPage implements Context
             'Export',
             $this->getElement('export_button_text')->getText()
         );
+    }
+
+    /**
+     * @Then I click on :element
+     */
+    public function iClickOn($element)
+    {
+        $page = $this->getSession()->getPage();
+        $findName = $page->find("css", $element);
+        if (!$findName) {
+            throw new Exception($element . " could not be found");
+        } else {
+            $findName->click();
+        }
     }
 
     /**
@@ -106,6 +128,21 @@ final class CountriesContext extends SymfonyPage implements Context
     }
 
     /**
+     * @Then :amount countries should be in the registry
+     */
+    public function amountCountriesShouldBeInTheRegistry($amount)
+    {
+        $countryCount = $this->countryContext->getCountryCount();
+
+        Assert::assertEquals(
+            $amount,
+            $countryCount,
+            'expected value differs from actual value ' . $amount . ' !== ' . $countryCount
+        );
+
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function getDefinedElements()
@@ -115,4 +152,32 @@ final class CountriesContext extends SymfonyPage implements Context
             'export_links' => '.buttons div.dropdown div.menu'
         ]);
     }
+
+
+    /**
+     * @When I go to :hp homepage
+     */
+    public function goToSpecificHomepage($hp)
+    {
+        $this->getSession(null)->visit($hp);
+    }
+
+    /**
+     * Checks that response body contains specific text.
+     *
+     * @param string $text
+     *
+     * @Then response should contain :text
+     */
+    public function theResponseShouldContain($text)
+    {
+        $responseText = $this->getSession()->getPage()->getContent();
+
+        if (strpos($responseText, $text) !== false){
+            return;
+        }
+        throw new ResponseTextException("Response does not contain: ". $text);
+    }
+
+
 }
