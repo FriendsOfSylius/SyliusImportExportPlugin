@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use Enqueue\Redis\RedisConnectionFactory;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemReader;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Pagerfanta\Pagerfanta;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfiguration;
@@ -75,7 +77,7 @@ final class ExportDataController extends Controller
      *
      * @throws \Exception
      */
-    private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
+    private function exportData(Request $request, string $exporter, string $format, string $outputFilename, int $mode = 3): Response
     {
         [$applicationName, $resource] = explode('.', $exporter);
         $metadata = Metadata::fromAliasAndConfiguration($exporter,
@@ -90,6 +92,15 @@ final class ExportDataController extends Controller
         $service = $this->registry->get($name);
 
         $resources = $this->findResources($configuration, $this->findRepository($resource));
+
+        if ($mode == 3) {
+            $mqItemReader = new MqItemReader(new RedisConnectionFactory());
+            $mqItemReader->initQueue('sylius.export.queue');
+            $mqItemReader->read();
+            exit;
+//            return;
+        }
+
         $service->export($this->getResourceIds($resources));
 
         $response = new Response($service->getExportedData());
