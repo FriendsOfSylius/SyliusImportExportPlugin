@@ -12,6 +12,8 @@ Feature: Importing countries from csv
     When I open the country admin index page
     And I import country data from "countries.csv" csv file
     Then I should see a notification that the import was successful
-    And I should see 2 countries in the list
-    And the country "Germany" should appear in the registry
-    And the country "Switzerland" should appear in the registry
+    And I should see 10 countries in the list
+    And I open the country admin index second page
+    And I should see 3 countries in the list
+    And the country "Andorra" should appear in the registry
+    And the country "Belize" should appear in the registry
