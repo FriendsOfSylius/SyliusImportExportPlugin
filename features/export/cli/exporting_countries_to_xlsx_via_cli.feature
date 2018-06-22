@@ -5,7 +5,7 @@ Feature: exporting countries to xlsx-file
   I want to be able to export country data to xlsx file from the commandline
 
   Background:
-    Given I have a working command-line-interface
+    Given I have a working command-line interface
 
   @cli_importer_exporter
   Scenario: Exporting countries to xlsx-file

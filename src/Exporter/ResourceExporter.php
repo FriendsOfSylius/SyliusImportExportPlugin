@@ -16,22 +16,22 @@ class ResourceExporter implements ResourceExporterInterface
     /**
      * @var array
      */
-    private $resourceKeys;
+    protected $resourceKeys;
 
     /**
      * @var WriterInterface
      */
-    private $writer;
+    protected $writer;
 
     /**
      * @var PluginPoolInterface
      */
-    private $pluginPool;
+    protected $pluginPool;
 
     /**
      * @var TransformerPoolInterface|null
      */
-    private $transformerPool;
+    protected $transformerPool;
 
     /**
      * @param WriterInterface $writer
@@ -95,7 +95,7 @@ class ResourceExporter implements ResourceExporterInterface
      *
      * @return array
      */
-    private function getDataForId(string $id): array
+    protected function getDataForId(string $id): array
     {
         $data = $this->pluginPool->getDataForId($id);
 
