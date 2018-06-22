@@ -161,11 +161,8 @@ final class ExportDataController extends Controller
             $results = [];
 
             for ($i = 0; $i < $data->getNbPages(); ++$i) {
+                $data->setCurrentPage($i + 1);
                 $results = array_merge($results, iterator_to_array($data->getCurrentPageResults()));
-
-                if ($data->hasNextPage()) {
-                    $data->getNextPage();
-                }
             }
 
             return $results;

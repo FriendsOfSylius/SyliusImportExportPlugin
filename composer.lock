@@ -4762,58 +4762,6 @@
             "time": "2018-01-20T00:28:24+00:00"
         },
         {
-            "name": "sensio/distribution-bundle",
-            "version": "v5.0.21",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sensiolabs/SensioDistributionBundle.git",
-                "reference": "eb6266b3b472e4002538610b28a0a04bcf94891a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sensiolabs/SensioDistributionBundle/zipball/eb6266b3b472e4002538610b28a0a04bcf94891a",
-                "reference": "eb6266b3b472e4002538610b28a0a04bcf94891a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.9",
-                "sensiolabs/security-checker": "~3.0|~4.0",
-                "symfony/class-loader": "~2.3|~3.0",
-                "symfony/config": "~2.3|~3.0",
-                "symfony/dependency-injection": "~2.3|~3.0",
-                "symfony/filesystem": "~2.3|~3.0",
-                "symfony/http-kernel": "~2.3|~3.0",
-                "symfony/process": "~2.3|~3.0"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "5.0.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Sensio\\Bundle\\DistributionBundle\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                }
-            ],
-            "description": "Base bundle for Symfony Distributions",
-            "keywords": [
-                "configuration",
-                "distribution"
-            ],
-            "time": "2017-08-25T16:55:44+00:00"
-        },
-        {
             "name": "sensiolabs/security-checker",
             "version": "v4.1.8",
             "source": {
@@ -5377,6 +5325,61 @@
             ],
             "description": "Doctrine ORM hydration performance optimization made easier.",
             "time": "2018-02-13T13:55:38+00:00"
+        },
+        {
+            "name": "sylius-labs/sensio-distribution-bundle",
+            "version": "v6.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SyliusLabs/SensioDistributionBundle.git",
+                "reference": "b03786d9af2e8fead7e837cbd1541dd5c0996e03"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SyliusLabs/SensioDistributionBundle/zipball/b03786d9af2e8fead7e837cbd1541dd5c0996e03",
+                "reference": "b03786d9af2e8fead7e837cbd1541dd5c0996e03",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.9",
+                "sensiolabs/security-checker": "~3.0|~4.0",
+                "symfony/class-loader": "~2.3|~3.0|^4.0",
+                "symfony/config": "~2.3|~3.0|^4.0",
+                "symfony/dependency-injection": "~2.3|~3.0|^4.0",
+                "symfony/filesystem": "~2.3|~3.0|^4.0",
+                "symfony/http-kernel": "~2.3|~3.0|^4.0",
+                "symfony/process": "~2.3|~3.0|^4.0"
+            },
+            "replace": {
+                "sensio/distribution-bundle": "*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "5.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Sensio\\Bundle\\DistributionBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Fabien Potencier",
+                    "email": "fabien@symfony.com"
+                }
+            ],
+            "description": "Base bundle for Symfony Distributions",
+            "keywords": [
+                "configuration",
+                "distribution"
+            ],
+            "time": "2018-06-11T11:50:52+00:00"
         },
         {
             "name": "sylius/sylius",

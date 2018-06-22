@@ -7,3 +7,5 @@ fos:
             types:
                 csv: 'CSV'
                 xlsx: 'Excel'
+                json: 'JSON'
+

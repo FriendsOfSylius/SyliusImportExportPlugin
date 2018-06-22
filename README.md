@@ -74,15 +74,15 @@ sylius_import_export:
 
 ### Available importer types
 
-* country (csv, excel)
-* customer_group (csv, excel)
-* payment_method (csv, excel)
-* tax_category (csv, excel)
+* country (csv, excel, json)
+* customer_group (csv, excel, json)
+* payment_method (csv, excel, json)
+* tax_category (csv, excel, json)
 
 ### Available exporter types
 
-* country (csv, excel)
-* order (csv, excel)
+* country (csv, excel, json)
+* order (csv, excel, json)
 
 ## Example import files
 

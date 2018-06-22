@@ -34,7 +34,12 @@ class CsvWriter implements WriterInterface
      */
     public function setFile(string $filename): void
     {
-        $this->writer->setStream(fopen($filename, 'w+'));
+        $file = fopen($filename, 'w+');
+        if (!$file) {
+            throw new \Exception('File open failed.');
+        }
+
+        $this->writer->setStream($file);
     }
 
     /**

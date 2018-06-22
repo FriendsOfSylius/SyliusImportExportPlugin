@@ -18,6 +18,7 @@ class ImportType extends AbstractType
                 'choices' => [
                     'CSV' => 'csv',
                     'Excel' => 'xlsx',
+                    'JSON' => 'json',
                 ],
                 'expanded' => false,
                 'multiple' => false,

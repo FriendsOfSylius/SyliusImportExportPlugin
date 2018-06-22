@@ -1,11 +1,11 @@
 @managing_countries
-Feature: Importing countries from excel with the command-line-interface
+Feature: Importing countries from excel with the command-line interface
     In order to have my countries from external source
-    As an Developer
+    As a developer
     I want to be able to import data from excel file from the commandline
 
     Background:
-       Given I have a working command-line-interface
+       Given I have a working command-line interface
 
     @cli_importer
     Scenario: Importing defined countries with the cli-command

@@ -1,11 +1,11 @@
 @managing_tax_categories
-Feature: Importing tax categories from excel with the command-line-interface
+Feature: Importing tax categories from excel with the command-line interface
     In order to have my tax categories from external source
     As an Developer
     I want to be able to import data from excel file from the commandline
 
     Background:
-       Given I have a working command-line-interface
+       Given I have a working command-line interface
 
     @cli_importer
     Scenario: Importing defined tax categories with the cli-command

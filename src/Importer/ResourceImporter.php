@@ -16,22 +16,25 @@ class ResourceImporter implements ImporterInterface
     private $readerFactory;
 
     /** @var ObjectManager */
-    private $objectManager;
+    protected $objectManager;
 
     /** @var ResourceProcessorInterface */
-    private $resourceProcessor;
+    protected $resourceProcessor;
 
     /** @var ImporterResultInterface */
-    private $result;
+    protected $result;
 
     /** @var int */
-    private $batchSize;
+    protected $batchSize;
 
     /** @var bool */
-    private $failOnIncomplete;
+    protected $failOnIncomplete;
 
     /** @var bool */
-    private $stopOnFailure;
+    protected $stopOnFailure;
+
+    /** @var int */
+    private $batchCount;
 
     public function __construct(
         ReaderFactory $readerFactory,
@@ -62,40 +65,55 @@ class ResourceImporter implements ImporterInterface
 
         $this->result->start();
 
-        $batchCount = 0;
+        $this->batchCount = 0;
         foreach ($reader as $i => $row) {
-            try {
-                $this->resourceProcessor->process($row);
-                $this->result->success($i);
-
-                ++$batchCount;
-                if ($this->batchSize && $batchCount === $this->batchSize) {
-                    $this->objectManager->flush();
-                    $batchCount = 0;
-                }
-            } catch (ItemIncompleteException $e) {
-                if ($this->failOnIncomplete) {
-                    $this->result->failed($i);
-                    if ($this->stopOnFailure) {
-                        break;
-                    }
-                } else {
-                    $this->result->skipped($i);
-                }
-            } catch (ImporterException $e) {
-                $this->result->failed($i);
-                if ($this->stopOnFailure) {
-                    break;
-                }
+            if ($this->importData($i, $row)) {
+                break;
             }
         }
 
-        if ($batchCount) {
+        if ($this->batchCount) {
             $this->objectManager->flush();
         }
 
         $this->result->stop();
 
         return $this->result;
+    }
+
+    /**
+     * @param int $i
+     * @param array $row
+     *
+     * @return bool
+     */
+    public function importData($i, $row): bool
+    {
+        try {
+            $this->resourceProcessor->process($row);
+            $this->result->success($i);
+
+            ++$this->batchCount;
+            if ($this->batchSize && $this->batchCount === $this->batchSize) {
+                $this->objectManager->flush();
+                $this->batchCount = 0;
+            }
+        } catch (ItemIncompleteException $e) {
+            if ($this->failOnIncomplete) {
+                $this->result->failed($i);
+                if ($this->stopOnFailure) {
+                    return true;
+                }
+            } else {
+                $this->result->skipped($i);
+            }
+        } catch (ImporterException $e) {
+            $this->result->failed($i);
+            if ($this->stopOnFailure) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

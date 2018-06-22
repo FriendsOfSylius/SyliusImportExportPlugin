@@ -94,7 +94,7 @@ class CliBaseContext implements Context
     }
 
     /**
-     * @Given I have a working command-line-interface
+     * @Given I have a working command-line interface
      */
     public function iHaveAWorkingCommandLineInterface()
     {

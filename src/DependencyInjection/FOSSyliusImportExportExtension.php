@@ -53,5 +53,9 @@ class FOSSyliusImportExportExtension extends Extension
         if (class_exists(self::CLASS_CSV_WRITER) && extension_loaded('zip')) {
             $loader->load('services_export_excel.yml');
         }
+
+        $loader->load('services_import_json.yml');
+
+        $loader->load('services_export_json.yml');
     }
 }
