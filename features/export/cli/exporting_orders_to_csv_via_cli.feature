@@ -5,7 +5,7 @@ Feature: exporting orders to csv-file
   I want to be able to export order data to csv file from the commandline
 
   Background:
-    Given I have a working command-line-interface
+    Given I have a working command-line interface
 
   @cli_importer_exporter
   Scenario: Exporting orders to csv-file
