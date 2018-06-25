@@ -8,4 +8,6 @@
 !/etc/build/.gitkeep
 
 /tests/Application/yarn.lock
-/tests/Behat/Resources/fixtures/countries_export.csv
+
+/tests/Behat/Resources/fixtures/export/*
+!/tests/Behat/Resources/fixtures/export/.gitkeep
