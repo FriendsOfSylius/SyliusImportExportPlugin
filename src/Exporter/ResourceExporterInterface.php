@@ -12,6 +12,13 @@ interface ResourceExporterInterface
     public function export(array $idsToExport): void;
 
     /**
+     * @param array $idsToExport
+     *
+     * @return array
+     */
+    public function exportData(array $idsToExport): array;
+
+    /**
      * @param string $filename
      */
     public function setExportFile(string $filename): void;
