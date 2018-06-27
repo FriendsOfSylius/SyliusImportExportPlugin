@@ -62,6 +62,15 @@ services:
             - [ setContainer, ["@service_container"]]
         tags:
             - { name: 'console.command' }
+            
+    sylius.command.export_data_to_message_queue:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataToMessageQueueCommand
+        arguments:
+            - "@sylius.exporters_registry"
+        calls:
+            - [ setContainer, ["@service_container"]]
+        tags:
+            - { name: 'console.command' }
 
     # Plugins for Exporters
     sylius.exporter.plugin.resource.countries:

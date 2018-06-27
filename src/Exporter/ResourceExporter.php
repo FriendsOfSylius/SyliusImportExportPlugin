@@ -90,13 +90,13 @@ class ResourceExporter implements ResourceExporterInterface
         $this->pluginPool->initPlugins($idsToExport);
         $this->writer->write($this->resourceKeys);
 
-        $dataArray = [];
+        $exportIdDataArray = [];
 
         foreach ($idsToExport as $id) {
-            $dataArray[$id] = $this->getDataForId((string) $id);
+            $exportIdDataArray[$id] = $this->getDataForId((string) $id);
         }
 
-        return $dataArray;
+        return $exportIdDataArray;
     }
 
     /**
