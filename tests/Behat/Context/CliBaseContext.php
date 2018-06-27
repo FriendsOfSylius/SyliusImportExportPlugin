@@ -133,6 +133,6 @@ class CliBaseContext implements Context
         $this->application->add($command);
         $this->command = $this->application->find('sylius:export');
         $this->tester = new CommandTester($this->command);
-        $this->tester->execute(['command' => 'sylius:export', 'exporter' => $exporterType, 'file' => $this->filePath . '/' . $filename, '--format' => $format]);
+        $this->tester->execute(['command' => 'sylius:export', 'exporter' => $exporterType, 'file' => $this->filePath . '/export/' . $filename, '--format' => $format]);
     }
 }

@@ -51,12 +51,13 @@ class MqItemWriter implements ItemWriterInterface
 
     /**
      * @param array $items
+     * @param string $entity
      */
-    public function write(array $items): void
+    public function write(array $items, string $entity): void
     {
         foreach ($items as $item) {
             $message = $this->redisContext->createMessage(json_encode([
-//                'type' => $this->messageType,
+                'entity' => $entity,
                 'payload' => $item,
                 'recordedOn' => (new \DateTime())->format('Y-m-d H:i:s'),
             ]));

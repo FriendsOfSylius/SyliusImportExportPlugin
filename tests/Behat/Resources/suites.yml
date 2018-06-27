@@ -112,6 +112,14 @@ default:
             filters:
                 tags: "@managing_payment_methods && @cli_importer"
 
+        cli_managing_orders:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_orders_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_orders && @cli_importer_exporter"
+
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:
             paths:

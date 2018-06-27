@@ -13,6 +13,7 @@ interface ItemWriterInterface
 
     /**
      * @param array $items
+     * @param string $entity
      */
-    public function write(array $items): void;
+    public function write(array $items, string $entity): void;
 }

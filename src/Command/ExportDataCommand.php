@@ -90,7 +90,7 @@ final class ExportDataCommand extends Command
         $allItems = $repository->findAll();
 
         if ($mode === '2') {
-            $this->exportToMq($allItems);
+            $this->exportToMq($allItems, $exporter);
             $this->finishExport($allItems, 'the message queue', $exporter, $output);
 
             return 0; // finally got a early return done
@@ -145,12 +145,16 @@ final class ExportDataCommand extends Command
         $service->export($idsToExport);
     }
 
-    public function exportToMq(array $allItems): void
+    /**
+     * @param array $allItems
+     * @param string $exporter
+     */
+    public function exportToMq(array $allItems, string $exporter): void
     {
         // insert mq logic here
         $mqItemWriter = new MqItemWriter(new RedisConnectionFactory());
         $mqItemWriter->initQueue('sylius.export.queue');
-        $mqItemWriter->write($allItems);
+        $mqItemWriter->write($allItems, $exporter);
     }
 
     /**

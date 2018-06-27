@@ -36,4 +36,12 @@ class CsvWriterSpec extends ObjectBehavior
         $csvWriter->writeItem($data)->shouldBeCalled();
         $this->write($data);
     }
+
+    function it_finishes_the_file_creation_when_we_get_the_contents(Writer $csvWriter)
+    {
+        $csvWriter->setCloseStreamOnFinish(true)->shouldBeCalled();
+        $csvWriter->getStream()->willReturn(fopen('php://memory', 'w'));
+        $csvWriter->finish()->shouldBeCalled();
+        $this->getFileContent();
+    }
 }

@@ -68,6 +68,15 @@
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
+        <service id="test.behat.context.cli_orders_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliOrdersContext">
+            <argument type="service" id="__symfony__.kernel" />
+            <argument type="service" id="__symfony__.sylius.repository.payment_method" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
+            <argument>%behat.files_directory%</argument>
+            <tag name="fob.context_service" />
+        </service>
 
         <service id="test.behat.page.country_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_country_index</argument>
