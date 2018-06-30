@@ -44,4 +44,13 @@ final class JsonResourceImporter extends ResourceImporter
 
         return $this->result;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importSingleDataArrayWithoutResult(array $dataToImport): void
+    {
+        $this->resourceProcessor->process($dataToImport);
+        $this->objectManager->flush();
+    }
 }

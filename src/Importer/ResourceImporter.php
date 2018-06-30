@@ -116,4 +116,12 @@ class ResourceImporter implements ImporterInterface
 
         return false;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function importSingleDataArrayWithoutResult(array $dataToImport): void
+    {
+        // not needed here
+    }
 }

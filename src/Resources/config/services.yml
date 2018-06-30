@@ -77,6 +77,7 @@ services:
             - "@sylius.repository.order"
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
+            - "@sylius.service.address_concatenation"
 
     # PluginPools for Exporters. Can contain multiple Plugins
     sylius.exporter.pluginpool.countries:
@@ -99,6 +100,10 @@ services:
     # Service for validating the header-information of input-files.
     sylius.importer.metadata_validator:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidator
+
+    # Service for concatenating the address.
+    sylius.service.address_concatenation:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Service\DefaultAddressConcatenation
 
     # generic ResourceProcessors, which can work with just Property-Accessors
     sylius.processor.countries:

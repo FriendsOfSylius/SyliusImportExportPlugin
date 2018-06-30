@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
 use Enqueue\Redis\RedisConnectionFactory;
+use Enqueue\Redis\RedisConsumer;
+use Enqueue\Redis\RedisMessage;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrQueue;
 
 class MqItemReader implements ItemReaderInterface
 {
-    /**
-     * @var RedisConnectionFactory
-     */
-    private $redisConnectionFactory;
-
     /**
      * @var PsrContext
      */
@@ -26,15 +24,29 @@ class MqItemReader implements ItemReaderInterface
     private $queue;
 
     /**
-     * @param RedisConnectionFactory $redisConnectionFactory
+     * @var RedisConnectionFactory
      */
-    public function __construct(RedisConnectionFactory $redisConnectionFactory)
+    private $redisConnectionFactory;
+
+    /**
+     * @var ImporterInterface
+     */
+    private $service;
+
+    /**
+     * MqItemReader constructor.
+     *
+     * @param RedisConnectionFactory $redisConnectionFactory
+     * @param ImporterInterface $service
+     */
+    public function __construct(RedisConnectionFactory $redisConnectionFactory, ImporterInterface $service)
     {
         $this->redisConnectionFactory = $redisConnectionFactory;
+        $this->service = $service;
     }
 
     /**
-     * @param string $queueName
+     * {@inheritdoc}
      */
     public function initQueue(string $queueName): void
     {
@@ -42,17 +54,14 @@ class MqItemReader implements ItemReaderInterface
         $this->queue = $this->redisContext->createQueue($queueName);
     }
 
-    public function read(): void
+    public function readAndImport(): void
     {
+        /** @var RedisConsumer $consumer */
         $consumer = $this->redisContext->createConsumer($this->queue);
 
+        /** @var RedisMessage $message */
         while ($message = $consumer->receive()) {
-            dump($message);
+            $this->service->importSingleDataArrayWithoutResult((array) json_decode($message->getBody()));
         }
-
-        dump('consumed!');
-
-//        should be imported inside of here!
-        exit;
     }
 }

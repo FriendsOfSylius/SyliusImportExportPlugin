@@ -4,13 +4,40 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\AddressConcatenationInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
+    /**
+     * @var AddressConcatenationInterface
+     */
+    private $addressConcatenation;
+
+    /**
+     * @param RepositoryInterface $repository
+     * @param PropertyAccessorInterface $propertyAccessor
+     * @param EntityManagerInterface $entityManager
+     * @param AddressConcatenationInterface $addressConcatenation
+     */
+    public function __construct(
+        RepositoryInterface $repository,
+        PropertyAccessorInterface $propertyAccessor,
+        EntityManagerInterface $entityManager,
+        AddressConcatenationInterface $addressConcatenation
+    ) {
+        $this->repository = $repository;
+        $this->propertyAccessor = $propertyAccessor;
+        $this->entityManager = $entityManager;
+        $this->addressConcatenation = $addressConcatenation;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -41,12 +68,15 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addCustomerData(OrderInterface $resource): void
     {
         $customer = $resource->getCustomer();
-        if (null !== $customer) {
-            $this->addDataForResource($resource, 'Gender', $customer->getGender() ? $customer->getGender() : '');
-            $this->addDataForResource($resource, 'Full_name', $customer->getFullName() ? $customer->getFullName() : '');
-            $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber() ? $customer->getPhoneNumber() : '');
-            $this->addDataForResource($resource, 'Email', $customer->getEmail() ? $customer->getEmail() : '');
+
+        if (null === $customer) {
+            return;
         }
+
+        $this->addDataForResource($resource, 'Gender', $customer->getGender());
+        $this->addDataForResource($resource, 'Full_name', $customer->getFullName());
+        $this->addDataForResource($resource, 'Telephone', $customer->getPhoneNumber());
+        $this->addDataForResource($resource, 'Email', $customer->getEmail());
     }
 
     /**
@@ -55,16 +85,14 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addShippingAddressData(OrderInterface $resource): void
     {
         $shippingAddress = $resource->getShippingAddress();
-        if (null !== $shippingAddress) {
-            $this->addDataForResource($resource, 'Shipping_address', sprintf(
-                '%s, %s, %s, %s, %s',
-                $shippingAddress->getFullName() ? $shippingAddress->getFullName() : '',
-                $shippingAddress->getStreet() ? $shippingAddress->getStreet() : '',
-                $shippingAddress->getCity() ? $shippingAddress->getCity() : '',
-                $shippingAddress->getPostcode() ? $shippingAddress->getPostcode() : '',
-                $shippingAddress->getCountryCode() ? $shippingAddress->getCountryCode() : ''
-            ));
+
+        if (null === $shippingAddress) {
+            return;
         }
+
+        $shippingInfoString = $this->addressConcatenation->getString($shippingAddress);
+
+        $this->addDataForResource($resource, 'Shipping_address', $shippingInfoString);
     }
 
     /**
@@ -73,16 +101,14 @@ class OrderResourcePlugin extends ResourcePlugin
     private function addBillingAddressData(OrderInterface $resource): void
     {
         $billingAddress = $resource->getBillingAddress();
-        if (null !== $billingAddress) {
-            $this->addDataForResource($resource, 'Billing_address', sprintf(
-                '%s, %s, %s, %s, %s',
-                $billingAddress->getFullName() ? $billingAddress->getFullName() : '',
-                $billingAddress->getStreet() ? $billingAddress->getStreet() : '',
-                $billingAddress->getCity() ? $billingAddress->getCity() : '',
-                $billingAddress->getPostcode() ? $billingAddress->getPostcode() : '',
-                $billingAddress->getCountryCode() ? $billingAddress->getCountryCode() : ''
-            ));
+
+        if (null === $billingAddress) {
+            return;
         }
+
+        $billingInfoString = $this->addressConcatenation->getString($billingAddress);
+
+        $this->addDataForResource($resource, 'Billing_address', $billingInfoString);
     }
 
     /**
@@ -101,11 +127,13 @@ class OrderResourcePlugin extends ResourcePlugin
             /** @var ProductInterface $product */
             $product = $variant->getProduct();
 
-            if (!isset($items[$product->getName()])) {
-                $items[$product->getName()] = 0;
+            if (!isset($items[$product->getId()])) {
+                $items[$product->getId()] = [
+                    'name' => $product->getName(),
+                    'count' => 0,
+                ];
             }
-
-            $items[$product->getName()] += $orderItem->getQuantity();
+            $items[$product->getId()]['count'] += $orderItem->getQuantity();
         }
 
         return $items;
@@ -118,11 +146,11 @@ class OrderResourcePlugin extends ResourcePlugin
     {
         $str = '';
 
-        foreach ($items as $itemName => $quantity) {
+        foreach ($items as $itemId => $item) {
             if (!empty($str)) {
                 $str .= ' | ';
             }
-            $str .= sprintf('%dx %s', $quantity, $itemName);
+            $str .= sprintf('%dx %s(id:%d)', $item['count'], $item['name'], $itemId);
         }
 
         $this->addDataForResource($resource, 'Product_list', $str);

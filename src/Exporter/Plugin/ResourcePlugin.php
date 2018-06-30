@@ -20,17 +20,17 @@ class ResourcePlugin implements PluginInterface
     /**
      * @var RepositoryInterface
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var PropertyAccessorInterface
      */
-    private $propertyAccessor;
+    protected $propertyAccessor;
 
     /**
      * @var EntityManagerInterface
      */
-    private $entityManager;
+    protected $entityManager;
 
     /**
      * @var array
