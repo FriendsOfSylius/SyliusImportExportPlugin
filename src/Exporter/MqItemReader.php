@@ -54,14 +54,37 @@ class MqItemReader implements ItemReaderInterface
         $this->queue = $this->redisContext->createQueue($queueName);
     }
 
-    public function readAndImport(): void
+    /**
+     * @return array
+     */
+    public function readAndImport(): array
     {
         /** @var RedisConsumer $consumer */
         $consumer = $this->redisContext->createConsumer($this->queue);
 
+        $dataTimestampArray = [];
+
+        $messagesImportedCount = 0;
+        $messagesSkippedCount = 0;
+
         /** @var RedisMessage $message */
         while ($message = $consumer->receive()) {
-            $this->service->importSingleDataArrayWithoutResult((array) json_decode($message->getBody()));
+            $dataArrayToImport = (array) json_decode($message->getBody());
+            $dataTimestamp = strtotime($message->getHeader('recordedOn'));
+
+            if (array_key_exists($dataArrayToImport['Id'], $dataTimestampArray)) {
+                if ($dataTimestampArray[$dataArrayToImport['Id']] >= $dataTimestamp) {
+                    ++$messagesSkippedCount;
+
+                    continue;
+                }
+            }
+
+            $dataTimestampArray[$dataArrayToImport['Id']] = $dataTimestamp;
+            $this->service->importSingleDataArrayWithoutResult($dataArrayToImport);
+            ++$messagesImportedCount;
         }
+
+        return [$messagesImportedCount, $messagesSkippedCount];
     }
 }

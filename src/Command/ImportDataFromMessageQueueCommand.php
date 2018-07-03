@@ -8,15 +8,13 @@ use Enqueue\Redis\RedisConnectionFactory;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemReader;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResultInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-final class ImportDataCommand extends Command
+final class ImportDataFromMessageQueueCommand extends Command
 {
     /**
      * @var ImporterRegistry
@@ -39,15 +37,10 @@ final class ImportDataCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('sylius:import')
-            ->setDescription('Import a file.')
+            ->setName('sylius:import-from-message-queue')
+            ->setDescription('Import data from message queue.')
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
-                new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
-                // @TODO try to guess the format from the file to make this optional
-                new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the file to import'),
-                new InputOption('details', null, InputOption::VALUE_NONE,
-                    'If to return details about skipped/failed rows'),
             ]);
     }
 
@@ -57,15 +50,14 @@ final class ImportDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $importer = $input->getArgument('importer');
-        $format = $input->getOption('format');
 
-        if (empty($importer) || empty($format)) {
-            $message = 'choose an importer and format';
+        if (empty($importer)) {
+            $message = 'choose an importer';
             $this->listImporters($input, $output, $message);
         }
 
-        $name = ImporterRegistry::buildServiceName($importer, $format);
-        $file = $input->getArgument('file');
+        // only accepts the format of json as messages
+        $name = ImporterRegistry::buildServiceName($importer, 'json');
 
         if (!$this->importerRegistry->has($name)) {
             $message = sprintf(
@@ -81,67 +73,36 @@ final class ImportDataCommand extends Command
         /** @var ImporterInterface $service */
         $service = $this->importerRegistry->get($name);
 
-        $result = $service->import($file);
-
-        $this->finishImport($file, $name, $output);
-
-        $this->showResultDetails($input, $output, $result);
+        $this->getImporterJsonDataFromMessageQueue($importer, $service, $output);
+        $this->finishImport($name, $output);
     }
 
     /**
-     * @param string $file
      * @param string $name
      * @param OutputInterface $output
      */
-    private function finishImport(string $file, string $name, OutputInterface $output): void
+    private function finishImport(string $name, OutputInterface $output): void
     {
         $message = sprintf(
-            "<info>Imported '%s' via the %s importer</info>",
-            $file,
+            '<info>Imported from the message queue via the %s importer</info>',
             $name
         );
         $output->writeln($message);
     }
 
     /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param ImporterResultInterface $result
-     */
-    private function showResultDetails(InputInterface $input, OutputInterface $output, ImporterResultInterface $result): void
-    {
-        $io = new SymfonyStyle($input, $output);
-
-        $imported = count($result->getSuccessRows());
-        $skipped = count($result->getSkippedRows());
-        $failed = count($result->getFailedRows());
-        $countOrRows = 'count';
-
-        if ($input->getOption('details')) {
-            $imported = implode(', ', $result->getSuccessRows());
-            $skipped = implode(', ', $result->getSkippedRows());
-            $failed = implode(', ', $result->getFailedRows());
-            $countOrRows = 'rows';
-        }
-
-        $io->listing(
-            [
-                sprintf('Time taken: %s ms ', $result->getDuration()),
-                sprintf('Imported %s: %s', $countOrRows, $imported),
-                sprintf('Skipped %s: %s', $countOrRows, $skipped),
-                sprintf('Failed %s: %s', $countOrRows, $failed),
-            ]
-        );
-    }
-
-    /**
      * @param string $importer
+     * @param ImporterInterface $service
+     * @param OutputInterface $output
      */
-    private function getImporterJsonDataFromMessageQueue(string $importer, ImporterInterface $service): void
+    private function getImporterJsonDataFromMessageQueue(string $importer, ImporterInterface $service, OutputInterface $output): void
     {
         $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        $mqItemReader->readAndImport();
+        /** @var array $importedAndSkippedCount */
+        $importedAndSkippedCount = $mqItemReader->readAndImport();
+        $output->writeln('Imported: ' . $importedAndSkippedCount[0]);
+        $output->writeln('Skipped: ' . $importedAndSkippedCount[1]);
     }
 
     /**
@@ -160,16 +121,16 @@ final class ImportDataCommand extends Command
         }
 
         $list = [];
-        $output->writeln('<info>Available importers and formats:</info>');
+        $output->writeln('<info>Available importers:</info>');
         foreach ($importers as $importer => $formats) {
             $list[] = sprintf(
-                '%s (formats: %s)',
-                $importer,
-                implode(', ', $formats)
+                '%s',
+                $importer
             );
         }
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
+        exit(0);
     }
 }
