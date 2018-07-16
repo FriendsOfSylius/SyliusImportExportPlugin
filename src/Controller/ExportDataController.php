@@ -90,7 +90,6 @@ final class ExportDataController extends Controller
         $service = $this->registry->get($name);
 
         $resources = $this->findResources($configuration, $this->findRepository($resource));
-
         $service->export($this->getResourceIds($resources));
 
         $response = new Response($service->getExportedData());
