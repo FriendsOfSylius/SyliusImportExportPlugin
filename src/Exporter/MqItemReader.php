@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 use Enqueue\Redis\RedisConnectionFactory;
 use Enqueue\Redis\RedisConsumer;
 use Enqueue\Redis\RedisMessage;
-use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\SingleDataArrayImporterInterface;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrQueue;
 
@@ -29,17 +29,27 @@ class MqItemReader implements ItemReaderInterface
     private $redisConnectionFactory;
 
     /**
-     * @var ImporterInterface
+     * @var SingleDataArrayImporterInterface
      */
     private $service;
+
+    /**
+     * @var int
+     */
+    private $messagesImportedCount;
+
+    /**
+     * @var int
+     */
+    private $messagesSkippedCount;
 
     /**
      * MqItemReader constructor.
      *
      * @param RedisConnectionFactory $redisConnectionFactory
-     * @param ImporterInterface $service
+     * @param SingleDataArrayImporterInterface $service
      */
-    public function __construct(RedisConnectionFactory $redisConnectionFactory, ImporterInterface $service)
+    public function __construct(RedisConnectionFactory $redisConnectionFactory, SingleDataArrayImporterInterface $service)
     {
         $this->redisConnectionFactory = $redisConnectionFactory;
         $this->service = $service;
@@ -52,20 +62,16 @@ class MqItemReader implements ItemReaderInterface
     {
         $this->redisContext = $this->redisConnectionFactory->createContext();
         $this->queue = $this->redisContext->createQueue($queueName);
+        $this->messagesImportedCount = 0;
+        $this->messagesSkippedCount = 0;
     }
 
-    /**
-     * @return array
-     */
-    public function readAndImport(): array
+    public function readAndImport(): void
     {
         /** @var RedisConsumer $consumer */
         $consumer = $this->redisContext->createConsumer($this->queue);
 
         $dataTimestampArray = [];
-
-        $messagesImportedCount = 0;
-        $messagesSkippedCount = 0;
 
         /** @var RedisMessage $message */
         while ($message = $consumer->receive()) {
@@ -74,7 +80,7 @@ class MqItemReader implements ItemReaderInterface
 
             if (array_key_exists($dataArrayToImport['Id'], $dataTimestampArray)) {
                 if ($dataTimestampArray[$dataArrayToImport['Id']] >= $dataTimestamp) {
-                    ++$messagesSkippedCount;
+                    ++$this->messagesSkippedCount;
 
                     continue;
                 }
@@ -82,9 +88,23 @@ class MqItemReader implements ItemReaderInterface
 
             $dataTimestampArray[$dataArrayToImport['Id']] = $dataTimestamp;
             $this->service->importSingleDataArrayWithoutResult($dataArrayToImport);
-            ++$messagesImportedCount;
+            ++$this->messagesImportedCount;
         }
+    }
 
-        return [$messagesImportedCount, $messagesSkippedCount];
+    /**
+     * @return int
+     */
+    public function getMessagesImportedCount(): int
+    {
+        return $this->messagesImportedCount;
+    }
+
+    /**
+     * @return int
+     */
+    public function getMessagesSkippedCount(): int
+    {
+        return $this->messagesSkippedCount;
     }
 }

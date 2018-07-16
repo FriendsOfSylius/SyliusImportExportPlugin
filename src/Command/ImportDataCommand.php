@@ -4,11 +4,8 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
-use Enqueue\Redis\RedisConnectionFactory;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemReader;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResultInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -45,7 +42,7 @@ final class ImportDataCommand extends Command
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
                 // @TODO try to guess the format from the file to make this optional
-                new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the file to import'),
+                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to import'),
                 new InputOption('details', null, InputOption::VALUE_NONE,
                     'If to return details about skipped/failed rows'),
             ]);
@@ -57,16 +54,15 @@ final class ImportDataCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $importer = $input->getArgument('importer');
-        $format = $input->getOption('format');
+        if (empty($importer)) {
+            $this->listImporters($input, $output);
 
-        if (empty($importer) || empty($format)) {
-            $message = 'choose an importer and format';
-            $this->listImporters($input, $output, $message);
+            return;
         }
 
-        $name = ImporterRegistry::buildServiceName($importer, $format);
-        $file = $input->getArgument('file');
+        $format = $input->getOption('format');
 
+        $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->importerRegistry->has($name)) {
             $message = sprintf(
                 "<error>There is no '%s' importer.</error>",
@@ -74,54 +70,37 @@ final class ImportDataCommand extends Command
             );
             $output->writeln($message);
 
-            $message = 'choose an importer and format';
-            $this->listImporters($input, $output, $message);
+            $this->listImporters($input, $output);
+
+            return;
         }
+
+        $file = $input->getArgument('file');
 
         /** @var ImporterInterface $service */
         $service = $this->importerRegistry->get($name);
-
         $result = $service->import($file);
 
-        $this->finishImport($file, $name, $output);
-
-        $this->showResultDetails($input, $output, $result);
-    }
-
-    /**
-     * @param string $file
-     * @param string $name
-     * @param OutputInterface $output
-     */
-    private function finishImport(string $file, string $name, OutputInterface $output): void
-    {
         $message = sprintf(
             "<info>Imported '%s' via the %s importer</info>",
             $file,
             $name
         );
         $output->writeln($message);
-    }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param ImporterResultInterface $result
-     */
-    private function showResultDetails(InputInterface $input, OutputInterface $output, ImporterResultInterface $result): void
-    {
         $io = new SymfonyStyle($input, $output);
 
-        $imported = count($result->getSuccessRows());
-        $skipped = count($result->getSkippedRows());
-        $failed = count($result->getFailedRows());
-        $countOrRows = 'count';
-
-        if ($input->getOption('details')) {
+        $details = $input->getOption('details');
+        if ($details) {
             $imported = implode(', ', $result->getSuccessRows());
             $skipped = implode(', ', $result->getSkippedRows());
             $failed = implode(', ', $result->getFailedRows());
             $countOrRows = 'rows';
+        } else {
+            $imported = count($result->getSuccessRows());
+            $skipped = count($result->getSkippedRows());
+            $failed = count($result->getFailedRows());
+            $countOrRows = 'count';
         }
 
         $io->listing(
@@ -132,26 +111,17 @@ final class ImportDataCommand extends Command
                 sprintf('Failed %s: %s', $countOrRows, $failed),
             ]
         );
-    }
 
-    /**
-     * @param string $importer
-     */
-    private function getImporterJsonDataFromMessageQueue(string $importer, ImporterInterface $service): void
-    {
-        $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
-        $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        $mqItemReader->readAndImport();
+        return;
     }
 
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string $message
      */
-    private function listImporters(InputInterface $input, OutputInterface $output, string $message): void
+    private function listImporters(InputInterface $input, OutputInterface $output): void
     {
-        $output->writeln($message);
+        $output->writeln('<info>Available importers:</info>');
         $all = array_keys($this->importerRegistry->all());
         $importers = [];
         foreach ($all as $importer) {
@@ -160,7 +130,6 @@ final class ImportDataCommand extends Command
         }
 
         $list = [];
-        $output->writeln('<info>Available importers and formats:</info>');
         foreach ($importers as $importer => $formats) {
             $list[] = sprintf(
                 '%s (formats: %s)',

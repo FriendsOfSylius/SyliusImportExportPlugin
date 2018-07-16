@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 
-final class JsonResourceImporter extends ResourceImporter
+final class JsonResourceImporter extends ResourceImporter implements SingleDataArrayImporterInterface
 {
     public function __construct(
         ObjectManager $objectManager,

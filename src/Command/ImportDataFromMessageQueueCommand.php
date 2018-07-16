@@ -6,8 +6,8 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
 use Enqueue\Redis\RedisConnectionFactory;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemReader;
-use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\SingleDataArrayImporterInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -70,7 +70,7 @@ final class ImportDataFromMessageQueueCommand extends Command
             $this->listImporters($input, $output, $message);
         }
 
-        /** @var ImporterInterface $service */
+        /** @var SingleDataArrayImporterInterface $service */
         $service = $this->importerRegistry->get($name);
 
         $this->getImporterJsonDataFromMessageQueue($importer, $service, $output);
@@ -92,17 +92,16 @@ final class ImportDataFromMessageQueueCommand extends Command
 
     /**
      * @param string $importer
-     * @param ImporterInterface $service
+     * @param SingleDataArrayImporterInterface $service
      * @param OutputInterface $output
      */
-    private function getImporterJsonDataFromMessageQueue(string $importer, ImporterInterface $service, OutputInterface $output): void
+    private function getImporterJsonDataFromMessageQueue(string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output): void
     {
         $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        /** @var array $importedAndSkippedCount */
-        $importedAndSkippedCount = $mqItemReader->readAndImport();
-        $output->writeln('Imported: ' . $importedAndSkippedCount[0]);
-        $output->writeln('Skipped: ' . $importedAndSkippedCount[1]);
+        $mqItemReader->readAndImport();
+        $output->writeln('Imported: ' . $mqItemReader->getMessagesImportedCount());
+        $output->writeln('Skipped: ' . $mqItemReader->getMessagesSkippedCount());
     }
 
     /**
@@ -131,6 +130,5 @@ final class ImportDataFromMessageQueueCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
-        exit(0);
     }
 }

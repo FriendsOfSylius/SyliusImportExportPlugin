@@ -11,8 +11,15 @@ interface ItemReaderInterface
      */
     public function initQueue(string $queueName): void;
 
+    public function readAndImport(): void;
+
     /**
-     * @return array
+     * @return int
      */
-    public function readAndImport(): array;
+    public function getMessagesImportedCount(): int;
+
+    /**
+     * @return int
+     */
+    public function getMessagesSkippedCount(): int;
 }

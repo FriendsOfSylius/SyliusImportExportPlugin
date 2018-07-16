@@ -12,9 +12,4 @@ interface ImporterInterface
      * @return ImporterResultInterface
      */
     public function import(string $fileName): ImporterResultInterface;
-
-    /**
-     * @param array $dataToImport
-     */
-    public function importSingleDataArrayWithoutResult(array $dataToImport): void;
 }
