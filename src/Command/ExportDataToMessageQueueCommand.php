@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
+use Enqueue\Redis\RedisConnectionFactory;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemWriter;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
-final class ExportDataCommand extends Command
+final class ExportDataToMessageQueueCommand extends Command
 {
     use ContainerAwareTrait;
 
@@ -41,15 +42,10 @@ final class ExportDataCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('sylius:export')
-            ->setDescription('Export data to a file.')
+            ->setName('sylius:export-to-message-queue')
+            ->setDescription('Export data to message queue')
             ->setDefinition([
-                new InputArgument('exporter', InputArgument::OPTIONAL, 'The exporter to use.'),
-                new InputArgument('file', InputArgument::OPTIONAL, 'The target file to export to.'),
-                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to export to'),
-                /** @todo Extracting details to show with this option. At the moment it will have no effect */
-                new InputOption('details', null, InputOption::VALUE_NONE,
-                    'If to return details about skipped/failed rows'),
+                new InputArgument('exporter', InputArgument::OPTIONAL, 'The exporter to uses.'),
             ]);
     }
 
@@ -64,8 +60,15 @@ final class ExportDataCommand extends Command
             $message = 'choose an exporter';
             $this->listExporters($input, $output, $message);
         }
-        $format = $input->getOption('format');
-        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
+
+        /** @var RepositoryInterface $repository */
+        $repository = $this->container->get('sylius.repository.' . $exporter);
+        $allItems = $repository->findAll();
+
+        /** @var array $idsToExport */
+        $idsToExport = $this->prepareExport($allItems);
+
+        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, 'json');
 
         if (!$this->exporterRegistry->has($name)) {
             $message = sprintf(
@@ -76,32 +79,8 @@ final class ExportDataCommand extends Command
             $this->listExporters($input, $output, $message);
         }
 
-        $file = $input->getArgument('file');
-
-        /** @var RepositoryInterface $repository */
-        $repository = $this->container->get('sylius.repository.' . $exporter);
-        $allItems = $repository->findAll();
-        $idsToExport = [];
-        foreach ($allItems as $item) {
-            /** @var ResourceInterface $item */
-            $idsToExport[] = $item->getId();
-        }
-
-        /** @var ResourceExporterInterface $service */
-        $service = $this->exporterRegistry->get($name);
-        $service->setExportFile($file);
-
-        $service->export($idsToExport);
-
-        $service->finish();
-
-        $message = sprintf(
-            "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
-            count($allItems),
-            $file,
-            $name
-        );
-        $output->writeln($message);
+        $this->export($name, $idsToExport, $exporter);
+        $this->finishExport($allItems, 'message queue', $name, $output);
     }
 
     /**
@@ -126,17 +105,66 @@ final class ExportDataCommand extends Command
         }
 
         $list = [];
+
         foreach ($exporters as $exporter => $formats) {
-            // prints the exporterentity, implodes the types and outputs them in a form
             $list[] = sprintf(
-                '%s (formats: %s)',
-                $exporter,
-                implode(', ', $formats)
+                '%s',
+                $exporter
             );
         }
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
         exit(0);
+    }
+
+    /**
+     * @param array $allItems
+     *
+     * @return array
+     */
+    private function prepareExport(array $allItems): array
+    {
+        $idsToExport = [];
+        foreach ($allItems as $item) {
+            /** @var ResourceInterface $item */
+            $idsToExport[] = $item->getId();
+        }
+
+        return $idsToExport;
+    }
+
+    /**
+     * @param string $name
+     * @param array $idsToExport
+     * @param string $exporter
+     */
+    private function export(string $name, array $idsToExport, string $exporter): void
+    {
+        /** @var ResourceExporterInterface $service */
+        $service = $this->exporterRegistry->get($name);
+        $service->export($idsToExport);
+        $itemsToExport = $service->getExportedData();
+
+        $mqItemWriter = new MqItemWriter(new RedisConnectionFactory());
+        $mqItemWriter->initQueue('sylius.export.queue.' . $exporter);
+        $mqItemWriter->write(json_decode($itemsToExport));
+    }
+
+    /**
+     * @param array $allItems
+     * @param string $file
+     * @param string $name
+     * @param OutputInterface $output
+     */
+    private function finishExport(array $allItems, string $file, string $name, OutputInterface $output): void
+    {
+        $message = sprintf(
+            "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
+            count($allItems),
+            $file,
+            $name
+        );
+        $output->writeln($message);
     }
 }

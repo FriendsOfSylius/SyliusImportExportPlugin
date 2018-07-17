@@ -111,6 +111,11 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
     ```bash
     $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
     ```
+    
+  - Export data of resources to message queue using `country` exporter
+    ```bash
+    $ bin/console sylius:export-to-message-queue country
+    ```
 
 ## Development
 
