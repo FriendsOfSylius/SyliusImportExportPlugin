@@ -101,7 +101,7 @@ final class ExportDataCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param null|string $errorMessage
+     * @param string|null $errorMessage
      */
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {

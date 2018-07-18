@@ -106,7 +106,7 @@ final class ImportDataFromMessageQueueCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param null|string $errorMessage
+     * @param string|null $errorMessage
      */
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {

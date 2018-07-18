@@ -52,7 +52,7 @@ final class ExportDataToMessageQueueCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $exporter = $input->getArgument('exporter');
 
@@ -82,7 +82,7 @@ final class ExportDataToMessageQueueCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param null|string $errorMessage
+     * @param string|null $errorMessage
      */
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
