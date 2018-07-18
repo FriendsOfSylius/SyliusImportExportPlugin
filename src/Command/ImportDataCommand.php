@@ -64,15 +64,7 @@ final class ImportDataCommand extends Command
 
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->importerRegistry->has($name)) {
-            $message = sprintf(
-                "<error>There is no '%s' importer.</error>",
-                $name
-            );
-            $output->writeln($message);
-
-            $this->listImporters($input, $output);
-
-            return;
+            $this->listImporters($input, $output, sprintf('There is no \'%s\' importer.', $name));
         }
 
         $file = $input->getArgument('file');
@@ -118,8 +110,9 @@ final class ImportDataCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
+     * @param string|null $errorMessage
      */
-    private function listImporters(InputInterface $input, OutputInterface $output): void
+    private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
         $output->writeln('<info>Available importers:</info>');
         $all = array_keys($this->importerRegistry->all());
@@ -140,5 +133,9 @@ final class ImportDataCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
+
+        if ($errorMessage) {
+            throw new \RuntimeException($errorMessage);
+        }
     }
 }
