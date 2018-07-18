@@ -52,8 +52,9 @@ final class ImportDataFromMessageQueueCommand extends Command
         $importer = $input->getArgument('importer');
 
         if (empty($importer)) {
-            $message = 'choose an importer';
-            $this->listImporters($input, $output, $message);
+            $this->listImporters($input, $output);
+
+            return;
         }
 
         // only accepts the format of json as messages
@@ -64,9 +65,7 @@ final class ImportDataFromMessageQueueCommand extends Command
                 "<error>There is no '%s' importer.</error>",
                 $name
             );
-            $output->writeln($message);
 
-            $message = 'choose an importer and format';
             $this->listImporters($input, $output, $message);
         }
 
@@ -107,11 +106,10 @@ final class ImportDataFromMessageQueueCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string $message
+     * @param null|string $errorMessage
      */
-    private function listImporters(InputInterface $input, OutputInterface $output, string $message): void
+    private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
-        $output->writeln($message);
         $all = array_keys($this->importerRegistry->all());
         $importers = [];
         foreach ($all as $importer) {
@@ -130,5 +128,9 @@ final class ImportDataFromMessageQueueCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
+
+        if ($errorMessage) {
+            throw new \RuntimeException($errorMessage);
+        }
     }
 }

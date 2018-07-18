@@ -56,24 +56,18 @@ final class ExportDataCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $exporter = $input->getArgument('exporter');
 
         if (empty($exporter)) {
-            $message = 'choose an exporter';
-            $this->listExporters($input, $output, $message);
+            $this->listExporters($input, $output);
         }
         $format = $input->getOption('format');
         $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
 
         if (!$this->exporterRegistry->has($name)) {
-            $message = sprintf(
-                "<error>There is no '%s' exporter.</error>",
-                $name
-            );
-
-            $this->listExporters($input, $output, $message);
+            $this->listExporters($input, $output, sprintf('There is no \'%s\' exporter.', $name));
         }
 
         $file = $input->getArgument('file');
@@ -107,14 +101,10 @@ final class ExportDataCommand extends Command
     /**
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @param string $message
+     * @param null|string $errorMessage
      */
-    private function listExporters(
-        InputInterface $input,
-        OutputInterface $output,
-        string $message
-    ): void {
-        $output->writeln($message);
+    private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
+    {
         $output->writeln('<info>Available exporters:</info>');
         $all = array_keys($this->exporterRegistry->all());
         $exporters = [];
@@ -137,6 +127,9 @@ final class ExportDataCommand extends Command
 
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
-        exit(0);
+
+        if ($errorMessage) {
+            throw new \RuntimeException($errorMessage);
+        }
     }
 }
