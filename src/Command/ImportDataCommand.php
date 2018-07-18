@@ -51,13 +51,13 @@ final class ImportDataCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): int
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $importer = $input->getArgument('importer');
         if (empty($importer)) {
             $this->listImporters($input, $output);
 
-            return 0;
+            return;
         }
 
         $format = $input->getOption('format');
@@ -72,7 +72,7 @@ final class ImportDataCommand extends Command
 
             $this->listImporters($input, $output);
 
-            return 1;
+            return;
         }
 
         $file = $input->getArgument('file');
@@ -112,7 +112,7 @@ final class ImportDataCommand extends Command
             ]
         );
 
-        return 0;
+        return;
     }
 
     /**
