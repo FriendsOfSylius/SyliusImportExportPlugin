@@ -81,6 +81,25 @@ class ResourceExporter implements ResourceExporterInterface
     }
 
     /**
+     * @param array $idsToExport
+     *
+     * @return array
+     */
+    public function exportData(array $idsToExport): array
+    {
+        $this->pluginPool->initPlugins($idsToExport);
+        $this->writer->write($this->resourceKeys);
+
+        $exportIdDataArray = [];
+
+        foreach ($idsToExport as $id) {
+            $exportIdDataArray[$id] = $this->getDataForId((string) $id);
+        }
+
+        return $exportIdDataArray;
+    }
+
+    /**
      * @param string $id
      */
     private function writeDataForId(string $id): void
