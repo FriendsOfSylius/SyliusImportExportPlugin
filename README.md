@@ -83,6 +83,7 @@ sylius_import_export:
 
 * country (csv, excel, json)
 * order (csv, excel, json)
+* customer (csv, excel, json)
 
 ## Example import files
 

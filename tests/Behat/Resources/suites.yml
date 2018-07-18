@@ -120,6 +120,14 @@ default:
             filters:
                 tags: "@managing_orders && @cli_importer_exporter"
 
+        cli_managing_customers:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_customers_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_customers && @cli_importer_exporter"
+
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:
             paths:

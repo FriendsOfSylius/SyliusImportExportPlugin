@@ -26,6 +26,16 @@ app_export_data_order:
             filterable: true
             grid: sylius_admin_order
 
+app_export_data_customer:
+    path: /export/sylius.customer/{format}
+    methods: [GET]
+    defaults:
+        resource: sylius.customer
+        _controller: sylius.controller.export_data:exportAction
+        _sylius:
+            filterable: true
+            grid: sylius_admin_customer
+
 ## Backup route
 app_export_data:
     path: /export/{resource}/{format}
