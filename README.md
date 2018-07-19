@@ -185,6 +185,8 @@ sylius.processor.foo:
         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
 
+HeaderKey0 is the key that will be searched for in the Database, to avoid redundancy. So best would be to make HeaderKey0 a unique Key.
+
 The fourth parameter represents the Headers of the data to import. For csv-files this would be the headers defined in 
 its first line. These HeaderKeys have to be equal to the fields in the resource to import if the generic
 ResourceProcessor is used, since the Keys are used for building dynamic Methodnames
