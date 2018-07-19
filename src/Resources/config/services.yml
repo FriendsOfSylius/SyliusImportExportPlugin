@@ -149,6 +149,15 @@ services:
             - "@sylius.importer.metadata_validator"
             - ["Code", "Name"]
 
+    sylius.processor.customers:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
+        arguments:
+            - "@sylius.factory.customer"
+            - "@sylius.repository.customer"
+            - "@property_accessor"
+            - "@sylius.importer.metadata_validator"
+            - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+
     # Definition of custom Processors, which can have additional logic to handle dependencies to other resources
     sylius.processor.payment_methods:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor

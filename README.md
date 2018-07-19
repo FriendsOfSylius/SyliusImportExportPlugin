@@ -78,6 +78,7 @@ sylius_import_export:
 * customer_group (csv, excel, json)
 * payment_method (csv, excel, json)
 * tax_category (csv, excel, json)
+* customer (csv, excel, json)
 
 ### Available exporter types
 
