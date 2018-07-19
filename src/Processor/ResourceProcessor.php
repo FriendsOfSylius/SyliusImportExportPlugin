@@ -64,7 +64,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
-        $resource = $this->getResource($data['Code']);
+        $resource = $this->getResource($data);
 
         foreach ($this->headerKeys as $headerKey) {
             if (false === $this->propertyAccessor->isReadable($resource, $headerKey)) {
@@ -77,22 +77,27 @@ final class ResourceProcessor implements ResourceProcessorInterface
                     )
                 );
             }
-
-            $this->propertyAccessor->setValue($resource, $headerKey, $data[$headerKey]);
+            $dataValue = $data[$headerKey];
+            if (strlen((string) $dataValue) === 0 && !is_bool($dataValue)) {
+                $dataValue = null;
+            }
+            $this->propertyAccessor->setValue($resource, $headerKey, $dataValue);
         }
 
         $this->resourceRepository->add($resource);
     }
 
     /**
-     * @param string $code
+     * @param array $data
      *
      * @return ResourceInterface
      */
-    private function getResource(string $code): ResourceInterface
+    private function getResource(array $data): ResourceInterface
     {
+        $lowerCaseKey = strtolower(key($data));
+
         /** @var ResourceInterface|null $resource */
-        $resource = $this->resourceRepository->findOneBy(['code' => $code]);
+        $resource = $this->resourceRepository->findOneBy([$lowerCaseKey => $data[key($data)]]);
 
         if (null === $resource) {
             /** @var ResourceInterface $resource */

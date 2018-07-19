@@ -78,7 +78,7 @@ sylius_import_export:
 * customer_group (csv, excel, json)
 * payment_method (csv, excel, json)
 * tax_category (csv, excel, json)
-* customer (csv, excel, json)
+* customer (json)
 
 ### Available exporter types
 
@@ -185,6 +185,8 @@ sylius.processor.foo:
         - "@sylius.importer.metadata_validator"
         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
+
+HeaderKey0 is the key that will be searched for in the Database, to avoid redundancy. So best would be to make HeaderKey0 a unique Key.
 
 The fourth parameter represents the Headers of the data to import. For csv-files this would be the headers defined in 
 its first line. These HeaderKeys have to be equal to the fields in the resource to import if the generic
