@@ -18,3 +18,11 @@ services:
         tags:
             - { name: sylius.exporter, type: sylius.order, format: json }
 
+    sylius.exporter.customers.json:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
+        arguments:
+            - "@sylius.exporter.pluginpool.customers"
+            - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
+            - "@sylius.exporters_transformer_pool"
+        tags:
+            - { name: sylius.exporter, type: sylius.customer, format: json }
