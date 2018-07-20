@@ -81,7 +81,6 @@ final class ResourceProcessor implements ResourceProcessorInterface
             if (strlen((string) $dataValue) === 0 && !is_bool($dataValue)) {
                 $dataValue = null;
             }
-
             $this->propertyAccessor->setValue($resource, $headerKey, $dataValue);
         }
 
