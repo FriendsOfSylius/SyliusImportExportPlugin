@@ -25,9 +25,6 @@ final class ExportDataCommand extends Command
      */
     private $exporterRegistry;
 
-    /**
-     * @param ExporterRegistry $exporterRegistry
-     */
     public function __construct(ExporterRegistry $exporterRegistry)
     {
         $this->exporterRegistry = $exporterRegistry;
@@ -74,12 +71,10 @@ final class ExportDataCommand extends Command
 
         /** @var RepositoryInterface $repository */
         $repository = $this->container->get('sylius.repository.' . $exporter);
-        $allItems = $repository->findAll();
-        $idsToExport = [];
-        foreach ($allItems as $item) {
-            /** @var ResourceInterface $item */
-            $idsToExport[] = $item->getId();
-        }
+        $items = $repository->findAll();
+        $idsToExport = array_map(function (ResourceInterface $item) {
+            return $item->getId();
+        }, $items);
 
         /** @var ResourceExporterInterface $service */
         $service = $this->exporterRegistry->get($name);
@@ -89,20 +84,14 @@ final class ExportDataCommand extends Command
 
         $service->finish();
 
-        $message = sprintf(
-            "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
-            count($allItems),
-            $file,
-            $name
-        );
-        $output->writeln($message);
+        $output->writeln(sprintf(
+          "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
+          count($items),
+          $file,
+          $name
+        ));
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string|null $errorMessage
-     */
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
         $output->writeln('<info>Available exporters:</info>');

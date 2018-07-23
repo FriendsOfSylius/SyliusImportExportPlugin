@@ -31,17 +31,11 @@ class MqItemWriter implements ItemWriterInterface
      */
     private $consumer;
 
-    /**
-     * @param RedisConnectionFactory $redisConnectionFactory
-     */
     public function __construct(RedisConnectionFactory $redisConnectionFactory)
     {
         $this->redisConnectionFactory = $redisConnectionFactory;
     }
 
-    /**
-     * @param string $queueName
-     */
     public function initQueue(string $queueName): void
     {
         $this->redisContext = $this->redisConnectionFactory->createContext();
@@ -50,7 +44,7 @@ class MqItemWriter implements ItemWriterInterface
     }
 
     /**
-     * @param array $items
+     * {@inheritdoc}
      */
     public function write(array $items): void
     {

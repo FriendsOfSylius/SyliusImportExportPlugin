@@ -20,21 +20,14 @@ class OrderResourcePlugin extends ResourcePlugin
      */
     private $addressConcatenation;
 
-    /**
-     * @param RepositoryInterface $repository
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param EntityManagerInterface $entityManager
-     * @param AddressConcatenationInterface $addressConcatenation
-     */
     public function __construct(
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
         EntityManagerInterface $entityManager,
         AddressConcatenationInterface $addressConcatenation
     ) {
-        $this->repository = $repository;
-        $this->propertyAccessor = $propertyAccessor;
-        $this->entityManager = $entityManager;
+        parent::__construct($repository, $propertyAccessor, $entityManager);
+
         $this->addressConcatenation = $addressConcatenation;
     }
 
@@ -62,9 +55,6 @@ class OrderResourcePlugin extends ResourcePlugin
         }
     }
 
-    /**
-     * @param OrderInterface $resource
-     */
     private function addCustomerData(OrderInterface $resource): void
     {
         $customer = $resource->getCustomer();
@@ -79,9 +69,6 @@ class OrderResourcePlugin extends ResourcePlugin
         $this->addDataForResource($resource, 'Email', $customer->getEmail());
     }
 
-    /**
-     * @param OrderInterface $resource
-     */
     private function addShippingAddressData(OrderInterface $resource): void
     {
         $shippingAddress = $resource->getShippingAddress();
@@ -95,9 +82,6 @@ class OrderResourcePlugin extends ResourcePlugin
         $this->addDataForResource($resource, 'Shipping_address', $shippingInfoString);
     }
 
-    /**
-     * @param OrderInterface $resource
-     */
     private function addBillingAddressData(OrderInterface $resource): void
     {
         $billingAddress = $resource->getBillingAddress();
@@ -111,11 +95,6 @@ class OrderResourcePlugin extends ResourcePlugin
         $this->addDataForResource($resource, 'Billing_address', $billingInfoString);
     }
 
-    /**
-     * @param OrderInterface $resource
-     *
-     * @return array
-     */
     private function getItemsAndCount(OrderInterface $resource): array
     {
         $items = [];
@@ -139,9 +118,6 @@ class OrderResourcePlugin extends ResourcePlugin
         return $items;
     }
 
-    /**
-     * @param OrderInterface $resource
-     */
     private function addOrderItemData(array $items, OrderInterface $resource): void
     {
         $str = '';

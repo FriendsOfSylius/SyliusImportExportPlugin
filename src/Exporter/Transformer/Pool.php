@@ -16,9 +16,6 @@ final class Pool implements TransformerPoolInterface
      */
     private $generator;
 
-    /**
-     * @param \IteratorAggregate $generator
-     */
     public function __construct(\IteratorAggregate $generator)
     {
         $this->generator = $generator;

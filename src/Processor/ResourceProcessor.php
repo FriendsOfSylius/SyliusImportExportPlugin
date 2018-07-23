@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\AccessorNotFoundException;
-use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -13,29 +12,33 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ResourceProcessor implements ResourceProcessorInterface
 {
-    /** @var FactoryInterface */
+    /**
+     * @var FactoryInterface
+     */
     private $resourceFactory;
 
-    /** @var RepositoryInterface */
+    /**
+     * @var RepositoryInterface
+     */
     private $resourceRepository;
 
-    /** @var PropertyAccessorInterface */
+    /**
+     * @var PropertyAccessorInterface
+     */
     private $propertyAccessor;
 
-    /** @var MetadataValidatorInterface */
+    /**
+     * @var MetadataValidatorInterface
+     */
     private $metadataValidator;
 
-    /** @var array */
+    /**
+     * @var string[]
+     */
     private $headerKeys;
 
     /**
-     * ResourceProcessor constructor.
-     *
-     * @param FactoryInterface $resourceFactory
-     * @param RepositoryInterface $resourceRepository
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param MetadataValidatorInterface $metadataValidator
-     * @param array $headerKeys
+     * @param string[] $headerKeys
      */
     public function __construct(
         FactoryInterface $resourceFactory,
@@ -53,12 +56,6 @@ final class ResourceProcessor implements ResourceProcessorInterface
 
     /**
      * {@inheritdoc}
-     *
-     * @throws AccessorNotFoundException
-     * @throws ItemIncompleteException
-     * @throws \Symfony\Component\PropertyAccess\Exception\AccessException
-     * @throws \Symfony\Component\PropertyAccess\Exception\InvalidArgumentException
-     * @throws \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
      */
     public function process(array $data): void
     {
@@ -88,9 +85,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return ResourceInterface
+     * @param mixed[] $data
      */
     private function getResource(array $data): ResourceInterface
     {

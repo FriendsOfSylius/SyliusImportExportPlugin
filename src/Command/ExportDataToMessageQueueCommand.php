@@ -26,9 +26,6 @@ final class ExportDataToMessageQueueCommand extends Command
      */
     private $exporterRegistry;
 
-    /**
-     * @param ExporterRegistry $exporterRegistry
-     */
     public function __construct(ExporterRegistry $exporterRegistry)
     {
         $this->exporterRegistry = $exporterRegistry;
@@ -64,10 +61,12 @@ final class ExportDataToMessageQueueCommand extends Command
 
         /** @var RepositoryInterface $repository */
         $repository = $this->container->get('sylius.repository.' . $exporter);
-        $allItems = $repository->findAll();
+
+        /** @var ResourceInterface[] $items */
+        $items = $repository->findAll();
 
         /** @var array $idsToExport */
-        $idsToExport = $this->prepareExport($allItems);
+        $idsToExport = $this->prepareExport($items);
 
         $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, 'json');
 
@@ -76,14 +75,9 @@ final class ExportDataToMessageQueueCommand extends Command
         }
 
         $this->export($name, $idsToExport, $exporter);
-        $this->finishExport($allItems, 'message queue', $name, $output);
+        $this->finishExport($items, 'message queue', $name, $output);
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string|null $errorMessage
-     */
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
         $output->writeln('<info>Available exporters:</info>');
@@ -114,25 +108,19 @@ final class ExportDataToMessageQueueCommand extends Command
     }
 
     /**
-     * @param array $allItems
+     * @param ResourceInterface[] $items
      *
-     * @return array
+     * @return int[]
      */
-    private function prepareExport(array $allItems): array
+    private function prepareExport(array $items): array
     {
-        $idsToExport = [];
-        foreach ($allItems as $item) {
-            /** @var ResourceInterface $item */
-            $idsToExport[] = $item->getId();
-        }
-
-        return $idsToExport;
+        return array_map(function (ResourceInterface $item) {
+            return $item->getId();
+        }, $items);
     }
 
     /**
-     * @param string $name
-     * @param array $idsToExport
-     * @param string $exporter
+     * @param int[] $idsToExport
      */
     private function export(string $name, array $idsToExport, string $exporter): void
     {
@@ -147,19 +135,15 @@ final class ExportDataToMessageQueueCommand extends Command
     }
 
     /**
-     * @param array $allItems
-     * @param string $file
-     * @param string $name
-     * @param OutputInterface $output
+     * @param ResourceInterface[] $items
      */
-    private function finishExport(array $allItems, string $file, string $name, OutputInterface $output): void
+    private function finishExport(array $items, string $file, string $name, OutputInterface $output): void
     {
-        $message = sprintf(
-            "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
-            count($allItems),
-            $file,
-            $name
-        );
-        $output->writeln($message);
+        $output->writeln(sprintf(
+          "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
+          count($items),
+          $file,
+          $name
+        ));
     }
 }

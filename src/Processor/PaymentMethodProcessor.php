@@ -12,23 +12,28 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class PaymentMethodProcessor implements ResourceProcessorInterface
 {
-    /** @var PaymentMethodFactoryInterface */
+    /**
+     * @var PaymentMethodFactoryInterface
+     */
     private $resourceFactory;
 
-    /** @var RepositoryInterface */
+    /**
+     * @var RepositoryInterface
+     */
     private $resourceRepository;
 
-    /** @var MetadataValidatorInterface */
+    /**
+     * @var MetadataValidatorInterface
+     */
     private $metadataValidator;
 
-    /** @var array */
+    /**
+     * @var string[]
+     */
     private $headerKeys;
 
     /**
-     * @param PaymentMethodFactoryInterface $factory
-     * @param RepositoryInterface           $repository
-     * @param MetadataValidatorInterface    $metadataValidator
-     * @param array                         $headerKeys
+     * @param string[]                         $headerKeys
      */
     public function __construct(
         PaymentMethodFactoryInterface $factory,
@@ -42,11 +47,6 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         $this->headerKeys = $headerKeys;
     }
 
-    /**
-     * {@inheritdoc}
-     *
-     * @throws ImporterException
-     */
     public function process(array $data): void
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
@@ -62,13 +62,7 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         $this->resourceRepository->add($paymentMethod);
     }
 
-    /**
-     * @param string $code
-     * @param string $gateway
-     *
-     * @return PaymentMethodInterface
-     */
-    private function getPaymentMethod(string $code, string $gateway)
+    private function getPaymentMethod(string $code, string $gateway): PaymentMethodInterface
     {
         /** @var PaymentMethodInterface|null $paymentMethod */
         $paymentMethod = $this->resourceRepository->findOneBy(['code' => $code]);
@@ -83,14 +77,9 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     }
 
     /**
-     * @param array $data
-     * @param PaymentMethodInterface $paymentMethod
-     *
-     * @return GatewayConfigInterface
-     *
-     * @throws ImporterException
+     * @param mixed[] $data
      */
-    private function getGatewayConfig(array $data, $paymentMethod)
+    private function getGatewayConfig(array $data, PaymentMethodInterface $paymentMethod): GatewayConfigInterface
     {
         $gatewayConfig = $paymentMethod->getGatewayConfig();
 
