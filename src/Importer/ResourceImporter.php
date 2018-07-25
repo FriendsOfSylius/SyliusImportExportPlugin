@@ -50,7 +50,7 @@ class ResourceImporter implements ImporterInterface
     /**
      * @var int
      */
-    private $batchCount;
+    private $batchCount = 0;
 
     public function __construct(
         ReaderFactory $readerFactory,
@@ -76,9 +76,8 @@ class ResourceImporter implements ImporterInterface
 
         $this->result->start();
 
-        $this->batchCount = 0;
         foreach ($reader as $i => $row) {
-            if ($this->importData($i, $row)) {
+            if ($this->importData((int) $i, $row)) {
                 break;
             }
         }

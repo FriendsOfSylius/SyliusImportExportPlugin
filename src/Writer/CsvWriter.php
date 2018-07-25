@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Writer;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ExporterException;
 use Port\Csv\CsvWriter as PortCsvWriter;
 
 class CsvWriter implements WriterInterface
@@ -42,6 +43,9 @@ class CsvWriter implements WriterInterface
 
         rewind($this->writer->getStream());
         $contents = stream_get_contents($this->writer->getStream());
+        if (false === $contents) {
+            throw new ExporterException(sprintf('Data stream could not be opened'));
+        }
 
         $this->finish();
 
