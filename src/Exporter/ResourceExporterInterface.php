@@ -7,29 +7,20 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 interface ResourceExporterInterface
 {
     /**
-     * @param array $idsToExport
+     * @param int[] $idsToExport
      */
     public function export(array $idsToExport): void;
 
     /**
-     * @param array $idsToExport
+     * @param int[] $idsToExport
      *
-     * @return array
+     * @return array[]
      */
     public function exportData(array $idsToExport): array;
 
-    /**
-     * @param string $filename
-     */
     public function setExportFile(string $filename): void;
 
-    /**
-     * @return string
-     */
     public function getExportedData(): string;
 
-    /**
-     * Wrap up the writer after all items have been written
-     */
     public function finish(): void;
 }

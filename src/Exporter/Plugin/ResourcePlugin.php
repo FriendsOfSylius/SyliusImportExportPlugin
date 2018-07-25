@@ -7,7 +7,6 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class ResourcePlugin implements PluginInterface
@@ -42,11 +41,6 @@ class ResourcePlugin implements PluginInterface
      */
     protected $resources;
 
-    /**
-     * @param RepositoryInterface $repository
-     * @param PropertyAccessorInterface $propertyAccessor
-     * @param EntityManagerInterface $entityManager
-     */
     public function __construct(
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
@@ -84,7 +78,7 @@ class ResourcePlugin implements PluginInterface
      */
     public function init(array $idsToExport): void
     {
-        $this->resources = $this->repository->findBy(['id' => $idsToExport]);
+        $this->resources = $this->findResources($idsToExport);
 
         foreach ($this->resources as $resource) {
             /** @var ResourceInterface $resource */
@@ -100,56 +94,26 @@ class ResourcePlugin implements PluginInterface
         return $this->fieldNames;
     }
 
-    /**
-     * @param string $id
-     * @param string $exportKey
-     *
-     * @return bool
-     */
     protected function hasPluginDataForExportKey(string $id, string $exportKey): bool
     {
         return isset($this->data[$id][$exportKey]);
     }
 
-    /**
-     * @param ResourceInterface $resource
-     * @param string $exportKey
-     *
-     * @return mixed
-     */
     protected function getDataForResourceAndExportKey(ResourceInterface $resource, string $exportKey)
     {
         return $this->getDataForExportKey((string) $resource->getId(), $exportKey);
     }
 
-    /**
-     * @param string $id
-     * @param string $exportKey
-     *
-     * @return mixed
-     */
     protected function getDataForExportKey(string $id, string $exportKey)
     {
         return $this->data[$id][$exportKey];
     }
 
-    /**
-     * @param ResourceInterface $resource
-     * @param string $field
-     * @param mixed $value
-     */
     protected function addDataForResource(ResourceInterface $resource, string $field, $value): void
     {
         $this->data[$resource->getId()][$field] = $value;
     }
 
-    /**
-     * @param ResourceInterface $resource
-     *
-     * @throws \Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException
-     * @throws \Symfony\Component\PropertyAccess\Exception\AccessException
-     * @throws InvalidArgumentException
-     */
     private function addDataForId(ResourceInterface $resource): void
     {
         $fields = $this->entityManager->getClassMetadata(\get_class($resource));
@@ -167,5 +131,18 @@ class ResourcePlugin implements PluginInterface
                 $this->propertyAccessor->getValue($resource, $field)
             );
         }
+    }
+
+    /**
+     * @param int[] $idsToExport
+     *
+     * @return ResourceInterface[]
+     */
+    private function findResources(array $idsToExport): array
+    {
+        /** @var ResourceInterface[] $items */
+        $items = $this->repository->findBy(['id' => $idsToExport]);
+
+        return $items;
     }
 }

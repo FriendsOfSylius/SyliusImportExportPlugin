@@ -20,9 +20,6 @@ final class ImportDataCommand extends Command
      */
     private $importerRegistry;
 
-    /**
-     * @param ImporterRegistry $importerRegistry
-     */
     public function __construct(ImporterRegistry $importerRegistry)
     {
         $this->importerRegistry = $importerRegistry;
@@ -107,11 +104,6 @@ final class ImportDataCommand extends Command
         return;
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string|null $errorMessage
-     */
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
         $output->writeln('<info>Available importers:</info>');

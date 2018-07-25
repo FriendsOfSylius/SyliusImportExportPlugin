@@ -12,28 +12,44 @@ use Port\Reader\ReaderFactory;
 
 class ResourceImporter implements ImporterInterface
 {
-    /** @var ReaderFactory */
+    /**
+     * @var ReaderFactory
+     */
     private $readerFactory;
 
-    /** @var ObjectManager */
+    /**
+     * @var ObjectManager
+     */
     protected $objectManager;
 
-    /** @var ResourceProcessorInterface */
+    /**
+     * @var ResourceProcessorInterface
+     */
     protected $resourceProcessor;
 
-    /** @var ImporterResultInterface */
+    /**
+     * @var ImporterResultInterface
+     */
     protected $result;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     protected $batchSize;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $failOnIncomplete;
 
-    /** @var bool */
+    /**
+     * @var bool
+     */
     protected $stopOnFailure;
 
-    /** @var int */
+    /**
+     * @var int
+     */
     private $batchCount;
 
     public function __construct(
@@ -54,11 +70,6 @@ class ResourceImporter implements ImporterInterface
         $this->stopOnFailure = $stopOnFailure;
     }
 
-    /**
-     * @param string $fileName
-     *
-     * @return ImporterResultInterface
-     */
     public function import(string $fileName): ImporterResultInterface
     {
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
@@ -81,13 +92,7 @@ class ResourceImporter implements ImporterInterface
         return $this->result;
     }
 
-    /**
-     * @param int $i
-     * @param array $row
-     *
-     * @return bool
-     */
-    public function importData($i, $row): bool
+    public function importData(int $i, array $row): bool
     {
         try {
             $this->resourceProcessor->process($row);

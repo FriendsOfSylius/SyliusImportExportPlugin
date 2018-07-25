@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 interface ResourceProcessorInterface
 {
     /**
-     * @param array $data
+     * @param mixed[] $data
      */
     public function process(array $data): void;
 }

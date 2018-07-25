@@ -43,12 +43,6 @@ class MqItemReader implements ItemReaderInterface
      */
     private $messagesSkippedCount;
 
-    /**
-     * MqItemReader constructor.
-     *
-     * @param RedisConnectionFactory $redisConnectionFactory
-     * @param SingleDataArrayImporterInterface $service
-     */
     public function __construct(RedisConnectionFactory $redisConnectionFactory, SingleDataArrayImporterInterface $service)
     {
         $this->redisConnectionFactory = $redisConnectionFactory;
@@ -92,17 +86,11 @@ class MqItemReader implements ItemReaderInterface
         }
     }
 
-    /**
-     * @return int
-     */
     public function getMessagesImportedCount(): int
     {
         return $this->messagesImportedCount;
     }
 
-    /**
-     * @return int
-     */
     public function getMessagesSkippedCount(): int
     {
         return $this->messagesSkippedCount;

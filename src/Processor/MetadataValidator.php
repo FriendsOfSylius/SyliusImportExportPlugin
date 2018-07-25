@@ -9,14 +9,12 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 class MetadataValidator implements MetadataValidatorInterface
 {
     /**
-     * @param array $headerKeys
-     * @param array $dataset
-     *
-     * @throws ItemIncompleteException
+     * {@inheritdoc}
      */
     public function validateHeaders(array $headerKeys, array $dataset): void
     {
         $missingHeaderKeys = array_diff($headerKeys, array_keys($dataset));
+
         if (false === empty($missingHeaderKeys)) {
             throw new ItemIncompleteException(
                 sprintf(

@@ -6,29 +6,17 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
 use Sylius\Component\Registry\ServiceRegistry;
 
-/**
- * Class ExporterRegistry
- */
-class ExporterRegistry extends ServiceRegistry
+final class ExporterRegistry extends ServiceRegistry
 {
     const EVENT_HOOK_NAME_PREFIX_GRID_BUTTONS = 'app.grid_event_listener.admin.crud';
 
-    /**
-     * @param string $type
-     * @param string $format
-     *
-     * @return string
-     */
     public static function buildServiceName(string $type, string $format): string
     {
         return sprintf('%s.%s', $type, $format);
     }
 
     /**
-     * @param string $type
-     * @param array $formats
-     *
-     * @return string
+     * @param string[] $formats
      */
     public static function buildGridButtonsEventHookName(string $type, array $formats): string
     {

@@ -4,32 +4,22 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use Symfony\Component\PropertyAccess\Exception\AccessException;
-use Symfony\Component\PropertyAccess\Exception\InvalidArgumentException;
-use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
-
 interface PluginInterface
 {
     /**
-     * @param string $id
-     * @param array $resourceFields
+     * @param mixed[] $resourceFields
      *
-     * @return array
+     * @return mixed[]
      */
     public function getData(string $id, array $resourceFields): array;
 
     /**
-     * @param array $idsToExport
-     *
-     * @throws AccessException
-     * @throws InvalidArgumentException
-     * @throws UnexpectedTypeException
-     * @throws \UnexpectedValueException
+     * @param int[] $idsToExport
      */
     public function init(array $idsToExport): void;
 
     /**
-     * @return array
+     * @return string[]
      */
     public function getFieldNames(): array;
 }

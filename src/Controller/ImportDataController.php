@@ -44,13 +44,6 @@ final class ImportDataController
      */
     private $twig;
 
-    /**
-     * @param ServiceRegistry $registry
-     * @param UrlGeneratorInterface $router
-     * @param Session $session
-     * @param FormFactoryInterface $formFactory
-     * @param \Twig_Environment $twig
-     */
     public function __construct(
         ServiceRegistry $registry,
         UrlGeneratorInterface $router,
@@ -65,11 +58,6 @@ final class ImportDataController
         $this->twig = $twig;
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return Response
-     */
     public function importFormAction(Request $request): Response
     {
         $form = $this->getForm();
@@ -82,11 +70,6 @@ final class ImportDataController
         return new Response($content);
     }
 
-    /**
-     * @param Request $request
-     *
-     * @return RedirectResponse
-     */
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
@@ -101,18 +84,11 @@ final class ImportDataController
         return new RedirectResponse($referer);
     }
 
-    /**
-     * @return FormInterface
-     */
-    private function getForm()
+    private function getForm(): FormInterface
     {
         return $this->formFactory->create(ImportType::class);
     }
 
-    /**
-     * @param string $importer
-     * @param FormInterface $form
-     */
     private function importData(string $importer, FormInterface $form): void
     {
         $format = $form->get('format')->getData();

@@ -43,10 +43,6 @@ final class RegisterImporterPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     * @param string           $type
-     */
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
         $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';

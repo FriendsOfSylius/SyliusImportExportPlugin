@@ -29,10 +29,6 @@ class ExcelWriter implements WriterInterface
      */
     private $temporaryFolder;
 
-    /**
-     * @param PortExcelWriterFactoryInterface $portExcelWriterFactory
-     * @param string|null $temporaryFolder
-     */
     public function __construct(PortExcelWriterFactoryInterface $portExcelWriterFactory, ?string $temporaryFolder = null)
     {
         $this->portExcelWriterFactory = $portExcelWriterFactory;
@@ -49,9 +45,6 @@ class ExcelWriter implements WriterInterface
         $this->writer->writeItem($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFile(string $filename): void
     {
         if (null !== $this->writer) {
@@ -61,9 +54,6 @@ class ExcelWriter implements WriterInterface
         $this->filename = $filename;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFileContent(): string
     {
         $this->finish();
@@ -87,9 +77,6 @@ class ExcelWriter implements WriterInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function finish(): void
     {
         $this->writer->finish();
