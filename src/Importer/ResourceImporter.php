@@ -75,7 +75,7 @@ class ResourceImporter implements ImporterInterface
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
 
         $this->result->start();
-        
+
         foreach ($reader as $i => $row) {
             if ($this->importData($i, $row)) {
                 break;
