@@ -52,10 +52,6 @@ final class RegisterExporterPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param string $type
-     * @param string $format
-     */
     private function registerTypeAndFormat(string $type, string $format): void
     {
         if (!isset($this->typesAndFormats[$type])) {
@@ -67,9 +63,6 @@ final class RegisterExporterPass implements CompilerPassInterface
         }
     }
 
-    /**
-     * @param ContainerBuilder $container
-     */
     private function registerEventListenersForExportButton(ContainerBuilder $container): void
     {
         foreach ($this->typesAndFormats as $type => $formats) {
@@ -78,9 +71,7 @@ final class RegisterExporterPass implements CompilerPassInterface
     }
 
     /**
-     * @param ContainerBuilder $container
-     * @param string $type
-     * @param array $formats
+     * @param string[] $formats
      */
     private function registerSingleEventListenerForExportButton(ContainerBuilder $container, string $type, array $formats): void
     {
@@ -108,11 +99,6 @@ final class RegisterExporterPass implements CompilerPassInterface
             );
     }
 
-    /**
-     * @param string $type
-     *
-     * @return string
-     */
     private function getEventName(string $type): string
     {
         if (strpos($type, '.') !== false) {

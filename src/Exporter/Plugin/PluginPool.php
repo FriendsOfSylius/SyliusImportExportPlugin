@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-/**
- * Class PluginPool
- */
 class PluginPool implements PluginPoolInterface
 {
     /**
@@ -30,8 +27,8 @@ class PluginPool implements PluginPoolInterface
     private $exportKeysAvailable = [];
 
     /**
-     * @param array $plugins
-     * @param array $exportKeys
+     * @param PluginInterface[] $plugins
+     * @param string[] $exportKeys
      */
     public function __construct(array $plugins, array $exportKeys)
     {
@@ -84,11 +81,9 @@ class PluginPool implements PluginPoolInterface
     }
 
     /**
-     * @param string $id
-     * @param PluginInterface $plugin
-     * @param array $result
+     * @param mixed[] $result
      *
-     * @return array
+     * @return mixed[]
      */
     private function getDataForIdFromPlugin(string $id, PluginInterface $plugin, array $result): array
     {

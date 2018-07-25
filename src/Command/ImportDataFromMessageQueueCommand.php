@@ -22,9 +22,6 @@ final class ImportDataFromMessageQueueCommand extends Command
      */
     private $importerRegistry;
 
-    /**
-     * @param ImporterRegistry $importerRegistry
-     */
     public function __construct(ImporterRegistry $importerRegistry)
     {
         $this->importerRegistry = $importerRegistry;
@@ -81,10 +78,6 @@ final class ImportDataFromMessageQueueCommand extends Command
         $this->finishImport($name, $output);
     }
 
-    /**
-     * @param string $name
-     * @param OutputInterface $output
-     */
     private function finishImport(string $name, OutputInterface $output): void
     {
         $message = sprintf(
@@ -109,11 +102,6 @@ final class ImportDataFromMessageQueueCommand extends Command
         $output->writeln('Skipped: ' . $mqItemReader->getMessagesSkippedCount());
     }
 
-    /**
-     * @param InputInterface $input
-     * @param OutputInterface $output
-     * @param string|null $errorMessage
-     */
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
     {
         $all = array_keys($this->importerRegistry->all());

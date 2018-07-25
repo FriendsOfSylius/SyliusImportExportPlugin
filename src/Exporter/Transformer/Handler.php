@@ -46,7 +46,6 @@ abstract class Handler implements HandlerInterface
     /**
      * Process the data. Return null to send to following handler.
      *
-     * @param mixed $value
      *
      * @return mixed|null
      */
@@ -54,11 +53,6 @@ abstract class Handler implements HandlerInterface
 
     /**
      * Will define whether this request will be handled by this handler (e.g. check on object type)
-     *
-     * @param mixed $key
-     * @param mixed $value
-     *
-     * @return bool
      */
     abstract protected function allows($key, $value): bool;
 }

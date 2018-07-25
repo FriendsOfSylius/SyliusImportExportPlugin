@@ -13,9 +13,6 @@ class CsvWriter implements WriterInterface
      */
     private $writer;
 
-    /**
-     * @param PortCsvWriter $writer
-     */
     public function __construct(PortCsvWriter $writer)
     {
         $this->writer = $writer;
@@ -29,9 +26,6 @@ class CsvWriter implements WriterInterface
         $this->writer->writeItem($data);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function setFile(string $filename): void
     {
         $file = fopen($filename, 'w+');
@@ -42,9 +36,6 @@ class CsvWriter implements WriterInterface
         $this->writer->setStream($file);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getFileContent(): string
     {
         $this->writer->setCloseStreamOnFinish(true);
@@ -57,9 +48,6 @@ class CsvWriter implements WriterInterface
         return $contents;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function finish(): void
     {
         $this->writer->finish();

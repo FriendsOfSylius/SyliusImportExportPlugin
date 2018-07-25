@@ -8,13 +8,10 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPoolInterface
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 
-/**
- * Class ResourceExporter
- */
 class ResourceExporter implements ResourceExporterInterface
 {
     /**
-     * @var array
+     * @var string[]
      */
     protected $resourceKeys;
 
@@ -34,10 +31,7 @@ class ResourceExporter implements ResourceExporterInterface
     protected $transformerPool;
 
     /**
-     * @param WriterInterface $writer
-     * @param PluginPoolInterface $pluginPool
-     * @param array $resourceKeys
-     * @param TransformerPoolInterface|null $transformerPool
+     * @param string[] $resourceKeys
      */
     public function __construct(
         WriterInterface $writer,
@@ -81,9 +75,9 @@ class ResourceExporter implements ResourceExporterInterface
     }
 
     /**
-     * @param array $idsToExport
+     * @param int[] $idsToExport
      *
-     * @return array
+     * @return array[]
      */
     public function exportData(array $idsToExport): array
     {
@@ -99,9 +93,6 @@ class ResourceExporter implements ResourceExporterInterface
         return $exportIdDataArray;
     }
 
-    /**
-     * @param string $id
-     */
     private function writeDataForId(string $id): void
     {
         $dataForId = $this->getDataForId($id);
@@ -110,9 +101,7 @@ class ResourceExporter implements ResourceExporterInterface
     }
 
     /**
-     * @param string $id
-     *
-     * @return array
+     * @return array[]
      */
     protected function getDataForId(string $id): array
     {
@@ -127,9 +116,6 @@ class ResourceExporter implements ResourceExporterInterface
         return $data;
     }
 
-    /**
-     * Wrap up the writer after all items have been written
-     */
     public function finish(): void
     {
         $this->writer->finish();

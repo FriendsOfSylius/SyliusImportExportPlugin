@@ -69,14 +69,6 @@ class CliBaseContext implements Context
      */
     private $container;
 
-    /**
-     * @param KernelInterface $kernel
-     * @param RepositoryInterface $repository
-     * @param ImporterRegistry $importerRegistry
-     * @param ExporterRegistry $exporterRegistry
-     * @param ContainerInterface $container
-     * @param string $filePath
-     */
     public function __construct(
         KernelInterface $kernel,
         RepositoryInterface $repository,

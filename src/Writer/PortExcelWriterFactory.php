@@ -8,9 +8,6 @@ use Port\Excel\ExcelWriter;
 
 class PortExcelWriterFactory implements PortExcelWriterFactoryInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function get(string $filename): ExcelWriter
     {
         return new ExcelWriter(

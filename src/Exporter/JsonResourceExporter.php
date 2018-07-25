@@ -7,21 +7,17 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
 
-/**
- * Class JsonResourceExporter
- */
 final class JsonResourceExporter extends ResourceExporter
 {
-    /** @var array */
     private $data = [];
 
-    /** @var string */
+    /**
+     * @var string
+     */
     private $filename;
 
     /**
-     * @param PluginPoolInterface $pluginPool
-     * @param array $resourceKeys
-     * @param TransformerPoolInterface|null $transformerPool
+     * @param string[] $resourceKeys
      */
     public function __construct(
         PluginPoolInterface $pluginPool,

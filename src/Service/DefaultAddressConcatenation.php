@@ -8,9 +8,6 @@ use Sylius\Component\Core\Model\AddressInterface;
 
 final class DefaultAddressConcatenation implements AddressConcatenationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function getString(AddressInterface $address): string
     {
         return sprintf(

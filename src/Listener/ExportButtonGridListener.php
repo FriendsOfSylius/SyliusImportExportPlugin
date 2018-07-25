@@ -22,18 +22,17 @@ final class ExportButtonGridListener
     private $resource;
 
     /**
-     * @var array
+     * @var string[]
      */
     private $formats;
 
     /**
-     * @var array
+     * @var array[]
      */
     private $links = [];
 
     /**
-     * @param string $resource
-     * @param array $formats
+     * @param string[] $formats
      */
     public function __construct(string $resource, array $formats)
     {
@@ -41,17 +40,11 @@ final class ExportButtonGridListener
         $this->formats = $formats;
     }
 
-    /**
-     * @param RequestStack $requestStack
-     */
     public function setRequest(RequestStack $requestStack)
     {
         $this->requestStack = $requestStack;
     }
 
-    /**
-     * @param GridDefinitionConverterEvent $event
-     */
     public function onSyliusGridAdmin(GridDefinitionConverterEvent $event)
     {
         $grid = $event->getGrid();
@@ -82,7 +75,7 @@ final class ExportButtonGridListener
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     private function createLinks(): array
     {
@@ -95,9 +88,6 @@ final class ExportButtonGridListener
         return $this->links;
     }
 
-    /**
-     * @param string $format
-     */
     private function addLink(string $format): void
     {
         $parameters = [

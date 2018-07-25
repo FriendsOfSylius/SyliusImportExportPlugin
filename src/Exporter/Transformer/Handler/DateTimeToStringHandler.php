@@ -13,31 +13,19 @@ final class DateTimeToStringHandler extends Handler
      */
     private $format;
 
-    /**
-     * @param string $format
-     */
     public function __construct(string $format = 'Y-m-d')
     {
         $this->format = $format;
     }
 
     /**
-     * @param mixed $key
-     * @param \DateTimeInterface $value
-     *
-     * @return string|null
+     * {@inheritdoc}
      */
     protected function process($key, $value)
     {
         return $value->format($this->format);
     }
 
-    /**
-     * @param mixed $key
-     * @param mixed $value
-     *
-     * @return bool
-     */
     protected function allows($key, $value): bool
     {
         return $value instanceof \DateTimeInterface;

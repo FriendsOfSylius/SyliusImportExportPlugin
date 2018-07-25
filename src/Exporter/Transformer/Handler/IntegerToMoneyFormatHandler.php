@@ -19,8 +19,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     private $format;
 
     /**
-     * @param array $allowedKeys
-     * @param string $format
+     * @param string[] $allowedKeys
      */
     public function __construct(array $allowedKeys, string $format = '%.2n')
     {
@@ -29,22 +28,13 @@ final class IntegerToMoneyFormatHandler extends Handler
     }
 
     /**
-     * @param mixed $key
-     * @param mixed $value
-     *
-     * @return mixed
+     * {@inheritdoc}
      */
     protected function process($key, $value)
     {
         return money_format($this->format, $value / 100);
     }
 
-    /**
-     * @param mixed $key
-     * @param mixed $value
-     *
-     * @return bool
-     */
     protected function allows($key, $value): bool
     {
         return is_int($value) && in_array($key, $this->keys);

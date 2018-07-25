@@ -37,11 +37,6 @@ final class ExportDataController extends Controller
      */
     private $resourcesCollectionProvider;
 
-    /**
-     * @param ServiceRegistryInterface $registry
-     * @param RequestConfigurationFactoryInterface $requestConfigurationFactory
-     * @param ResourcesCollectionProviderInterface $resourcesCollectionProvider
-     */
     public function __construct(
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
@@ -52,12 +47,6 @@ final class ExportDataController extends Controller
         $this->resourcesCollectionProvider = $resourcesCollectionProvider;
     }
 
-    /**
-     * @param string $resource
-     * @param string $format
-     *
-     * @return Response
-     */
     public function exportAction(Request $request, string $resource, string $format): Response
     {
         $outputFilename = sprintf('%s-%s.%s', $resource, date('Y-m-d'), $format); // @todo Create a service for this
@@ -65,16 +54,6 @@ final class ExportDataController extends Controller
         return $this->exportData($request, $resource, $format, $outputFilename);
     }
 
-    /**
-     * @param Request $request
-     * @param string $exporter
-     * @param string $format
-     * @param string $outputFilename
-     *
-     * @return Response
-     *
-     * @throws \Exception
-     */
     private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
     {
         [$applicationName, $resource] = explode('.', $exporter);
@@ -102,13 +81,6 @@ final class ExportDataController extends Controller
         return $response;
     }
 
-    /**
-     * @param string $resource
-     *
-     * @return RepositoryInterface
-     *
-     * @throws \Exception
-     */
     private function findRepository(string $resource): RepositoryInterface
     {
         $repositoryName = sprintf('sylius.repository.%s', $resource);
@@ -125,7 +97,7 @@ final class ExportDataController extends Controller
     /**
      * @param ResourceGridView|array $resources
      *
-     * @return array
+     * @return int[]
      */
     private function getResourceIds($resources): array
     {
@@ -136,19 +108,12 @@ final class ExportDataController extends Controller
 
     /**
      * @param ResourceGridView|array $resources
-     *
-     * @return array
      */
     private function getResources($resources): array
     {
         return is_array($resources) ? $resources : $this->getResourcesItems($resources);
     }
 
-    /**
-     * @param ResourceGridView $resources
-     *
-     * @return array
-     */
     private function getResourcesItems(ResourceGridView $resources): array
     {
         $data = $resources->getData();
@@ -170,9 +135,6 @@ final class ExportDataController extends Controller
     }
 
     /**
-     * @param RequestConfiguration $configuration
-     * @param RepositoryInterface $repository
-     *
      * @return ResourceGridView|array
      */
     private function findResources(RequestConfiguration $configuration, RepositoryInterface $repository)

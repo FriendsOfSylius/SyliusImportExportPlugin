@@ -16,8 +16,6 @@ interface HandlerInterface
     /**
      * Loops through handlers until it gets satisfying result
      *
-     * @param mixed $key
-     * @param mixed $value
      *
      * @return string
      */

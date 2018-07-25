@@ -10,33 +10,24 @@ interface ImporterResultInterface
 
     public function stop(): void;
 
-    /**
-     * @param int $rowNum
-     */
     public function success(int $rowNum): void;
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getSuccessRows(): array;
 
-    /**
-     * @param int $rowNum
-     */
     public function skipped(int $rowNum): void;
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getSkippedRows(): array;
 
-    /**
-     * @param int $rowNum
-     */
     public function failed(int $rowNum): void;
 
     /**
-     * @return array
+     * @return int[]
      */
     public function getFailedRows(): array;
 

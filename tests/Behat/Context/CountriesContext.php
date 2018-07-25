@@ -62,7 +62,7 @@ final class CountriesContext extends SymfonyPage implements Context
      */
     public function iOpenTheCountryIndexSecondPage()
     {
-        $this->countryIndexPage->open(['page'=> 2]);
+        $this->countryIndexPage->open(['page' => 2]);
     }
 
     /**
@@ -82,12 +82,11 @@ final class CountriesContext extends SymfonyPage implements Context
     public function iClickOn($element)
     {
         $page = $this->getSession()->getPage();
-        $findName = $page->find("css", $element);
+        $findName = $page->find('css', $element);
         if (!$findName) {
-            throw new Exception($element . " could not be found");
-        } else {
-            $findName->click();
+            throw new Exception($element . ' could not be found');
         }
+        $findName->click();
     }
 
     /**
@@ -139,7 +138,6 @@ final class CountriesContext extends SymfonyPage implements Context
             $countryCount,
             'expected value differs from actual value ' . $amount . ' !== ' . $countryCount
         );
-
     }
 
     /**
@@ -149,10 +147,9 @@ final class CountriesContext extends SymfonyPage implements Context
     {
         return array_merge(parent::getDefinedElements(), [
             'export_button_text' => '.buttons div.dropdown span.text',
-            'export_links' => '.buttons div.dropdown div.menu'
+            'export_links' => '.buttons div.dropdown div.menu',
         ]);
     }
-
 
     /**
      * @When I go to :hp homepage
@@ -173,11 +170,10 @@ final class CountriesContext extends SymfonyPage implements Context
     {
         $responseText = $this->getSession()->getPage()->getContent();
 
-        if (strpos($responseText, $text) !== false){
+        if (strpos($responseText, $text) !== false) {
             return;
         }
-        throw new ResponseTextException("Response does not contain: ". $text);
+
+        throw new ResponseTextException('Response does not contain: ' . $text);
     }
-
-
 }
