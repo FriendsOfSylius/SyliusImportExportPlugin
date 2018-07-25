@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
@@ -102,7 +103,11 @@ final class ImportDataController
         $file = $form->get('import-data')->getData();
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
-        $result = $service->import($file->getRealPath());
+        $path = $file->getRealPath();
+        if (false === $path) {
+            throw new ImporterException(sprintf('File %s could not be loaded', $file->getClientOriginalName()));
+        }
+        $result = $service->import($path);
 
         $message = sprintf(
             'Imported via %s importer (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
