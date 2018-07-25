@@ -11,7 +11,7 @@ interface ItemReaderInterface
      */
     public function initQueue(string $queueName): void;
 
-    public function readAndImport(): void;
+    public function readAndImport(int $timeout): void;
 
     /**
      * @return int

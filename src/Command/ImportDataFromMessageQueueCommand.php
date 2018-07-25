@@ -11,6 +11,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\SingleDataArrayImporterInt
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -41,7 +42,9 @@ final class ImportDataFromMessageQueueCommand extends Command
             ->setDescription('Import data from message queue.')
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
-            ]);
+                new InputOption('timeout', null, InputOption::VALUE_OPTIONAL, 'The time in ms the importer will wait for some input.', 0),
+            ])
+        ;
     }
 
     /**
@@ -56,6 +59,8 @@ final class ImportDataFromMessageQueueCommand extends Command
 
             return;
         }
+
+        $timeout = $input->getOption('timeout');
 
         // only accepts the format of json as messages
         $name = ImporterRegistry::buildServiceName($importer, 'json');
@@ -72,7 +77,7 @@ final class ImportDataFromMessageQueueCommand extends Command
         /** @var SingleDataArrayImporterInterface $service */
         $service = $this->importerRegistry->get($name);
 
-        $this->getImporterJsonDataFromMessageQueue($importer, $service, $output);
+        $this->importJsonDataFromMessageQueue($importer, $service, $output, (int) $timeout);
         $this->finishImport($name, $output);
     }
 
@@ -93,12 +98,13 @@ final class ImportDataFromMessageQueueCommand extends Command
      * @param string $importer
      * @param SingleDataArrayImporterInterface $service
      * @param OutputInterface $output
+     * @param int $timeout
      */
-    private function getImporterJsonDataFromMessageQueue(string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output): void
+    private function importJsonDataFromMessageQueue(string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output, int $timeout): void
     {
         $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        $mqItemReader->readAndImport();
+        $mqItemReader->readAndImport($timeout);
         $output->writeln('Imported: ' . $mqItemReader->getMessagesImportedCount());
         $output->writeln('Skipped: ' . $mqItemReader->getMessagesSkippedCount());
     }
