@@ -100,8 +100,6 @@ final class ImportDataCommand extends Command
                 sprintf('Failed %s: %s', $countOrRows, $failed),
             ]
         );
-
-        return;
     }
 
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void

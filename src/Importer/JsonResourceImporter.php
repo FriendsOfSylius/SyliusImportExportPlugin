@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 
 final class JsonResourceImporter extends ResourceImporter implements SingleDataArrayImporterInterface
@@ -32,9 +33,12 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
     {
         $this->result->start();
 
-        $dataAsArray = json_decode(file_get_contents($fileName), true);
+        $contents = file_get_contents($fileName);
+        if (false === $contents) {
+            throw new ImporterException(sprintf('File %s could not be loaded', $fileName));
+        }
 
-        foreach ($dataAsArray as $i => $row) {
+        foreach (json_decode($contents, true) as $i => $row) {
             if ($this->importData($i, $row)) {
                 break;
             }
