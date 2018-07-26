@@ -87,12 +87,6 @@ final class ImportDataFromMessageQueueCommand extends Command
         $output->writeln($message);
     }
 
-    /**
-     * @param string $importer
-     * @param SingleDataArrayImporterInterface $service
-     * @param OutputInterface $output
-     * @param int $timeout
-     */
     private function importJsonDataFromMessageQueue(string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output, int $timeout): void
     {
         $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
