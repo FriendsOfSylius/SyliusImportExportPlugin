@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
-use Enqueue\Redis\RedisConnectionFactory;
+use Interop\Queue\PsrConnectionFactory;
 use Interop\Queue\PsrConsumer;
 use Interop\Queue\PsrContext;
 use Interop\Queue\PsrQueue;
@@ -12,14 +12,14 @@ use Interop\Queue\PsrQueue;
 class MqItemWriter implements ItemWriterInterface
 {
     /**
-     * @var RedisConnectionFactory
+     * @var PsrConnectionFactory
      */
-    private $redisConnectionFactory;
+    private $psrConnectionFactory;
 
     /**
      * @var PsrContext
      */
-    private $redisContext;
+    private $context;
 
     /**
      * @var PsrQueue
@@ -31,16 +31,16 @@ class MqItemWriter implements ItemWriterInterface
      */
     private $consumer;
 
-    public function __construct(RedisConnectionFactory $redisConnectionFactory)
+    public function __construct(PsrConnectionFactory $psrConnectionFactory)
     {
-        $this->redisConnectionFactory = $redisConnectionFactory;
+        $this->psrConnectionFactory = $psrConnectionFactory;
     }
 
     public function initQueue(string $queueName): void
     {
-        $this->redisContext = $this->redisConnectionFactory->createContext();
-        $this->queue = $this->redisContext->createQueue($queueName);
-        $this->consumer = $this->redisContext->createConsumer($this->queue);
+        $this->context = $this->psrConnectionFactory->createContext();
+        $this->queue = $this->context->createQueue($queueName);
+        $this->consumer = $this->context->createConsumer($this->queue);
     }
 
     /**
@@ -49,12 +49,12 @@ class MqItemWriter implements ItemWriterInterface
     public function write(array $items): void
     {
         foreach ($items as $item) {
-            $message = $this->redisContext->createMessage(
+            $message = $this->context->createMessage(
                 json_encode($item) ?: '',
                 [],
                 ['recordedOn' => (new \DateTime())->format('Y-m-d H:i:s')]
             );
-            $this->redisContext->createProducer()->send($this->queue, $message);
+            $this->context->createProducer()->send($this->queue, $message);
         }
     }
 }

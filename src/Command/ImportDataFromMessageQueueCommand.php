@@ -4,18 +4,20 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
-use Enqueue\Redis\RedisConnectionFactory;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemReader;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ItemReaderInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\SingleDataArrayImporterInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 
 final class ImportDataFromMessageQueueCommand extends Command
 {
+    use ContainerAwareTrait;
+
     /**
      * @var ImporterRegistry
      */
@@ -69,7 +71,9 @@ final class ImportDataFromMessageQueueCommand extends Command
         /** @var SingleDataArrayImporterInterface $service */
         $service = $this->importerRegistry->get($name);
 
-        $this->getImporterJsonDataFromMessageQueue($importer, $service, $output);
+        /** @var ItemReaderInterface $mqItemReader */
+        $mqItemReader = $this->container->get('sylius.message_queue_reader');
+        $this->getImporterJsonDataFromMessageQueue($mqItemReader, $importer, $service, $output);
         $this->finishImport($name, $output);
     }
 
@@ -82,11 +86,10 @@ final class ImportDataFromMessageQueueCommand extends Command
         $output->writeln($message);
     }
 
-    private function getImporterJsonDataFromMessageQueue(string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output): void
+    private function getImporterJsonDataFromMessageQueue(ItemReaderInterface $mqItemReader, $importer, SingleDataArrayImporterInterface $service, OutputInterface $output): void
     {
-        $mqItemReader = new MqItemReader(new RedisConnectionFactory(), $service);
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        $mqItemReader->readAndImport();
+        $mqItemReader->readAndImport($service);
         $output->writeln('Imported: ' . $mqItemReader->getMessagesImportedCount());
         $output->writeln('Skipped: ' . $mqItemReader->getMessagesSkippedCount());
     }

@@ -70,6 +70,21 @@ sylius_import_export:
     prefix: /admin
 ```
 
+### Message queue configuration:
+```yaml
+# define a service which will be used as the queue
+services:
+    redis_connection_factory:
+        class: Enqueue\Redis\RedisConnectionFactory
+```
+
+```yaml
+# use the defined service
+fos_sylius_import_export:
+    message_queue:
+        service_id: 'redis_connection_factory'
+```
+
 ## Usage
 
 ### Available importer types

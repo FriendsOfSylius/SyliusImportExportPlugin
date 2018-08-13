@@ -54,6 +54,13 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_export_excel.yml');
         }
 
+        if (isset($config['message_queue'])) {
+            $loader->load('services_message_queue.yml');
+            $config['message_queue']['importer_service_id'] = $config['message_queue']['importer_service_id'] ?? $config['message_queue']['service_id'];
+            $config['message_queue']['exporter_service_id'] = $config['message_queue']['exporter_service_id'] ?? $config['message_queue']['service_id'];
+            $container->setParameter('sylius.message_queue', $config['message_queue']);
+        }
+
         $loader->load('services_import_json.yml');
 
         $loader->load('services_export_json.yml');

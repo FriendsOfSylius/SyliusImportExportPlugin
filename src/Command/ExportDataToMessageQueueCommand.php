@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
-use Enqueue\Redis\RedisConnectionFactory;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
-use FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemWriter;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ItemWriterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -74,7 +73,9 @@ final class ExportDataToMessageQueueCommand extends Command
             $this->listExporters($input, $output, sprintf('There is no \'%s\' exporter.', $name));
         }
 
-        $this->export($name, $idsToExport, $exporter);
+        /** @var ItemWriterInterface $mqItemWriter */
+        $mqItemWriter = $this->container->get('sylius.message_queue_writer');
+        $this->export($mqItemWriter, $name, $idsToExport, $exporter);
         $this->finishExport($items, 'message queue', $name, $output);
     }
 
@@ -122,14 +123,13 @@ final class ExportDataToMessageQueueCommand extends Command
     /**
      * @param int[] $idsToExport
      */
-    private function export(string $name, array $idsToExport, string $exporter): void
+    private function export(ItemWriterInterface $mqItemWriter, string $name, array $idsToExport, string $exporter): void
     {
         /** @var ResourceExporterInterface $service */
         $service = $this->exporterRegistry->get($name);
         $service->export($idsToExport);
         $itemsToExport = $service->getExportedData();
 
-        $mqItemWriter = new MqItemWriter(new RedisConnectionFactory());
         $mqItemWriter->initQueue('sylius.export.queue.' . $exporter);
         $mqItemWriter->write(json_decode($itemsToExport));
     }
