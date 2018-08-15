@@ -1,0 +1,10 @@
+services:
+    sylius.message_queue_writer:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\MqItemWriter
+        abstract: true
+        public: true
+
+    sylius.message_queue_reader:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\MqItemReader
+        abstract: true
+        public: true

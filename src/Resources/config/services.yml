@@ -54,10 +54,12 @@ services:
         tags:
             - { name: 'console.command' }
 
-    sylius.command.import_data_data_from_message_queue:
+    sylius.command.import_data_from_message_queue:
         class: FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataFromMessageQueueCommand
         arguments:
             - "@sylius.importers_registry"
+        calls:
+            - [ setContainer, ["@service_container"]]
         tags:
             - { name: 'console.command' }
 

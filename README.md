@@ -70,6 +70,22 @@ sylius_import_export:
     prefix: /admin
 ```
 
+### Message queue configuration:
+Any library implementing the **"queue-interop/queue-interop"** can be used as the message queue. Following is the "enqueue/redis" library shown as an example usage.
+```yaml
+# define a service which will be used as the queue
+services:
+    redis_connection_factory:
+        class: Enqueue\Redis\RedisConnectionFactory
+```
+
+```yaml
+# use the defined service
+fos_sylius_import_export:
+    message_queue:
+        service_id: 'redis_connection_factory'
+```
+
 ## Usage
 
 ### Available importer types

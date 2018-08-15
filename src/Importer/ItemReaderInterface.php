@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
+namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 interface ItemReaderInterface
 {
     public function initQueue(string $queueName): void;
 
-    public function readAndImport(int $timeout): void;
+    public function readAndImport(SingleDataArrayImporterInterface $service, int $timeout): void;
 
     public function getMessagesImportedCount(): int;
 

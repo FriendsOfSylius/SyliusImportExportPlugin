@@ -34,6 +34,14 @@ final class Configuration implements ConfigurationInterface
                         ->booleanNode('web_ui')->defaultTrue()->end()
                     ->end()
                 ->end()
+                ->arrayNode('message_queue')
+                    ->canBeEnabled()
+                    ->children()
+                        ->scalarNode('service_id')->defaultNull()->end()
+                        ->scalarNode('importer_service_id')->defaultNull()->end()
+                        ->scalarNode('exporter_service_id')->defaultNull()->end()
+                    ->end()
+                ->end()
             ->end()
         ->end();
 
