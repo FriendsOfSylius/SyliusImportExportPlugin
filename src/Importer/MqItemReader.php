@@ -50,13 +50,13 @@ class MqItemReader implements ItemReaderInterface
         $this->messagesSkippedCount = 0;
     }
 
-    public function readAndImport(SingleDataArrayImporterInterface $service): void
+    public function readAndImport(SingleDataArrayImporterInterface $service, int $timeout = 0): void
     {
         /** @var PsrConsumer $consumer */
         $consumer = $this->context->createConsumer($this->queue);
 
         /** @var PsrMessage $message */
-        while ($message = $consumer->receive()) {
+        while ($message = $consumer->receive($timeout)) {
             $dataArrayToImport = (array) json_decode($message->getBody());
 
             $service->importSingleDataArrayWithoutResult($dataArrayToImport);

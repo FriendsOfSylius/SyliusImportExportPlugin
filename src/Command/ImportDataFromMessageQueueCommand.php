@@ -10,6 +10,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\SingleDataArrayImporterInt
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DependencyInjection\ContainerAwareTrait;
@@ -40,7 +41,9 @@ final class ImportDataFromMessageQueueCommand extends Command
             ->setDescription('Import data from message queue.')
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
-            ]);
+                new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'The time in ms the importer will wait for some input.', 0),
+            ])
+        ;
     }
 
     /**
@@ -55,6 +58,8 @@ final class ImportDataFromMessageQueueCommand extends Command
 
             return;
         }
+
+        $timeout = $input->getOption('timeout');
 
         // only accepts the format of json as messages
         $name = ImporterRegistry::buildServiceName($importer, 'json');
@@ -73,7 +78,7 @@ final class ImportDataFromMessageQueueCommand extends Command
 
         /** @var ItemReaderInterface $mqItemReader */
         $mqItemReader = $this->container->get('sylius.message_queue_reader');
-        $this->getImporterJsonDataFromMessageQueue($mqItemReader, $importer, $service, $output);
+        $this->importJsonDataFromMessageQueue($mqItemReader, $importer, $service, $output, (int) $timeout);
         $this->finishImport($name, $output);
     }
 
@@ -86,10 +91,10 @@ final class ImportDataFromMessageQueueCommand extends Command
         $output->writeln($message);
     }
 
-    private function getImporterJsonDataFromMessageQueue(ItemReaderInterface $mqItemReader, $importer, SingleDataArrayImporterInterface $service, OutputInterface $output): void
+    private function importJsonDataFromMessageQueue(ItemReaderInterface $mqItemReader, $importer, SingleDataArrayImporterInterface $service, OutputInterface $output, int $timeout): void
     {
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
-        $mqItemReader->readAndImport($service);
+        $mqItemReader->readAndImport($service, $timeout);
         $output->writeln('Imported: ' . $mqItemReader->getMessagesImportedCount());
         $output->writeln('Skipped: ' . $mqItemReader->getMessagesSkippedCount());
     }
