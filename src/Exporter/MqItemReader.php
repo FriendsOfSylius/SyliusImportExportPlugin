@@ -60,13 +60,13 @@ class MqItemReader implements ItemReaderInterface
         $this->messagesSkippedCount = 0;
     }
 
-    public function readAndImport(): void
+    public function readAndImport(int $timeout = 0): void
     {
         /** @var RedisConsumer $consumer */
         $consumer = $this->redisContext->createConsumer($this->queue);
 
         /** @var RedisMessage $message */
-        while ($message = $consumer->receive()) {
+        while ($message = $consumer->receive($timeout)) {
             $dataArrayToImport = (array) json_decode($message->getBody());
 
             $this->service->importSingleDataArrayWithoutResult($dataArrayToImport);

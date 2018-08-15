@@ -115,6 +115,12 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
       $ bin/console sylius:import-from-message-queue country
       ```
    
+  - To make the importer wait 1s for messages to get into the message queue (default, does not wait)
+  
+      ```bash
+      $ bin/console sylius:import-from-message-queue country --timeout=1000
+      ```
+   
   - Export data of resources to file using `country` exporter
     ```bash
     $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
