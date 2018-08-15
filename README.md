@@ -71,6 +71,7 @@ sylius_import_export:
 ```
 
 ### Message queue configuration:
+Any library implementing the **"queue-interop/queue-interop"** can be used as the message queue. Following is the "enqueue/redis" library shown as an example usage.
 ```yaml
 # define a service which will be used as the queue
 services:
