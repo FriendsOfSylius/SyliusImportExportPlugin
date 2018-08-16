@@ -1,0 +1,11 @@
+fos:
+    import_export:
+        ui:
+            import: 'Import'
+            import_data: 'Import Data'
+            export: 'Export'
+            types:
+                csv: 'CSV'
+                xlsx: 'Excel'
+                json: 'JSON'
+
