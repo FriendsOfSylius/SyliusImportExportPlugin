@@ -23,7 +23,7 @@ final class RegisterExporterPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $serviceId = 'sylius.exporters_registry';
-        if (!$container->has($serviceId)) {
+        if ($container->has($serviceId) == false) {
             return;
         }
 

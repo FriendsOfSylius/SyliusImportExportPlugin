@@ -18,7 +18,7 @@ final class RegisterImporterPass implements CompilerPassInterface
     public function process(ContainerBuilder $container)
     {
         $serviceId = 'sylius.importers_registry';
-        if (!$container->has($serviceId)) {
+        if ($container->has($serviceId) == false) {
             return;
         }
 
