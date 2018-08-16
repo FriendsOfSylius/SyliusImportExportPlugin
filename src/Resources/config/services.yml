@@ -1,4 +1,6 @@
 services:
+    _defaults:
+        public: true
     # Controllers for Admin-Integration
     sylius.controller.import_data:
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
