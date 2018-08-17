@@ -20,12 +20,14 @@ services:
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:
+        public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry
         arguments:
             - FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface
             - exporter
 
     sylius.importers_registry:
+        public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry
         arguments:
             - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
