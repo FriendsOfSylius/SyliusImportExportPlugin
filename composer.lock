@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "beda77b5074c3cb51b04fbfe61d9bf68",
+    "content-hash": "e9a026f890cec10120577511b735c3b8",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1505,16 +1505,16 @@
         },
         {
             "name": "egulias/email-validator",
-            "version": "2.1.4",
+            "version": "2.1.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/egulias/EmailValidator.git",
-                "reference": "8790f594151ca6a2010c6218e09d96df67173ad3"
+                "reference": "54859fabea8b3beecbb1a282888d5c990036b9e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/8790f594151ca6a2010c6218e09d96df67173ad3",
-                "reference": "8790f594151ca6a2010c6218e09d96df67173ad3",
+                "url": "https://api.github.com/repos/egulias/EmailValidator/zipball/54859fabea8b3beecbb1a282888d5c990036b9e3",
+                "reference": "54859fabea8b3beecbb1a282888d5c990036b9e3",
                 "shasum": ""
             },
             "require": {
@@ -1558,7 +1558,7 @@
                 "validation",
                 "validator"
             ],
-            "time": "2018-04-10T10:11:19+00:00"
+            "time": "2018-08-16T20:49:45+00:00"
         },
         {
             "name": "fig/link-util",
@@ -7680,16 +7680,16 @@
         },
         {
             "name": "composer/xdebug-handler",
-            "version": "1.1.0",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/xdebug-handler.git",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08"
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/c919dc6c62e221fc6406f861ea13433c0aa24f08",
-                "reference": "c919dc6c62e221fc6406f861ea13433c0aa24f08",
+                "url": "https://api.github.com/repos/composer/xdebug-handler/zipball/e1809da56ce1bd1b547a752936817341ac244d8e",
+                "reference": "e1809da56ce1bd1b547a752936817341ac244d8e",
                 "shasum": ""
             },
             "require": {
@@ -7720,7 +7720,7 @@
                 "Xdebug",
                 "performance"
             ],
-            "time": "2018-04-11T15:42:36+00:00"
+            "time": "2018-08-16T10:54:23+00:00"
         },
         {
             "name": "container-interop/container-interop",
@@ -9270,36 +9270,35 @@
         },
         {
             "name": "phpspec/phpspec",
-            "version": "3.4.3",
+            "version": "4.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpspec/phpspec.git",
-                "reference": "8e72ed3576f6e26baebb2c214a8dba344508e3bd"
+                "reference": "4474f1cb4cf9873996fc07fac6533ab9298eb6fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/8e72ed3576f6e26baebb2c214a8dba344508e3bd",
-                "reference": "8e72ed3576f6e26baebb2c214a8dba344508e3bd",
+                "url": "https://api.github.com/repos/phpspec/phpspec/zipball/4474f1cb4cf9873996fc07fac6533ab9298eb6fd",
+                "reference": "4474f1cb4cf9873996fc07fac6533ab9298eb6fd",
                 "shasum": ""
             },
             "require": {
-                "doctrine/instantiator": "^1.0.1",
+                "doctrine/instantiator": "^1.0.5",
                 "ext-tokenizer": "*",
-                "php": "^5.6 || ^7.0",
+                "php": "^7.0,<7.3",
                 "phpspec/php-diff": "^1.0.0",
                 "phpspec/prophecy": "^1.5",
                 "sebastian/exporter": "^1.0 || ^2.0 || ^3.0",
-                "symfony/console": "^2.7 || ^3.0",
-                "symfony/event-dispatcher": "^2.7 || ^3.0",
-                "symfony/finder": "^2.7 || ^3.0",
-                "symfony/process": "^2.7 || ^3.0",
-                "symfony/yaml": "^2.7 || ^3.0"
+                "symfony/console": "^3.2 || ^4.0",
+                "symfony/event-dispatcher": "^3.2 || ^4.0",
+                "symfony/finder": "^3.2 || ^4.0",
+                "symfony/process": "^3.2 || ^4.0",
+                "symfony/yaml": "^3.2 || ^4.0"
             },
             "require-dev": {
                 "behat/behat": "^3.3",
-                "ciaranmcnulty/versionbasedtestskipper": "^0.2.1",
-                "phpunit/phpunit": "^5.5|^6.0",
-                "symfony/filesystem": "^3.0"
+                "phpunit/phpunit": "^5.7|^6.0",
+                "symfony/filesystem": "^3.2 || ^4.0"
             },
             "suggest": {
                 "phpspec/nyan-formatters": "Adds Nyan formatters"
@@ -9310,7 +9309,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0.x-dev"
+                    "dev-master": "4.3.x-dev"
                 }
             },
             "autoload": {
@@ -9348,7 +9347,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2017-12-06T09:12:11+00:00"
+            "time": "2018-07-02T17:43:33+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -11157,7 +11156,9 @@
     ],
     "aliases": [],
     "minimum-stability": "alpha",
-    "stability-flags": [],
+    "stability-flags": {
+        "behat/mink": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
