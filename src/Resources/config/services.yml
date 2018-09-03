@@ -1,6 +1,7 @@
 services:
     # Controllers for Admin-Integration
     sylius.controller.import_data:
+        public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
             - "@sylius.importers_registry"
@@ -10,20 +11,23 @@ services:
             - "@twig"
 
     sylius.controller.export_data:
-          class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
-          arguments:
-              - "@sylius.exporters_registry"
-              - "@sylius.resource_controller.request_configuration_factory"
-              - "@sylius.resource_controller.resources_collection_provider"
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:
+        public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry
         arguments:
             - FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface
             - exporter
 
     sylius.importers_registry:
+        public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry
         arguments:
             - FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface
@@ -71,7 +75,7 @@ services:
             - [ setContainer, ["@service_container"]]
         tags:
             - { name: 'console.command' }
-            
+
     sylius.command.export_data_to_message_queue:
         class: FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataToMessageQueueCommand
         arguments:
