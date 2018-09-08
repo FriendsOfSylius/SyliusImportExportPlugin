@@ -27,11 +27,6 @@ final class ExportButtonGridListener
     private $formats;
 
     /**
-     * @var array[]
-     */
-    private $links = [];
-
-    /**
      * @param string[] $formats
      */
     public function __construct(string $resource, array $formats)
@@ -79,16 +74,15 @@ final class ExportButtonGridListener
      */
     private function createLinks(): array
     {
-        if (empty($this->links)) {
-            foreach ($this->formats as $format) {
-                $this->addLink($format);
-            }
+        $links = [];
+        foreach ($this->formats as $format) {
+            $links[] = $this->addLink($format);
         }
 
-        return $this->links;
+        return $links;
     }
 
-    private function addLink(string $format): void
+    private function addLink(string $format): array
     {
         $parameters = [
             'resource' => $this->resource,
@@ -101,7 +95,7 @@ final class ExportButtonGridListener
             $parameters['criteria'] = $currentRequest->query->get('criteria');
         }
 
-        $this->links[$format] = [
+        return [
             'label' => 'fos.import_export.ui.types.' . $format,
             'icon' => 'file archive',
             'route' => 'app_export_data',
