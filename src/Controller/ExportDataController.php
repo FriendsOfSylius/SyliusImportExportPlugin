@@ -106,11 +106,11 @@ final class ExportDataController extends Controller
             $resources->getData()->getAdapter() instanceof DoctrineORMAdapter) {
             $query = $resources->getData()->getAdapter()->getQuery()->setMaxResults(null);
             return array_column($query->getArrayResult(), 'id');
-        } else {
-            return array_map(function (ResourceInterface $resource) {
-                return $resource->getId();
-            }, $this->getResources($resources));
         }
+
+        return array_map(function (ResourceInterface $resource) {
+            return $resource->getId();
+        }, $this->getResources($resources));
     }
 
     /**

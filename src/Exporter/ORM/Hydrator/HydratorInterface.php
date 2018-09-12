@@ -10,6 +10,7 @@ interface HydratorInterface
 {
     /**
      * @param int[]|string[] $idsToExport
+     *
      * @return ResourceInterface[]
      */
     public function getHydratedResources(array $idsToExport): array;

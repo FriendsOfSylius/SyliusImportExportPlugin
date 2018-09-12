@@ -22,6 +22,7 @@ class OrderHydrator implements HydratorInterface
 
     /**
      * @param int[]|string[] $idsToExport
+     *
      * @return ResourceInterface[]
      */
     public function getHydratedResources(array $idsToExport): array
@@ -40,7 +41,6 @@ class OrderHydrator implements HydratorInterface
 
     /**
      * @param int[]|string[] $idsToExport
-     * @return QueryBuilder
      */
     protected function findOrdersQb(array $idsToExport): QueryBuilder
     {
@@ -52,7 +52,6 @@ class OrderHydrator implements HydratorInterface
 
     /**
      * @param int[]|string[] $idsToExport
-     * @return QueryBuilder
      */
     protected function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
     {
