@@ -105,6 +105,7 @@ final class ExportDataController extends Controller
         if ($resources instanceof ResourceGridView &&
             $resources->getData()->getAdapter() instanceof DoctrineORMAdapter) {
             $query = $resources->getData()->getAdapter()->getQuery()->setMaxResults(null);
+
             return array_column($query->getArrayResult(), 'id');
         }
 

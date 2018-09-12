@@ -47,19 +47,17 @@ class OrderResourcePluginSpec extends ObjectBehavior
     }
 
     function it_should_add_customer_data(
-        RepositoryInterface $repository,
         EntityManagerInterface $entityManager,
         OrderInterface $resource,
         PropertyAccessorInterface $propertyAccessor,
         ClassMetaData $classMetadata,
-        AddressConcatenationInterface $addressConcatenation
+        AddressConcatenationInterface $addressConcatenation,
+        HydratorInterface $hydrator
     ) {
         $idsToExport = [1];
 
-        $repository->findBy(
-            [
-                'id' => $idsToExport,
-            ]
+        $hydrator->getHydratedResources(
+            $idsToExport
         )->willReturn(
             [
                 $resource,
