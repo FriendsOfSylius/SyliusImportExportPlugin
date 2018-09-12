@@ -100,6 +100,7 @@ services:
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
             - "@sylius.service.address_concatenation"
+            - "@sylius.exporter.orm.hydrator.orders"
 
     sylius.exporter.plugin.resource.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
@@ -107,6 +108,12 @@ services:
             - "@sylius.repository.customer"
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
+
+    # ORM hydrators to improve performance
+    sylius.exporter.orm.hydrator.orders:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator\OrderHydrator
+        arguments:
+            - "@sylius.repository.order"
 
     # PluginPools for Exporters. Can contain multiple Plugins
     sylius.exporter.pluginpool.countries:

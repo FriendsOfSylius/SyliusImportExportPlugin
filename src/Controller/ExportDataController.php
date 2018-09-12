@@ -6,6 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfiguration;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
@@ -101,9 +102,14 @@ final class ExportDataController extends Controller
      */
     private function getResourceIds($resources): array
     {
-        return array_map(function (ResourceInterface $resource) {
-            return $resource->getId();
-        }, $this->getResources($resources));
+        if ($resources->getData()->getAdapter() instanceof DoctrineORMAdapter) {
+            $query = $resources->getData()->getAdapter()->getQuery()->setMaxResults(null);
+            return array_column($query->getArrayResult(), 'id');
+        } else {
+            return array_map(function (ResourceInterface $resource) {
+                return $resource->getId();
+            }, $this->getResources($resources));
+        }
     }
 
     /**
