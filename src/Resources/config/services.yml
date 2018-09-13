@@ -319,7 +319,7 @@ services:
     sylius.processor.payment_methods:
         class: FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor
         arguments:
-            - "@sylius.factory.payment_method"
+            - "@sylius.custom_factory.payment_method"
             - "@sylius.repository.payment_method"
             - "@sylius.importer.metadata_validator"
             - "@doctrine.orm.entity_manager"
@@ -362,3 +362,12 @@ services:
         arguments:
             - '@doctrine.orm.default_entity_manager'
             - '@sylius.class_metadata.product_image'
+
+    sylius.processor.taxonomies:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Processor\TaxonomyProcessor
+        arguments:
+            - "@sylius.custom_factory.taxon"
+            - "@sylius.repository.taxon"
+            - "@sylius.locale_provider"
+            - "@sylius.importer.metadata_validator"
+            - ["Code", "Parent", "Locale", "Name", "Slug", "Description"]

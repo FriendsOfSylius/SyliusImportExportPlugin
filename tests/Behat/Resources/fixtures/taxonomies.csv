@@ -1,0 +1,5 @@
+Code,Parent,Locale,Name,Slug,Description
+root,,en_US,Root,root,
+taxon1,root,en_US,Taxon 1,taxon1,Description taxon1
+taxon2,root,en_US,Taxon 2,taxon2,Description taxon2
+taxon11,taxon1,en_US,Taxon 11,taxon1/taxon11,Description taxon11

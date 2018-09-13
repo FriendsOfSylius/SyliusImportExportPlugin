@@ -51,30 +51,50 @@ final class RegisterImporterPass implements CompilerPassInterface
             return;
         }
 
-        $domain = 'sylius';
-        // backward compatibility with the old configuration
-        if (count(\explode('.', $type)) === 2) {
-            [$domain, $type] = \explode('.', $type);
-        }
-
+        $eventName = $this->buildEventName($type);
+        $templateName = $this->buildTemplateName($type);
         $container
             ->register(
                 $eventHookName,
                 BlockEventListener::class
             )
             ->setAutowired(false)
-            ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
+            ->addArgument($templateName)
             ->addTag(
                 'kernel.event_listener',
                 [
-                    'event' => \sprintf(
-                        'sonata.block.event.%s.admin.%s.index.after_content',
-                        $domain,
-                        $type
-                    ),
+                    'event' => $eventName,
                     'method' => 'onBlockEvent',
                 ]
             )
         ;
     }
+
+    private function buildEventName(string $type): string
+    {
+        if ('taxon' === $type) {
+            return 'sonata.block.event.sylius.admin.taxon.create.after_content';
+        }
+
+        $domain = 'sylius';
+        // backward compatibility with the old configuration
+        if (count(\explode('.', $type)) === 2) {
+            [$domain, $type] = \explode('.', $type);
+        }
+
+        return \sprintf(
+            'sonata.block.event.%s.admin.%s.index.after_content',
+            $domain,
+            $type
+        );
+    }
+
+    private function buildTemplateName(string $type): string
+    {
+        if ('taxon' === $type) {
+            return '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig';
+        }
+        return '@FOSSyliusImportExportPlugin/Crud/import.html.twig';
+    }
+
 }

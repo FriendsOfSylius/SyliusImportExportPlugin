@@ -1,0 +1,34 @@
+[
+  {
+    "Code":"root",
+    "Parent":"",
+    "Locale":"en_US",
+    "Name":"Root",
+    "Slug":"root",
+    "Description":""
+  },
+  {
+    "Code":"taxon1",
+    "Parent":"root",
+    "Locale":"en_US",
+    "Name":"Taxon 1",
+    "Slug":"taxon1",
+    "Description":"Description taxon1"
+  },
+  {
+    "Code":"taxon2",
+    "Parent":"root",
+    "Locale":"en_US",
+    "Name":"Taxon 2",
+    "Slug":"taxon2",
+    "Description":"Description taxon2"
+  },
+  {
+    "Code":"taxon11",
+    "Parent":"taxon1",
+    "Locale":"en_US",
+    "Name":"Taxon 11",
+    "Slug":"taxon11",
+    "Description":"Description taxon11"
+  }
+]
