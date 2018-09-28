@@ -6,12 +6,17 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
+use Port\Csv\CsvWriter;
+use Port\Excel\ExcelWriter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterExporterPass implements CompilerPassInterface
 {
+    private const CLASS_CSV_WRITER = CsvWriter::class;
+    private const CLASS_EXCEL_WRITER = ExcelWriter::class;
+
     /**
      * @var array
      */
@@ -54,6 +59,14 @@ final class RegisterExporterPass implements CompilerPassInterface
 
     private function registerTypeAndFormat(string $type, string $format): void
     {
+        if ('csv' === $format && !class_exists(self::CLASS_CSV_WRITER)) {
+            return;
+        }
+
+        if ('xlsx' === $format && !class_exists(self::CLASS_EXCEL_WRITER)) {
+            return;
+        }
+
         if (!isset($this->typesAndFormats[$type])) {
             $this->typesAndFormats[$type] = [];
         }
