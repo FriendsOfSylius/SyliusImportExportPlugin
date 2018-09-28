@@ -1,13 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: apitchen
- * Date: 17/01/18
- * Time: 11:41
- */
+
+declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
-
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Sylius\Component\Core\Model\TaxonInterface;
@@ -22,7 +17,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
     private $resourceTaxonFactory;
 
     /** @var TaxonRepositoryInterface */
-    private $taxonRepositry;
+    private $taxonRepository;
 
     /** @var  @var LocaleProviderInterface */
     private $localeProvider;
@@ -44,7 +39,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
         array $headerKeys
     ) {
         $this->resourceTaxonFactory = $taxonFactory;
-        $this->taxonRepositry = $taxonRepository;
+        $this->taxonRepository = $taxonRepository;
         $this->localeProviderInterface = $localeProviderInterface;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
@@ -75,18 +70,17 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
         }
         $taxon->setDescription($descriptionValue);
 
-        $this->taxonRepositry->add($taxon);
+        $this->taxonRepository->add($taxon);
     }
 
     private function getTaxon(string $code, string $parentCode): TaxonInterface
     {
-
         /** @var TaxonInterface $taxon */
-        $taxon = $this->taxonRepositry->findOneBy(['code' => $code]);
+        $taxon = $this->taxonRepository->findOneBy(['code' => $code]);
 
-        if ($taxon == null) {
+        if (null === $taxon) {
             /** @var TaxonInterface $parentTaxon */
-            $parentTaxon = $this->taxonRepositry->findOneBy(['code' => $parentCode]);
+            $parentTaxon = $this->taxonRepository->findOneBy(['code' => $parentCode]);
             if (null === $parentTaxon) {
                 $taxon = $this->resourceTaxonFactory->createNew();
             } else {
@@ -100,7 +94,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
 
     private function getLocale(string $locale)
     {
-        if ($locale === "") {
+        if ('' === $locale) {
             return  $this->localeProviderInterface->getDefaultLocaleCode();
         }
 
@@ -108,10 +102,10 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
             $this->availableLocalesCodes = $this->localeProviderInterface->getAvailableLocalesCodes();
         }
 
-        if (in_array($locale,  $this->availableLocalesCodes)) {
+        if (in_array($locale, $this->availableLocalesCodes)) {
             return $locale;
-        } else {
-            throw new \Exception("Locale $locale does not exist in Sylius");
         }
+
+        throw new \Exception("Locale $locale does not exist in Sylius");
     }
 }
