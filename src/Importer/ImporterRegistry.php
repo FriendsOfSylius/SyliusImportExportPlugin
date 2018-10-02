@@ -20,7 +20,7 @@ class ImporterRegistry extends ServiceRegistry
         if ('taxon' === $type) {
             return 'app.block_event_listener.admin.taxon.create.after_content';
         }
+
         return sprintf('%s_%s', self::EVENT_HOOK_NAME_PREFIX_ADMIN_CRUD_AFTER_CONTENT, $type);
     }
-
 }

@@ -6,20 +6,19 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Sylius\Component\Core\Model\TaxonInterface;
+use Sylius\Component\Locale\Provider\LocaleProviderInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
-use Sylius\Component\Locale\Provider\LocaleProviderInterface;
 
 final class TaxonomyProcessor implements ResourceProcessorInterface
 {
-
     /** @var TaxonFactoryInterface */
     private $resourceTaxonFactory;
 
     /** @var TaxonRepositoryInterface */
     private $taxonRepository;
 
-    /** @var  @var LocaleProviderInterface */
+    /** @var @var LocaleProviderInterface */
     private $localeProvider;
 
     /** @var MetadataValidatorInterface */
@@ -30,7 +29,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
 
     /** @var array */
     private $availableLocalesCodes;
-    
+
     public function __construct(
         TaxonFactoryInterface $taxonFactory,
         TaxonRepositoryInterface $taxonRepository,
@@ -73,7 +72,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
         $this->taxonRepository->add($taxon);
     }
 
-    private function getTaxon(string $code, string $parentCode): TaxonInterface
+    private function getTaxon(string $code, string $parentCode = null): TaxonInterface
     {
         /** @var TaxonInterface $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => $code]);

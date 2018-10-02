@@ -1,15 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidatorInterface;
-use FriendsOfSylius\SyliusImportExportPlugin\Processor\TaxonomyProcessor;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Processor\TaxonomyProcessor;
 use PhpSpec\ObjectBehavior;
-use Prophecy\Argument;
+use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Locale\Provider\LocaleProviderInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
 class TaxonomyProcessorSpec extends ObjectBehavior
@@ -40,7 +41,7 @@ class TaxonomyProcessorSpec extends ObjectBehavior
         LocaleProviderInterface $localeProviderInterface,
         MetadataValidatorInterface $metadataValidator
     ) {
-        $headerKeys = ['Code','Parent','Locale','Name','Slug','Description'];
+        $headerKeys = ['Code', 'Parent', 'Locale', 'Name', 'Slug', 'Description'];
         $dataset = ['Code' => 'root', 'Parent' => '', 'Locale' => 'en_US', 'Name' => 'Root', 'Slug' => 'root', 'Description' => 'root category'];
         $this->beConstructedWith($taxonFactory, $taxonRepository, $localeProviderInterface, $metadataValidator, $headerKeys);
 

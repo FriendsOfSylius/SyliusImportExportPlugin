@@ -71,7 +71,7 @@ final class RegisterImporterPass implements CompilerPassInterface
     }
 
     private $eventNames = [
-        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content'
+        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
     ];
 
     private function buildEventName(string $type): string
@@ -94,7 +94,7 @@ final class RegisterImporterPass implements CompilerPassInterface
     }
 
     private $templateNames = [
-        'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig'
+        'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig',
     ];
 
     private function buildTemplateName(string $type): string
@@ -102,7 +102,7 @@ final class RegisterImporterPass implements CompilerPassInterface
         if (isset($this->templateNames[$type])) {
             return $this->templateNames[$type];
         }
+
         return '@FOSSyliusImportExportPlugin/Crud/import.html.twig';
     }
-
 }

@@ -44,6 +44,10 @@
             <argument type="service" id="service_container" />
             <argument>%behat.files_directory%</argument>
         </service>
+        <service id="test.behat.context.taxonomies_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\TaxonomiesContext">
+            <argument type="service" id="test.behat.page.taxonomy_create_page" />
+            <tag name="fob.context_service" />
+        </service>
         <service id="test.behat.context.cli_countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCountriesContext">
             <argument type="service" id="kernel" />
             <argument type="service" id="sylius.repository.country" />
@@ -100,6 +104,15 @@
             <argument type="service" id="service_container" />
             <argument>%behat.files_directory%</argument>
         </service>
+        <service id="test.behat.context.cli_taxonomies_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliTaxonomiesContext">
+            <argument type="service" id="__symfony__.kernel" />
+            <argument type="service" id="__symfony__.sylius.repository.taxon" />
+            <argument type="service" id="__symfony__.sylius.importers_registry" />
+            <argument type="service" id="__symfony__.sylius.exporters_registry" />
+            <argument type="service" id="__symfony__.service_container" />
+            <argument>%behat.files_directory%</argument>
+            <tag name="fob.context_service" />
+        </service>
 
         <service id="test.behat.page.country_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_country_index</argument>
@@ -119,6 +132,10 @@
         </service>
         <service id="test.behat.page.product_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_product_index</argument>
+            <argument>%behat.files_directory%</argument>
+        </service>
+        <service id="test.behat.page.taxonomy_create_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxonCreatePage" parent="sylius.behat.page.admin.crud.create" public="false">
+            <argument>sylius_admin_taxon_create</argument>
             <argument>%behat.files_directory%</argument>
         </service>
     </services>

@@ -102,6 +102,24 @@ default:
             filters:
                 tags: "@managing_products && @ui"
 
+        ui_managing_taxonomies:
+            contexts:
+                - sylius.behat.context.hook.doctrine_orm
+
+                - sylius.behat.context.transform.shared_storage
+                - sylius.behat.context.transform.taxon
+
+                - sylius.behat.context.setup.admin_security
+                - sylius.behat.context.setup.taxonomy
+
+                - sylius.behat.context.ui.admin.managing_taxons
+                - sylius.behat.context.ui.admin.notification
+
+                - test.behat.context.notification_context
+                - test.behat.context.taxonomies_context
+            filters:
+                tags: "@managing_taxonomies && @ui"
+
         cli_managing_countries:
             contexts:
                 - sylius.behat.context.hook.doctrine_orm
@@ -168,6 +186,14 @@ default:
                 - test.behat.context.cli_base_context
             filters:
                 tags: "@managing_imports && @cli_importer_exporter"
+
+        cli_managing_taxonomies:
+            contexts:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_taxonomies_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_taxonomies && @cli_importer"
 
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:
