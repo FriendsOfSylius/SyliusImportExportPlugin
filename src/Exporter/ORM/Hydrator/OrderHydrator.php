@@ -51,6 +51,7 @@ class OrderHydrator implements HydratorInterface
          * @var \Doctrine\ORM\EntityRepository
          */
         $repository = $this->repository;
+
         return $repository->createQueryBuilder('o')
             ->andWhere('o.id IN (:exportIds)')
             ->setParameter('exportIds', $idsToExport)
@@ -66,6 +67,7 @@ class OrderHydrator implements HydratorInterface
          * @var \Doctrine\ORM\EntityRepository
          */
         $repository = $this->repository;
+
         // Partial hydration to make sure order items don't get lazy-loaded
         return $repository->createQueryBuilder('o')
             ->select('PARTIAL o.{id}, items')
