@@ -30,7 +30,8 @@ class OrderHydrator implements HydratorInterface
     {
         /** @var ResourceInterface[] $items */
         if (!$this->repository instanceof \Doctrine\ORM\EntityRepository) {
-            return $this->repository->findBy(['id' => $idsToExport]);
+            $items = $this->repository->findBy(['id' => $idsToExport]);
+            return $items;
         }
 
         $query = $this->findOrdersQb($idsToExport)->getQuery();
