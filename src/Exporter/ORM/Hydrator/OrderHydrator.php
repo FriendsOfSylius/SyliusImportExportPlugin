@@ -12,6 +12,9 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 class OrderHydrator implements HydratorInterface
 {
+    /**
+     * @var RepositoryInterface
+     */
     protected $repository;
 
     public function __construct(
@@ -21,28 +24,27 @@ class OrderHydrator implements HydratorInterface
     }
 
     /**
-     * @param int[]|string[] $idsToExport
-     *
-     * @return ResourceInterface[]
+     * @inheritdoc
      */
     public function getHydratedResources(array $idsToExport): array
     {
         /** @var ResourceInterface[] $items */
-        if ($this->repository instanceof \Doctrine\ORM\EntityRepository) {
-            $query = $this->findOrdersQb($idsToExport)->getQuery();
-            $items = $this->enableEagerLoading($query)->getResult();
-            $this->hydrateOrderItemsQb($idsToExport)->getQuery()->getResult(); // This result can be discarded
-        } else {
-            $items = $this->repository->findBy(['id' => $idsToExport]);
+        if (!$this->repository instanceof \Doctrine\ORM\EntityRepository) {
+            return $this->repository->findBy(['id' => $idsToExport]);
         }
+
+        $query = $this->findOrdersQb($idsToExport)->getQuery();
+        $items = $this->enableEagerLoading($query)->getResult();
+        $this->hydrateOrderItemsQb($idsToExport)->getQuery()->getResult(); // This result can be discarded
 
         return $items;
     }
 
     /**
      * @param int[]|string[] $idsToExport
+     * @return QueryBuilder
      */
-    protected function findOrdersQb(array $idsToExport): QueryBuilder
+    private function findOrdersQb(array $idsToExport): QueryBuilder
     {
         return $this->repository->createQueryBuilder('o')
             ->andWhere('o.id IN (:exportIds)')
@@ -52,6 +54,7 @@ class OrderHydrator implements HydratorInterface
 
     /**
      * @param int[]|string[] $idsToExport
+     * @return QueryBuilder
      */
     protected function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
     {

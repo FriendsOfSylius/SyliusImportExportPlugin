@@ -138,7 +138,7 @@ class ResourcePlugin implements PluginInterface
      *
      * @return ResourceInterface[]
      */
-    protected function findResources(array $idsToExport): array
+    private function findResources(array $idsToExport): array
     {
         /** @var ResourceInterface[] $items */
         $items = $this->repository->findBy(['id' => $idsToExport]);
