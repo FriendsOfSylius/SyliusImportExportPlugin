@@ -17,12 +17,14 @@ final class MessageQueuePass implements CompilerPassInterface
     {
         $config = $container->getParameter('sylius.message_queue');
 
-        $writerDefinition = $container->getDefinition('sylius.message_queue_writer');
-        $writerDefinition->addArgument(new Reference($config['exporter_service_id']));
-        $writerDefinition->setAbstract(false);
+        if (isset($config['enabled']) && $config['enabled']) {
+            $writerDefinition = $container->getDefinition('sylius.message_queue_writer');
+            $writerDefinition->addArgument(new Reference($config['exporter_service_id']));
+            $writerDefinition->setAbstract(false);
 
-        $readerDefinition = $container->getDefinition('sylius.message_queue_reader');
-        $readerDefinition->addArgument(new Reference($config['importer_service_id']));
-        $readerDefinition->setAbstract(false);
+            $readerDefinition = $container->getDefinition('sylius.message_queue_reader');
+            $readerDefinition->addArgument(new Reference($config['importer_service_id']));
+            $readerDefinition->setAbstract(false);
+        }
     }
 }
