@@ -31,6 +31,7 @@ class OrderHydrator implements HydratorInterface
         if (!$this->repository instanceof \Doctrine\ORM\EntityRepository) {
             /** @var ResourceInterface[] $items */
             $items = $this->repository->findBy(['id' => $idsToExport]);
+
             return $items;
         }
 
@@ -47,7 +48,7 @@ class OrderHydrator implements HydratorInterface
     private function findOrdersQb(array $idsToExport): QueryBuilder
     {
         /**
-         * @var \Doctrine\ORM\EntityRepository $repository
+         * @var \Doctrine\ORM\EntityRepository
          */
         $repository = $this->repository;
         return $repository->createQueryBuilder('o')
@@ -62,7 +63,7 @@ class OrderHydrator implements HydratorInterface
     protected function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
     {
         /**
-         * @var \Doctrine\ORM\EntityRepository $repository
+         * @var \Doctrine\ORM\EntityRepository
          */
         $repository = $this->repository;
         // Partial hydration to make sure order items don't get lazy-loaded
