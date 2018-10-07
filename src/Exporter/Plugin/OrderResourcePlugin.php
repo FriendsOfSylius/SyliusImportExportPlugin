@@ -141,7 +141,7 @@ class OrderResourcePlugin extends ResourcePlugin
         $this->addDataForResource($resource, 'Product_list', $str);
     }
 
-    private function findResources(array $idsToExport): array
+    protected function findResources(array $idsToExport): array
     {
         /** @var ResourceInterface[] $items */
         $items = $this->orderHydrator->getHydratedResources($idsToExport);
