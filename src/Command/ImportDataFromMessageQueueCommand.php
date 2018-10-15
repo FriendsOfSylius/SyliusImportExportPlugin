@@ -51,6 +51,7 @@ final class ImportDataFromMessageQueueCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        /** @var string $importer */
         $importer = $input->getArgument('importer');
 
         if (empty($importer)) {
