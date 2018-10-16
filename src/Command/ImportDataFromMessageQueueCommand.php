@@ -41,7 +41,7 @@ final class ImportDataFromMessageQueueCommand extends Command
             ->setDescription('Import data from message queue.')
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
-                new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'The time in ms the importer will wait for some input.', 0),
+                new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'The time in ms the importer will wait for some input.', '0'),
             ])
         ;
     }
@@ -51,6 +51,7 @@ final class ImportDataFromMessageQueueCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        /** @var string $importer */
         $importer = $input->getArgument('importer');
 
         if (empty($importer)) {
@@ -59,6 +60,7 @@ final class ImportDataFromMessageQueueCommand extends Command
             return;
         }
 
+        /** @var string $timeout */
         $timeout = $input->getOption('timeout');
 
         // only accepts the format of json as messages

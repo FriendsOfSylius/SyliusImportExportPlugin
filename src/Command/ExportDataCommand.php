@@ -55,6 +55,7 @@ final class ExportDataCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        /** @var string $exporter */
         $exporter = $input->getArgument('exporter');
 
         if (empty($exporter)) {
