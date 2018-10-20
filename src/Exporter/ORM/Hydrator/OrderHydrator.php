@@ -10,7 +10,7 @@ use Doctrine\ORM\QueryBuilder;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-class OrderHydrator implements HydratorInterface
+final class OrderHydrator implements HydratorInterface
 {
     /**
      * @var RepositoryInterface
