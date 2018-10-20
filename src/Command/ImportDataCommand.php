@@ -50,6 +50,7 @@ final class ImportDataCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): void
     {
+        /** @var string $importer */
         $importer = $input->getArgument('importer');
         if (empty($importer)) {
             $this->listImporters($input, $output);
