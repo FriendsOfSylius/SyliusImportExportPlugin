@@ -15,7 +15,7 @@ final class OrderHydrator implements HydratorInterface
     /**
      * @var RepositoryInterface
      */
-    protected $repository;
+    private $repository;
 
     public function __construct(
         RepositoryInterface $repository
@@ -61,7 +61,7 @@ final class OrderHydrator implements HydratorInterface
     /**
      * @param int[]|string[] $idsToExport
      */
-    protected function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
+    private function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
     {
         /**
          * @var \Doctrine\ORM\EntityRepository
@@ -77,7 +77,7 @@ final class OrderHydrator implements HydratorInterface
         ;
     }
 
-    protected function enableEagerLoading(Query $query): Query
+    private function enableEagerLoading(Query $query): Query
     {
         return $query
             ->setFetchMode(
