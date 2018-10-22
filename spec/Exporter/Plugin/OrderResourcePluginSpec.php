@@ -7,6 +7,7 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator\HydratorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\OrderResourcePlugin;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AddressConcatenationInterface;
@@ -29,9 +30,10 @@ class OrderResourcePluginSpec extends ObjectBehavior
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
         EntityManagerInterface $entityManager,
-        AddressConcatenationInterface $addressConcatenation
+        AddressConcatenationInterface $addressConcatenation,
+        HydratorInterface $hydrator
     ) {
-        $this->beConstructedWith($repository, $propertyAccessor, $entityManager, $addressConcatenation);
+        $this->beConstructedWith($repository, $propertyAccessor, $entityManager, $addressConcatenation, $hydrator);
     }
 
     function it_is_initializable()
@@ -45,19 +47,17 @@ class OrderResourcePluginSpec extends ObjectBehavior
     }
 
     function it_should_add_customer_data(
-        RepositoryInterface $repository,
         EntityManagerInterface $entityManager,
         OrderInterface $resource,
         PropertyAccessorInterface $propertyAccessor,
         ClassMetaData $classMetadata,
-        AddressConcatenationInterface $addressConcatenation
+        AddressConcatenationInterface $addressConcatenation,
+        HydratorInterface $hydrator
     ) {
         $idsToExport = [1];
 
-        $repository->findBy(
-            [
-                'id' => $idsToExport,
-            ]
+        $hydrator->getHydratedResources(
+            $idsToExport
         )->willReturn(
             [
                 $resource,

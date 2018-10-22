@@ -5,11 +5,13 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator\HydratorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AddressConcatenationInterface;
 use Sylius\Component\Core\Model\OrderInterface;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
@@ -20,15 +22,22 @@ class OrderResourcePlugin extends ResourcePlugin
      */
     private $addressConcatenation;
 
+    /**
+     * @var HydratorInterface
+     */
+    private $orderHydrator;
+
     public function __construct(
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
         EntityManagerInterface $entityManager,
-        AddressConcatenationInterface $addressConcatenation
+        AddressConcatenationInterface $addressConcatenation,
+        HydratorInterface $orderHydrator
     ) {
         parent::__construct($repository, $propertyAccessor, $entityManager);
 
         $this->addressConcatenation = $addressConcatenation;
+        $this->orderHydrator = $orderHydrator;
     }
 
     /**
@@ -130,5 +139,13 @@ class OrderResourcePlugin extends ResourcePlugin
         }
 
         $this->addDataForResource($resource, 'Product_list', $str);
+    }
+
+    protected function findResources(array $idsToExport): array
+    {
+        /** @var ResourceInterface[] $items */
+        $items = $this->orderHydrator->getHydratedResources($idsToExport);
+
+        return $items;
     }
 }
