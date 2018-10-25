@@ -12,6 +12,10 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterImporterPass implements CompilerPassInterface
 {
+    private $eventHookNames = [
+        'taxonomy' => 'app.block_event_listener.admin.taxon.create.after_content',
+    ];
+
     private $eventNames = [
         'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
     ];
@@ -39,6 +43,7 @@ final class RegisterImporterPass implements CompilerPassInterface
             if (!isset($attributes[0]['format'])) {
                 throw new \InvalidArgumentException('Tagged importer ' . $id . ' needs to have a format');
             }
+
             $type = $attributes[0]['type'];
             $format = $attributes[0]['format'];
             $name = ImporterRegistry::buildServiceName($type, $format);
@@ -53,7 +58,7 @@ final class RegisterImporterPass implements CompilerPassInterface
 
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
-        $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
+        $eventHookName = $this->buildEventHookName($type);
 
         if ($container->has($eventHookName)) {
             return;
@@ -76,6 +81,15 @@ final class RegisterImporterPass implements CompilerPassInterface
                 ]
             )
         ;
+    }
+
+    public function buildEventHookName(string $type): string
+    {
+        if (isset($this->eventHookNames[$type])) {
+            return $this->eventHookNames[$type];
+        }
+
+        return sprintf('app.block_event_listener.admin.crud.after_content_%s.import', $type);
     }
 
     private function buildEventName(string $type): string
