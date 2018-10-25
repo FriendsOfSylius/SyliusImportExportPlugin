@@ -12,6 +12,14 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterImporterPass implements CompilerPassInterface
 {
+    private $eventNames = [
+        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
+    ];
+
+    private $templateNames = [
+        'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -70,10 +78,6 @@ final class RegisterImporterPass implements CompilerPassInterface
         ;
     }
 
-    private $eventNames = [
-        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
-    ];
-
     private function buildEventName(string $type): string
     {
         if (isset($this->eventNames[$type])) {
@@ -92,10 +96,6 @@ final class RegisterImporterPass implements CompilerPassInterface
             $type
         );
     }
-
-    private $templateNames = [
-        'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig',
-    ];
 
     private function buildTemplateName(string $type): string
     {
