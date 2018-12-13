@@ -7,7 +7,7 @@ Feature: Importing tax categories from excel with the command-line interface
     Background:
        Given I have a working command-line interface
 
-    @cli_importer
+    @cli_importer_exporter
     Scenario: Importing defined tax categories with the cli-command
         When I import "tax_category" data from xlsx file "tax_categories.xlsx" file with the cli-command
         Then I should see "Imported" in the output

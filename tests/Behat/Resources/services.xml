@@ -38,6 +38,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
@@ -47,6 +48,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
@@ -56,6 +58,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
@@ -65,6 +68,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
@@ -74,6 +78,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
@@ -83,6 +88,7 @@
             <argument type="service" id="__symfony__.sylius.importers_registry" />
             <argument type="service" id="__symfony__.sylius.exporters_registry" />
             <argument type="service" id="__symfony__.service_container" />
+            <argument type="service" id="__symfony__.doctrine.orm.entity_manager" />
             <argument>%behat.files_directory%</argument>
             <tag name="fob.context_service" />
         </service>
