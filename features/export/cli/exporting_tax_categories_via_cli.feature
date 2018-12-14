@@ -7,13 +7,13 @@ Feature: exporting tax categories to csv-file
   Background:
     Given I have a working command-line interface
     And the store has a tax category "cloth"
-    And this tax category name should be "Cloth"
-    And this tax category description should be "Shirts and Jeans"
+    And this tax category name is "Cloth"
+    And this tax category description is "Shirts and Jeans"
 
   @cli_importer_exporter
   Scenario: Exporting tax categories to csv-file
     When I export "tax_category" data as "csv" to the file "tax_categories_export.csv" with the cli-command
     Then I should see "Exported" in the output
     And I should see in the file:
-      | Id | Code  | Name  | Description        |
-      | 1  | cloth | Cloth | "Shirts and Jeans" |
+      | Code  | Name  | Description      |
+      | cloth | Cloth | Shirts and Jeans |

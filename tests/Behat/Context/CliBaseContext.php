@@ -146,11 +146,20 @@ class CliBaseContext implements Context
     /**
      * @Given /^I should see in the file:$/
      */
-    public function iShouldSeeInTheFile(TableNode $table)
+    public function iShouldSeeInTheFile(TableNode $expectedContent): void
     {
-        $fileContent = file($this->exportFile);
-        foreach ($fileContent as $index => $rowInFile) {
-            Assert::assertEquals($table->getRow($index), explode(";", trim($rowInFile)));
+        $actualFile = fopen($this->exportFile, 'r');
+        $row = 0;
+
+        while ($actualRowInFile = fgetcsv($actualFile, 1000, ';', '"')) {
+            // Check if the line in the exported file differs from the expected one
+            Assert::assertTrue($this->getDiff($expectedContent, $row, $actualRowInFile) === 0);
+            ++$row;
         }
+    }
+
+    private function getDiff(TableNode $table, int $index, array $rowInFile): int
+    {
+        return count(array_diff($table->getRow($index), $rowInFile));
     }
 }
