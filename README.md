@@ -17,9 +17,10 @@
     <a href="https://scrutinizer-ci.com/g/FriendsOfSylius/SyliusImportExportPlugin/" title="Scrutinizer">
         <img src="https://img.shields.io/scrutinizer/g/FriendsOfSylius/SyliusImportExportPlugin.svg" />
     </a>
-    <a href="https://sylius.com/plugins/" title="Sylius approved plugin">
-        <img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200">
-    </a>
+</p>
+
+<p align="center">
+    <img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200">
 </p>
 
 ## Installation
