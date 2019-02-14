@@ -19,6 +19,10 @@
     </a>
 </p>
 
+<p align="center">
+    <img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200">
+</p>
+
 ## Installation
 
 1. Require relevant portphp format support
