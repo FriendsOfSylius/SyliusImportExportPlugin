@@ -20,7 +20,7 @@
 </p>
 
 <p align="center">
-    <img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200">
+    <a href="https://sylius.com/plugins/" target="_blank"><img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200"></a>
 </p>
 
 ## Installation
