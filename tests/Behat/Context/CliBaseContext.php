@@ -6,7 +6,6 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Gherkin\Node\TableNode;
-use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
@@ -76,18 +75,12 @@ class CliBaseContext implements Context
      */
     protected $exportFile;
 
-    /**
-     * @var ObjectManager
-     */
-    protected $objectManager;
-
     public function __construct(
         KernelInterface $kernel,
         RepositoryInterface $repository,
         ImporterRegistry $importerRegistry,
         ExporterRegistry $exporterRegistry,
         ContainerInterface $container,
-        ObjectManager $objectManager,
         string $filePath
     ) {
         $this->kernel = $kernel;
@@ -96,7 +89,6 @@ class CliBaseContext implements Context
         $this->importerRegistry = $importerRegistry;
         $this->exporterRegistry = $exporterRegistry;
         $this->container = $container;
-        $this->objectManager = $objectManager;
     }
 
     /**
