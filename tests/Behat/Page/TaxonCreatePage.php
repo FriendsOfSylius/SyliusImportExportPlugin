@@ -13,7 +13,12 @@ class TaxonCreatePage extends CreatePage implements TaxonCreatePageInterface
     /** @var string */
     protected $filesPath;
 
-    public function __construct(Session $session, array $parameters, RouterInterface $router, string $routeName, string $filesPath
+    public function __construct(
+        Session $session,
+        array $parameters,
+        RouterInterface $router,
+        string $routeName,
+        string $filesPath
     ) {
         parent::__construct($session, $parameters, $router, $routeName);
         $this->filesPath = $filesPath;
