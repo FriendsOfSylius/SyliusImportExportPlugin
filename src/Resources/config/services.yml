@@ -18,6 +18,13 @@ services:
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
 
+    # Form Type
+    sylius.form.type.import:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType
+        arguments:
+            - "@sylius.importers_registry"
+
     # Registries for Importers / Exporters
     sylius.exporters_registry:
         public: true

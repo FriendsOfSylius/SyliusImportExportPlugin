@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class ImportDataController
 {
@@ -24,11 +23,6 @@ final class ImportDataController
      * @var ServiceRegistry
      */
     private $registry;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
 
     /**
      * @var Session
@@ -47,13 +41,11 @@ final class ImportDataController
 
     public function __construct(
         ServiceRegistry $registry,
-        UrlGeneratorInterface $router,
         Session $session,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
         $this->registry = $registry;
-        $this->router = $router;
         $this->session = $session;
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -88,7 +80,7 @@ final class ImportDataController
 
     private function getForm(string $importerType): FormInterface
     {
-        return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType, 'importer_registry' => $this->registry]);
+        return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType]);
     }
 
     private function importData(string $importer, FormInterface $form): void
