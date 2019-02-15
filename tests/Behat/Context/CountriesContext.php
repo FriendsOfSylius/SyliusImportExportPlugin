@@ -6,9 +6,9 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
 use Behat\Mink\Session;
+use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\CountryContext;
-use Sylius\Behat\Page\SymfonyPage;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
@@ -36,7 +36,7 @@ final class CountriesContext extends SymfonyPage implements Context
     /**
      * {@inheritdoc}
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return 'sylius_admin_country_index';
     }
@@ -143,7 +143,7 @@ final class CountriesContext extends SymfonyPage implements Context
     /**
      * {@inheritdoc}
      */
-    protected function getDefinedElements()
+    protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
             'export_button_text' => '.buttons div.dropdown span.text',

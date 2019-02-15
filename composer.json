@@ -27,6 +27,7 @@
         "enqueue/redis": "^0.8.23",
         "friends-of-behat/context-service-extension": "^1.0",
         "friends-of-behat/cross-container-extension": "^1.0",
+        "friends-of-behat/page-object-extension": "^0.2",
         "friends-of-behat/performance-extension": "^1.0",
         "friends-of-behat/service-container-extension": "^1.0",
         "friends-of-behat/suite-settings-extension": "^1.0",
