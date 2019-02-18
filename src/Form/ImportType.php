@@ -26,6 +26,7 @@ class ImportType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired('importer_type');
+        $resolver->setAllowedTypes('importer_type', 'string');
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
