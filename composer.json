@@ -11,8 +11,7 @@
         "queue-interop/queue-interop": "^0.6.2"
     },
     "suggest": {
-        "portphp/excel": "To support importing excel files, use version ^1.1",
-        "ext-zip": "To support writing of Excel files",
+        "portphp/spreadsheet": "To support importing Excel and LibreOffice Calc files, use version ^1.1",
         "portphp/csv": "To support importing csv files, use version ^1.1",
         "enqueue/enqueue-bundle" : "To help defining message queuing services",
         "enqueue/redis" : "To support message queuing via redis",
@@ -39,7 +38,7 @@
         "phpstan/phpstan-webmozart-assert": "^0.10.0",
         "phpunit/phpunit": "^5.6",
         "portphp/csv": "^1.1.0",
-        "portphp/excel": "^1.1.0",
+        "portphp/spreadsheet": "^1.0.0-alpha",
         "predis/predis": "^1.1",
         "se/selenium-server-standalone": "^2.52",
         "sylius-labs/coding-standard": "^2.0",

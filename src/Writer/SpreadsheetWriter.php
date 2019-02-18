@@ -6,17 +6,17 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Writer;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ExporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\InvalidOrderException;
-use Port\Excel\ExcelWriter as PortExcelWriter;
+use Port\Spreadsheet\SpreadsheetWriter as PortSpreadsheetWriter;
 
-class ExcelWriter implements WriterInterface
+class SpreadsheetWriter implements WriterInterface
 {
     /**
-     * @var PortExcelWriterFactoryInterface
+     * @var PortSpreadsheetWriterFactoryInterface
      */
-    private $portExcelWriterFactory;
+    private $portSpreadsheetWriterFactory;
 
     /**
-     * @var PortExcelWriter
+     * @var PortSpreadsheetWriter
      */
     private $writer;
 
@@ -30,9 +30,9 @@ class ExcelWriter implements WriterInterface
      */
     private $temporaryFolder;
 
-    public function __construct(PortExcelWriterFactoryInterface $portExcelWriterFactory, ?string $temporaryFolder = null)
+    public function __construct(PortSpreadsheetWriterFactoryInterface $portSpreadsheetWriterFactory, ?string $temporaryFolder = null)
     {
-        $this->portExcelWriterFactory = $portExcelWriterFactory;
+        $this->portSpreadsheetWriterFactory = $portSpreadsheetWriterFactory;
         $this->temporaryFolder = $temporaryFolder ?? sys_get_temp_dir();
     }
 
@@ -80,7 +80,7 @@ class ExcelWriter implements WriterInterface
         }
 
         if (null === $this->writer) {
-            $this->writer = $this->portExcelWriterFactory->get($this->filename);
+            $this->writer = $this->portSpreadsheetWriterFactory->get($this->filename);
             $this->writer->prepare();
         }
     }

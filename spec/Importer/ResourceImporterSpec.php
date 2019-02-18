@@ -11,8 +11,8 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use PhpSpec\ObjectBehavior;
 use Port\Csv\CsvReader;
-use Port\Excel\ExcelReader;
 use Port\Reader\ReaderFactory;
+use Port\Spreadsheet\SpreadsheetReader;
 use Prophecy\Argument;
 
 class ResourceImporterSpec extends ObjectBehavior
@@ -65,23 +65,23 @@ class ResourceImporterSpec extends ObjectBehavior
         $this->import(__DIR__ . '/countries.csv')->shouldReturn($importerResult);
     }
 
-    function it_imports_countries_from_excel_file(
+    function it_imports_countries_from_spreadsheet_file(
         ReaderFactory $readerFactory,
-        ExcelReader $excelReader,
+        SpreadsheetReader $spreadsheetReader,
         ObjectManager $objectManager,
         ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
-        $excelReader->rewind()->willReturn();
-        $excelReader->key()->willReturn(0, 1);
-        $excelReader->count()->willReturn(2);
-        $excelReader->valid()->willReturn(true, true, false);
-        $excelReader->next()->willReturn();
-        $excelReader->current()->willReturn(
+        $spreadsheetReader->rewind()->willReturn();
+        $spreadsheetReader->key()->willReturn(0, 1);
+        $spreadsheetReader->count()->willReturn(2);
+        $spreadsheetReader->valid()->willReturn(true, true, false);
+        $spreadsheetReader->next()->willReturn();
+        $spreadsheetReader->current()->willReturn(
             ['Code' => 'DE'],
             ['Code' => 'CH']
         );
-        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($excelReader);
+        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($spreadsheetReader);
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
 
@@ -120,23 +120,23 @@ class ResourceImporterSpec extends ObjectBehavior
         $this->import(__DIR__ . '/tax_categories.csv')->shouldReturn($importerResult);
     }
 
-    function it_imports_tax_categories_from_excel_file(
+    function it_imports_tax_categories_from_spreadsheet_file(
         ReaderFactory $readerFactory,
-        ExcelReader $excelReader,
+        SpreadsheetReader $spreadsheetReader,
         ObjectManager $objectManager,
         ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
-        $excelReader->rewind()->willReturn();
-        $excelReader->key()->willReturn(0, 1);
-        $excelReader->count()->willReturn(2);
-        $excelReader->valid()->willReturn(true, true, false);
-        $excelReader->next()->willReturn();
-        $excelReader->current()->willReturn(
+        $spreadsheetReader->rewind()->willReturn();
+        $spreadsheetReader->key()->willReturn(0, 1);
+        $spreadsheetReader->count()->willReturn(2);
+        $spreadsheetReader->valid()->willReturn(true, true, false);
+        $spreadsheetReader->next()->willReturn();
+        $spreadsheetReader->current()->willReturn(
             ['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books'],
             ['Code' => 'CARS', 'Name' => 'cars', 'Description' => 'tax category for cars']
         );
-        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($excelReader);
+        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($spreadsheetReader);
 
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
@@ -177,23 +177,23 @@ class ResourceImporterSpec extends ObjectBehavior
         $this->import(__DIR__ . '/customer_groups.csv')->shouldReturn($importerResult);
     }
 
-    function it_imports_customer_groups_from_excel_file(
+    function it_imports_customer_groups_from_spreadsheet_file(
         ReaderFactory $readerFactory,
-        ExcelReader $excelReader,
+        SpreadsheetReader $spreadsheetReader,
         ObjectManager $objectManager,
         ImporterResultInterface $importerResult,
         ResourceProcessorInterface $resourceProcessor
     ) {
-        $excelReader->rewind()->willReturn();
-        $excelReader->key()->willReturn(0, 1);
-        $excelReader->count()->willReturn(2);
-        $excelReader->valid()->willReturn(true, true, false);
-        $excelReader->next()->willReturn();
-        $excelReader->current()->willReturn(
+        $spreadsheetReader->rewind()->willReturn();
+        $spreadsheetReader->key()->willReturn(0, 1);
+        $spreadsheetReader->count()->willReturn(2);
+        $spreadsheetReader->valid()->willReturn(true, true, false);
+        $spreadsheetReader->next()->willReturn();
+        $spreadsheetReader->current()->willReturn(
             ['Code' => 'PREMIUM', 'Name' => 'premium'],
             ['Code' => 'BASIC', 'Name' => 'basic']
         );
-        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($excelReader);
+        $readerFactory->getReader(Argument::type(\SplFileObject::class))->willReturn($spreadsheetReader);
 
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
         $objectManager->flush()->shouldBeCalledTimes(1);
