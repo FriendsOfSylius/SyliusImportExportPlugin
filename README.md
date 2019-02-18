@@ -28,7 +28,7 @@
 1. Require relevant portphp format support
 
   - Run `composer require portphp/csv --no-update` to add CSV format support
-  - Run `composer require portphp/excel --no-update` to add Excel format support (also install the `zip` PHP extension)
+  - Run `composer require portphp/spreadsheet --no-update` to add Excel format support (also install the `zip` PHP extension)
 
 2. Require and install the plugin
 
@@ -385,7 +385,7 @@ With the provided keys you can influence which fields of a resource are exported
   - Test application install
 
     ```bash
-    $ composer install
+    $ composer require sylius/sylius symfony/symfony
     $ (cd tests/Application && yarn install)
     $ (cd tests/Application && yarn run gulp)
     $ (cd tests/Application && bin/console assets:install web -e test)
@@ -447,3 +447,6 @@ With the provided keys you can influence which fields of a resource are exported
     $ (cd tests/Application && bin/console sylius:fixtures:load -e dev)
     $ (cd tests/Application && bin/console server:run -d web -e dev)
     ```
+
+Fixture file with login information:
+https://github.com/Sylius/Sylius/blob/master/src/Sylius/Bundle/CoreBundle/Resources/config/app/fixtures.yml

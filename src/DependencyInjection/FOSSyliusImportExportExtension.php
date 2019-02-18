@@ -6,8 +6,8 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection;
 
 use Port\Csv\CsvReaderFactory;
 use Port\Csv\CsvWriter;
-use Port\Excel\ExcelReaderFactory;
-use Port\Excel\ExcelWriter;
+use Port\Spreadsheet\SpreadsheetReaderFactory;
+use Port\Spreadsheet\SpreadsheetWriter;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
@@ -18,8 +18,8 @@ class FOSSyliusImportExportExtension extends Extension
     private const CLASS_CSV_READER = CsvReaderFactory::class;
     private const CLASS_CSV_WRITER = CsvWriter::class;
 
-    private const CLASS_EXCEL_READER = ExcelReaderFactory::class;
-    private const CLASS_EXCEL_WRITER = ExcelWriter::class;
+    private const CLASS_SPREADSHEET_READER = SpreadsheetReaderFactory::class;
+    private const CLASS_SPREADSHEET_WRITER = SpreadsheetWriter::class;
 
     /**
      * {@inheritdoc}
@@ -46,12 +46,12 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_export_csv.yml');
         }
 
-        if (class_exists(self::CLASS_EXCEL_READER)) {
-            $loader->load('services_import_excel.yml');
+        if (class_exists(self::CLASS_SPREADSHEET_READER)) {
+            $loader->load('services_import_spreadsheet.yml');
         }
 
         if (class_exists(self::CLASS_CSV_WRITER) && extension_loaded('zip')) {
-            $loader->load('services_export_excel.yml');
+            $loader->load('services_export_spreadsheet.yml');
         }
 
         if (isset($config['message_queue'])) {

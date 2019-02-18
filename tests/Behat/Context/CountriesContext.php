@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ResponseTextException;
 use Behat\Mink\Session;
 use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use PHPUnit\Framework\Assert;
@@ -84,7 +86,7 @@ final class CountriesContext extends SymfonyPage implements Context
         $page = $this->getSession()->getPage();
         $findName = $page->find('css', $element);
         if (!$findName) {
-            throw new Exception($element . ' could not be found');
+            throw new ElementNotFoundException($element . ' could not be found');
         }
         $findName->click();
     }
@@ -174,6 +176,6 @@ final class CountriesContext extends SymfonyPage implements Context
             return;
         }
 
-        throw new ResponseTextException('Response does not contain: ' . $text);
+        throw new ResponseTextException(sprintf("Response '%s' does not contain: '%s'", $responseText, $text), $this->getDriver());
     }
 }

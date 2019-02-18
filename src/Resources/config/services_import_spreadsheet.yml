@@ -1,14 +1,14 @@
 services:
-    sylius.factory.excel_reader:
-        class: Port\Excel\ExcelReaderFactory
+    sylius.factory.spreadsheet_reader:
+        class: Port\Spreadsheet\SpreadsheetReaderFactory
         arguments:
             - 1
 
-    # Excel-Importers
+    # Spreadsheet-Importers
     sylius.importer.countries.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.spreadsheet_reader"
             - "@sylius.manager.country"
             - "@sylius.processor.countries"
             - "@sylius.importer.result"
@@ -21,7 +21,7 @@ services:
     sylius.importer.customer_group.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.spreadsheet_reader"
             - "@sylius.manager.customer_group"
             - "@sylius.processor.customer_groups"
             - "@sylius.importer.result"
@@ -34,7 +34,7 @@ services:
     sylius.importer.payment_methods.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.spreadsheet_reader"
             - "@sylius.manager.payment_method"
             - "@sylius.processor.payment_methods"
             - "@sylius.importer.result"
@@ -47,7 +47,7 @@ services:
     sylius.importer.tax_categories.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.spreadsheet_reader"
             - "@sylius.manager.tax_category"
             - "@sylius.processor.tax_categories"
             - "@sylius.importer.result"
