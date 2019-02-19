@@ -21,8 +21,8 @@ services:
     sylius.form.type.import:
         public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType
-        arguments:
-            - "@sylius.importers_registry"
+        arguments: ["@sylius.importers_registry"]
+        tags: [form.type]
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:
