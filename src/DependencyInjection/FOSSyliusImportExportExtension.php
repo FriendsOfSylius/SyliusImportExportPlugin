@@ -50,7 +50,7 @@ class FOSSyliusImportExportExtension extends Extension
             $loader->load('services_import_spreadsheet.yml');
         }
 
-        if (class_exists(self::CLASS_CSV_WRITER) && extension_loaded('zip')) {
+        if (class_exists(self::CLASS_SPREADSHEET_WRITER) && extension_loaded('zip')) {
             $loader->load('services_export_spreadsheet.yml');
         }
 

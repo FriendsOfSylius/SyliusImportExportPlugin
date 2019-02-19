@@ -16,7 +16,6 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 final class ImportDataController
 {
@@ -24,11 +23,6 @@ final class ImportDataController
      * @var ServiceRegistry
      */
     private $registry;
-
-    /**
-     * @var UrlGeneratorInterface
-     */
-    private $router;
 
     /**
      * @var Session
@@ -47,13 +41,11 @@ final class ImportDataController
 
     public function __construct(
         ServiceRegistry $registry,
-        UrlGeneratorInterface $router,
         Session $session,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
         $this->registry = $registry;
-        $this->router = $router;
         $this->session = $session;
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -61,11 +53,12 @@ final class ImportDataController
 
     public function importFormAction(Request $request): Response
     {
-        $form = $this->getForm();
+        $importer = $request->attributes->get('resource');
+        $form = $this->getForm($importer);
 
         $content = $this->twig->render(
             '@FOSSyliusImportExportPlugin/Crud/import_form.html.twig',
-            ['form' => $form->createView(), 'resource' => $request->attributes->get('resource')]
+            ['form' => $form->createView(), 'resource' => $importer]
         );
 
         return new Response($content);
@@ -74,7 +67,7 @@ final class ImportDataController
     public function importAction(Request $request): RedirectResponse
     {
         $importer = $request->attributes->get('resource');
-        $form = $this->getForm();
+        $form = $this->getForm($importer);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -85,9 +78,9 @@ final class ImportDataController
         return new RedirectResponse($referer);
     }
 
-    private function getForm(): FormInterface
+    private function getForm(string $importerType): FormInterface
     {
-        return $this->formFactory->create(ImportType::class);
+        return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType]);
     }
 
     private function importData(string $importer, FormInterface $form): void

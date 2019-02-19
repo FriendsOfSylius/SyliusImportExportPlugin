@@ -5,7 +5,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
             - "@sylius.importers_registry"
-            - "@router"
             - "@session"
             - "@form.factory"
             - "@twig"
@@ -17,6 +16,13 @@ services:
             - "@sylius.exporters_registry"
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
+
+    # Form Type
+    sylius.form.type.import:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType
+        arguments: ["@sylius.importers_registry"]
+        tags: [form.type]
 
     # Registries for Importers / Exporters
     sylius.exporters_registry:
