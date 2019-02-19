@@ -5,7 +5,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
             - "@sylius.importers_registry"
-            - "@router"
             - "@session"
             - "@form.factory"
             - "@twig"
