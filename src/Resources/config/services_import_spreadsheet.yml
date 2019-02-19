@@ -60,7 +60,7 @@ services:
     sylius.importer.taxons.xlsx:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:
-            - "@sylius.factory.excel_reader"
+            - "@sylius.factory.spreadsheet_reader"
             - "@sylius.manager.taxon"
             - "@sylius.processor.taxonomies"
             - "@sylius.importer.result"
