@@ -7,7 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Listener\ExportButtonGridListener;
 use Port\Csv\CsvWriter;
-use Port\Excel\ExcelWriter;
+use Port\Spreadsheet\SpreadsheetWriter;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Reference;
 final class RegisterExporterPass implements CompilerPassInterface
 {
     private const CLASS_CSV_WRITER = CsvWriter::class;
-    private const CLASS_EXCEL_WRITER = ExcelWriter::class;
+    private const CLASS_SPREADSHEET_WRITER = SpreadsheetWriter::class;
 
     /**
      * @var array
@@ -63,7 +63,7 @@ final class RegisterExporterPass implements CompilerPassInterface
             return;
         }
 
-        if ('xlsx' === $format && !class_exists(self::CLASS_EXCEL_WRITER)) {
+        if ('xlsx' === $format && !class_exists(self::CLASS_SPREADSHEET_WRITER)) {
             return;
         }
 
