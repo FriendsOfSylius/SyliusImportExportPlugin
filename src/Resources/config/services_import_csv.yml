@@ -57,7 +57,6 @@ services:
         tags:
             - { name: sylius.importer, type: tax_category, format: csv }
 
-
     sylius.importer.products.csv:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
         arguments:

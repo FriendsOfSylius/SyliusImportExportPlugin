@@ -120,17 +120,19 @@ final class ProductProcessor implements ResourceProcessorInterface
                 continue;
             }
 
-            if (!empty($data[$attrCode])) {
-                $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
-                /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
-                $attr = $this->productAttributeValueFactory->createNew();
-                $attr->setAttribute($productAttr);
-                $attr->setProduct($product);
-                $attr->setLocaleCode($product->getTranslation()->getLocale());
-                $attr->setValue($data[$attrCode]);
-                $product->addAttribute($attr);
-                $this->productRepository->add($attr);
+            if (empty($data[$attrCode])) {
+                continue;
             }
+
+            $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
+            /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
+            $attr = $this->productAttributeValueFactory->createNew();
+            $attr->setAttribute($productAttr);
+            $attr->setProduct($product);
+            $attr->setLocaleCode($product->getTranslation()->getLocale());
+            $attr->setValue($data[$attrCode]);
+            $product->addAttribute($attr);
+            $this->productRepository->add($attr);
         }
     }
 }

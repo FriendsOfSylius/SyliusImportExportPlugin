@@ -6,7 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-class ProductPluginPool extends PluginPool
+final class ProductPluginPool extends PluginPool
 {
     public function __construct(array $plugins, array $exportKeys, RepositoryInterface $productAttributeRepository)
     {

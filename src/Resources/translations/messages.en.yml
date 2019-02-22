@@ -8,3 +8,4 @@ fos:
                 csv: 'CSV'
                 xlsx: 'Excel'
                 json: 'JSON'
+

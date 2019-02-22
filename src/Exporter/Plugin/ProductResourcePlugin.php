@@ -4,22 +4,11 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
-use Doctrine\ORM\EntityManagerInterface;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-class ProductResourcePlugin extends ResourcePlugin
+final class ProductResourcePlugin extends ResourcePlugin
 {
-    public function __construct(
-        RepositoryInterface $repository,
-        PropertyAccessorInterface $propertyAccessor,
-        EntityManagerInterface $entityManager
-    ) {
-        parent::__construct($repository, $propertyAccessor, $entityManager);
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -29,11 +18,8 @@ class ProductResourcePlugin extends ResourcePlugin
 
         /** @var ProductInterface $resource */
         foreach ($this->resources as $resource) {
-            // insert Translation information to specific fields
             $this->addTranslationData($resource);
-            // insert Taxon information
             $this->addTaxonData($resource);
-            // insert Attribute Values information
             $this->addAttributeData($resource);
         }
     }

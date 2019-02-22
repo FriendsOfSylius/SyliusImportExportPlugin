@@ -9,7 +9,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoo
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-class ProductResourceExporter extends ResourceExporter
+final class ProductResourceExporter extends ResourceExporter
 {
     public function __construct(
         WriterInterface $writer,
