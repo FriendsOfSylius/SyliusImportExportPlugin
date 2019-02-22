@@ -10,7 +10,7 @@ class PluginPool implements PluginPoolInterface
     private $plugins;
 
     /** @var array */
-    private $exportKeys;
+    protected $exportKeys;
 
     /** @var array */
     private $exportKeysNotFound;
