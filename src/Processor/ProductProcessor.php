@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributesCodeInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
@@ -36,6 +37,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productAttributeRepository;
     /** @var FactoryInterface */
     private $productAttributeValueFactory;
+    /** @var AttributesCodeInterface */
+    private $attributesCode;
 
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -45,6 +48,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         MetadataValidatorInterface $metadataValidator,
         PropertyAccessorInterface $propertyAccessor,
         RepositoryInterface $productAttributeRepository,
+        AttributesCodeInterface $attributesCode,
         FactoryInterface $productAttributeValueFactory,
         array $headerKeys
     ) {
@@ -55,16 +59,9 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->metadataValidator = $metadataValidator;
         $this->propertyAccessor = $propertyAccessor;
         $this->productAttributeRepository = $productAttributeRepository;
-
-        $this->attrCode = [];
-        $productAttr = $productAttributeRepository->findBy([], ['id' => 'ASC']);
-        /** @var \Sylius\Component\Product\Model\ProductAttribute $attr */
-        foreach ($productAttr as $attr) {
-            $this->attrCode[] = $attr->getCode();
-        }
-
-        $this->headerKeys = \array_merge($headerKeys, $this->attrCode);
         $this->productAttributeValueFactory = $productAttributeValueFactory;
+        $this->attributesCode = $attributesCode;
+        $this->headerKeys = $headerKeys;
     }
 
     /**
@@ -72,20 +69,15 @@ final class ProductProcessor implements ResourceProcessorInterface
      */
     public function process(array $data): void
     {
+        $this->attrCode = $this->attributesCode->getAttributeCodesList();
+        $this->headerKeys = \array_merge($this->headerKeys, $this->attrCode);
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
         $product = $this->getProduct($data['Code']);
-        $mainTaxon = $this->getMainTaxon($data['Main_taxon']);
 
-        /** @var ProductInterface $product */
-        $product->setMainTaxon($mainTaxon);
-        $product->setName($data['Name']);
-        $product->setDescription($data['Description']);
-        $product->setShortDescription($data['Short_description']);
-        $product->setMetaDescription($data['Meta_description']);
-        $product->setMetaKeywords($data['Meta_keywords']);
-
+        $this->setDetails($product, $data);
         $this->setAttributesData($product, $data);
+        $this->setMainTaxon($product, $data);
 
         $this->productRepository->add($product);
     }
@@ -103,12 +95,13 @@ final class ProductProcessor implements ResourceProcessorInterface
         return $product;
     }
 
-    private function getMainTaxon(string $taxon): ?TaxonInterface
+    private function setMainTaxon(ProductInterface $product, array $data)
     {
         /** @var TaxonInterface|null $mainTaxon */
-        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $taxon]);
+        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]);
 
-        return $mainTaxon;
+        /** @var ProductInterface $product */
+        $product->setMainTaxon($mainTaxon);
     }
 
     private function setAttributesData(ProductInterface $product, array $data): void
@@ -134,5 +127,14 @@ final class ProductProcessor implements ResourceProcessorInterface
             $product->addAttribute($attr);
             $this->productRepository->add($attr);
         }
+    }
+
+    private function setDetails(ProductInterface $product, array $data)
+    {
+        $product->setName($data['Name']);
+        $product->setDescription($data['Description']);
+        $product->setShortDescription($data['Short_description']);
+        $product->setMetaDescription($data['Meta_description']);
+        $product->setMetaKeywords($data['Meta_keywords']);
     }
 }

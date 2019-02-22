@@ -56,7 +56,7 @@ services:
             - "@sylius.exporter.csv_writer"
             - "@sylius.exporter.pluginpool.products"
             - ['Code', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon']
-            - "@sylius.repository.product_attribute"
+            - "@sylius.service.attributes_code"
             - "@sylius.exporters_transformer_pool"
         tags:
             - { name: sylius.exporter, type: sylius.product, format: csv }
