@@ -1,0 +1,157 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
+
+use Behat\Behat\Context\Context;
+use Behat\Mink\Session;
+use PHPUnit\Framework\Assert;
+use Sylius\Behat\Context\Transform\ProductContext;
+use Sylius\Behat\Page\SymfonyPage;
+use Symfony\Component\Routing\RouterInterface;
+use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
+
+final class ProductsContext extends SymfonyPage implements Context
+{
+    /** @var ResourceIndexPageInterface */
+    private $productIndexPage;
+    /** @var ProductContext */
+    private $productContext;
+
+    public function __construct(
+        ResourceIndexPageInterface $productIndexPage,
+        ProductContext $productContext,
+        Session $session,
+        array $parameters,
+        RouterInterface $router
+    ) {
+        $this->productIndexPage = $productIndexPage;
+        $this->productContext = $productContext;
+
+        parent::__construct($session, $parameters, $router);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRouteName()
+    {
+        return 'sylius_admin_product_index';
+    }
+
+    /**
+     * @When I import product data from :file :format file
+     */
+    public function iImportProductDataFromCsvFile(string $file, string $format)
+    {
+        $this->productIndexPage->importData($file, $format);
+    }
+
+    /**
+     * @When I open the product admin index page
+     */
+    public function iOpenTheProductIndexPage()
+    {
+        $this->productIndexPage->open();
+    }
+
+    /**
+     * @Then I should see an export button
+     */
+    public function iShouldSeeExportButton()
+    {
+        Assert::assertEquals(
+            'Export',
+            $this->getElement('export_button_text')->getText()
+        );
+    }
+
+    /**
+     * @Then I click on :element
+     */
+    public function iClickOn($element)
+    {
+        $page = $this->getSession()->getPage();
+        $findName = $page->find('css', $element);
+        if (!$findName) {
+            throw new Exception($element . ' could not be found');
+        }
+        $findName->click();
+    }
+
+    /**
+     * @Then I should see a link to export products to CSV
+     */
+    public function iShouldSeeExportCSVLink()
+    {
+        Assert::assertContains(
+            'CSV',
+            $this->getElement('export_links')->find('css', 'a.item')->getText()
+        );
+    }
+
+    /**
+     * @Then the product :product should appear in the registry
+     */
+    public function theProductShouldAppearInTheRegistry($productname)
+    {
+        $product = $this->productContext->getProductByName($productname);
+
+        Assert::assertNotNull(
+            $product,
+            sprintf('Product with name "%s" does not exist', $productname)
+        );
+    }
+
+    /**
+     * @Then :amount products should be in the registry
+     */
+    public function amountProductsShouldBeInTheRegistry($amount)
+    {
+        $productCount = $this->productContext->getProductCount();
+
+        Assert::assertEquals(
+            $amount,
+            $productCount,
+            'expected value differs from actual value ' . $amount . ' !== ' . $productCount
+        );
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedElements()
+    {
+        return array_merge(parent::getDefinedElements(), [
+            'export_button_text' => '.buttons div.dropdown span.text',
+            'export_links' => '.buttons div.dropdown div.menu',
+        ]);
+    }
+
+    /**
+     * @When I go to :hp homepage
+     */
+    public function goToSpecificHomepage($hp)
+    {
+        $this->getSession(null)->visit($hp);
+    }
+
+    /**
+     * Checks that response body contains specific text.
+     *
+     * @param string $text
+     *
+     * @Then response should contain :text
+     */
+    public function theResponseShouldContain($text)
+    {
+        $responseText = $this->getSession()->getPage()->getContent();
+
+        if (strpos($responseText, $text) !== false) {
+            return;
+        }
+
+        throw new ResponseTextException('Response does not contain: ' . $text);
+    }
+}
