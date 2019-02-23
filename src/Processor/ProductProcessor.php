@@ -9,6 +9,7 @@ use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
+use Sylius\Component\Product\Generator\SlugGeneratorInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
@@ -39,6 +40,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productAttributeValueFactory;
     /** @var AttributesCodeInterface */
     private $attributesCode;
+    /** @var SlugGeneratorInterface */
+    private $slugGenerator;
 
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -50,6 +53,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         RepositoryInterface $productAttributeRepository,
         AttributesCodeInterface $attributesCode,
         FactoryInterface $productAttributeValueFactory,
+        SlugGeneratorInterface $slugGenerator,
         array $headerKeys
     ) {
         $this->resourceProductFactory = $productFactory;
@@ -62,6 +66,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productAttributeValueFactory = $productAttributeValueFactory;
         $this->attributesCode = $attributesCode;
         $this->headerKeys = $headerKeys;
+        $this->slugGenerator = $slugGenerator;
     }
 
     /**
@@ -136,5 +141,6 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setShortDescription($data['Short_description']);
         $product->setMetaDescription($data['Meta_description']);
         $product->setMetaKeywords($data['Meta_keywords']);
+        $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
     }
 }

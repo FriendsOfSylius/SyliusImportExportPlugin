@@ -283,4 +283,5 @@ services:
             - "@sylius.repository.product_attribute"
             - "@sylius.service.attributes_code"
             - "@sylius.factory.product_attribute_value"
+            - "@sylius.generator.slug"
             - ['Code', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon']
