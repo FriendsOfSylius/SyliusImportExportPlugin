@@ -8,9 +8,9 @@ use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ResponseTextException;
 use Behat\Mink\Session;
+use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\ProductContext;
-use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
@@ -153,6 +153,7 @@ final class ProductsContext extends SymfonyPage implements Context
         if (strpos($responseText, $text) !== false) {
             return;
         }
+
         throw new ResponseTextException(sprintf("Response '%s' does not contain: '%s'", $responseText, $text), $this->getDriver());
     }
 }
