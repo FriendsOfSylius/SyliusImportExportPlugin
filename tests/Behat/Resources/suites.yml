@@ -98,11 +98,14 @@ default:
 
         cli_managing_tax_categories:
             contexts_services:
+                - sylius.behat.context.transform.shared_storage
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_tax_categories_context
                 - sylius.behat.context.cli.installer
+                - sylius.behat.context.setup.taxation
+                - sylius.behat.context.transform.tax_category
             filters:
-                tags: "@managing_tax_categories && @cli_importer"
+                tags: "@managing_tax_categories && @cli_importer_exporter"
 
         cli_managing_payment_methods:
             contexts_services:

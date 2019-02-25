@@ -108,6 +108,13 @@ services:
             - "@sylius.service.address_concatenation"
             - "@sylius.exporter.orm.hydrator.orders"
 
+    sylius.exporter.plugin.resource.tax_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
+        arguments:
+            - "@sylius.repository.tax_category"
+            - "@property_accessor"
+            - "@doctrine.orm.entity_manager"
+
     sylius.exporter.plugin.resource.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
         arguments:
@@ -133,6 +140,12 @@ services:
         arguments:
             - ["@sylius.exporter.plugin.resource.orders"]
             - ["Number", "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
+
+    sylius.exporter.pluginpool.tax_categories:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
+        arguments:
+            - ["@sylius.exporter.plugin.resource.tax_categories"]
+            - ["Id", "Code" ,"Name", "Description"]
 
     sylius.exporter.pluginpool.customers:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool

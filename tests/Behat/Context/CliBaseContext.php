@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Gherkin\Node\TableNode;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ExportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
@@ -69,6 +70,11 @@ class CliBaseContext implements Context
      */
     private $container;
 
+    /**
+     * @var string
+     */
+    protected $exportFile;
+
     public function __construct(
         KernelInterface $kernel,
         RepositoryInterface $repository,
@@ -119,6 +125,7 @@ class CliBaseContext implements Context
     public function iExportDataToSpecificFiletypeFileWithTheCliCommand($exporterType, $format, $filename)
     {
         $this->cliArguments = [$exporterType, $filename];
+        $this->exportFile = $this->filePath . '/export/' . $filename;
 
         $command = new ExportDataCommand($this->exporterRegistry);
         $command->setContainer($this->container);
@@ -126,5 +133,25 @@ class CliBaseContext implements Context
         $this->command = $this->application->find('sylius:export');
         $this->tester = new CommandTester($this->command);
         $this->tester->execute(['command' => 'sylius:export', 'exporter' => $exporterType, 'file' => $this->filePath . '/export/' . $filename, '--format' => $format]);
+    }
+
+    /**
+     * @Given /^I should see in the file:$/
+     */
+    public function iShouldSeeInTheFile(TableNode $expectedContent): void
+    {
+        $actualFile = fopen($this->exportFile, 'r');
+        $row = 0;
+
+        while ($actualRowInFile = fgetcsv($actualFile, 1000, ';', '"')) {
+            // Check if the line in the exported file differs from the expected one
+            Assert::assertTrue($this->getDiff($expectedContent, $row, $actualRowInFile) === 0);
+            ++$row;
+        }
+    }
+
+    private function getDiff(TableNode $table, int $index, array $rowInFile): int
+    {
+        return count(array_diff($table->getRow($index), $rowInFile));
     }
 }

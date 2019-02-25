@@ -6,6 +6,7 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\Assert;
+use Sylius\Component\Taxation\Model\TaxCategoryInterface;
 
 final class CliTaxCategoriesContext extends CliBaseContext
 {
@@ -18,5 +19,21 @@ final class CliTaxCategoriesContext extends CliBaseContext
             $taxCategory = $this->repository->findBy(['code' => $taxCategoryId]);
             Assert::assertNotNull($taxCategory);
         }
+    }
+
+    /**
+     * @Then /^(this tax category) name is "([^"]+)"$/
+     */
+    public function thisTaxCategoryNameShouldBe(TaxCategoryInterface $taxCategory, $taxCategoryName): void
+    {
+        $taxCategory->setName($taxCategoryName);
+    }
+
+    /**
+     * @Then /^(this tax category) description is "([^"]+)"$/
+     */
+    public function thisTaxCategoryDescriptionShouldBe(TaxCategoryInterface $taxCategory, $taxCategoryName): void
+    {
+        $taxCategory->setDescription($taxCategoryName);
     }
 }

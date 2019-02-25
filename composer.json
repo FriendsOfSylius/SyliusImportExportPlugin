@@ -58,6 +58,9 @@
     "config": {
         "bin-dir": "bin"
     },
+    "conflict": {
+        "sonata-project/core-bundle": ">=3.12 <3.13.4"
+    },
     "extra": {
         "branch-alias": {
             "dev-master": "1.0-dev"
