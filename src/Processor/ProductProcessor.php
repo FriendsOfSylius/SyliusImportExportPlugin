@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributesCodeInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
@@ -38,8 +38,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productAttributeRepository;
     /** @var FactoryInterface */
     private $productAttributeValueFactory;
-    /** @var AttributesCodeInterface */
-    private $attributesCode;
+    /** @var AttributeCodesProviderInterface */
+    private $attributeCodesProvider;
     /** @var SlugGeneratorInterface */
     private $slugGenerator;
 
@@ -51,7 +51,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         MetadataValidatorInterface $metadataValidator,
         PropertyAccessorInterface $propertyAccessor,
         RepositoryInterface $productAttributeRepository,
-        AttributesCodeInterface $attributesCode,
+        AttributeCodesProviderInterface $attributeCodesProvider,
         FactoryInterface $productAttributeValueFactory,
         SlugGeneratorInterface $slugGenerator,
         array $headerKeys
@@ -64,7 +64,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->propertyAccessor = $propertyAccessor;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->productAttributeValueFactory = $productAttributeValueFactory;
-        $this->attributesCode = $attributesCode;
+        $this->attributeCodesProvider = $attributeCodesProvider;
         $this->headerKeys = $headerKeys;
         $this->slugGenerator = $slugGenerator;
     }
@@ -74,7 +74,7 @@ final class ProductProcessor implements ResourceProcessorInterface
      */
     public function process(array $data): void
     {
-        $this->attrCode = $this->attributesCode->getAttributeCodesList();
+        $this->attrCode = $this->attributeCodesProvider->getAttributeCodesList();
         $this->headerKeys = \array_merge($this->headerKeys, $this->attrCode);
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
@@ -112,13 +112,13 @@ final class ProductProcessor implements ResourceProcessorInterface
     private function setAttributesData(ProductInterface $product, array $data): void
     {
         foreach ($this->attrCode as $attrCode) {
-            if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
-                $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
-
+            if (empty($data[$attrCode])) {
                 continue;
             }
 
-            if (empty($data[$attrCode])) {
+            if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
+                $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
+
                 continue;
             }
 

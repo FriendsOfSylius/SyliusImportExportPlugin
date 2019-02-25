@@ -6,7 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Service;
 
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-final class AttributesCode implements AttributesCodeInterface
+final class AttributeCodesProvider implements AttributeCodesProviderInterface
 {
     /** @var \Sylius\Component\Resource\Repository\RepositoryInterface */
     private $productAttributeRepository;

@@ -6,28 +6,28 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoolInterface;
-use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributesCodeInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 
 final class ProductResourceExporter extends ResourceExporter
 {
-    /** @var AttributesCodeInterface */
-    protected $attributesCode;
+    /** @var AttributeCodesProviderInterface */
+    protected $attributeCodesProvider;
 
     public function __construct(
         WriterInterface $writer,
         PluginPoolInterface $pluginPool,
         array $resourceKeys,
-        AttributesCodeInterface $attributesCode,
+        AttributeCodesProviderInterface $attributeCodesProvider,
         ?TransformerPoolInterface $transformerPool
     ) {
         parent::__construct($writer, $pluginPool, $resourceKeys, $transformerPool);
-        $this->attributesCode = $attributesCode;
+        $this->attributeCodesProvider = $attributeCodesProvider;
     }
 
     public function export(array $idsToExport): void
     {
-        $this->resourceKeys = \array_merge($this->resourceKeys, $this->attributesCode->getAttributeCodesList());
+        $this->resourceKeys = \array_merge($this->resourceKeys, $this->attributeCodesProvider->getAttributeCodesList());
         parent::export($idsToExport);
     }
 }

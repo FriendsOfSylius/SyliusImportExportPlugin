@@ -216,7 +216,7 @@ services:
 
     # Service for get list of attributes code.
     sylius.service.attributes_code:
-        class: FriendsOfSylius\SyliusImportExportPlugin\Service\AttributesCode
+        class: FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProvider
         arguments:
             - "@sylius.repository.product_attribute"
 
