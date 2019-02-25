@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
 use Behat\Behat\Context\Context;
+use Behat\Mink\Exception\ElementNotFoundException;
+use Behat\Mink\Exception\ResponseTextException;
 use Behat\Mink\Session;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\ProductContext;
-use Sylius\Behat\Page\SymfonyPage;
+use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use Symfony\Component\Routing\RouterInterface;
 use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
@@ -35,7 +37,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * {@inheritdoc}
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return 'sylius_admin_product_index';
     }
@@ -75,7 +77,7 @@ final class ProductsContext extends SymfonyPage implements Context
         $page = $this->getSession()->getPage();
         $findName = $page->find('css', $element);
         if (!$findName) {
-            throw new Exception($element . ' could not be found');
+            throw new ElementNotFoundException($element . ' could not be found');
         }
         $findName->click();
     }
@@ -121,7 +123,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * {@inheritdoc}
      */
-    protected function getDefinedElements()
+    protected function getDefinedElements(): array
     {
         return array_merge(parent::getDefinedElements(), [
             'export_button_text' => '.buttons div.dropdown span.text',
@@ -151,7 +153,6 @@ final class ProductsContext extends SymfonyPage implements Context
         if (strpos($responseText, $text) !== false) {
             return;
         }
-
-        throw new ResponseTextException('Response does not contain: ' . $text);
+        throw new ResponseTextException(sprintf("Response '%s' does not contain: '%s'", $responseText, $text), $this->getDriver());
     }
 }
