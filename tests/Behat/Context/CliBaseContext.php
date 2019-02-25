@@ -143,7 +143,7 @@ class CliBaseContext implements Context
         $actualFile = fopen($this->exportFile, 'r');
         $row = 0;
 
-        while ($actualRowInFile = fgetcsv($actualFile, 1000, ';', '"')) {
+        while ($actualRowInFile = fgetcsv($actualFile, 1000, ',', '"')) {
             // Check if the line in the exported file differs from the expected one
             Assert::assertTrue($this->getDiff($expectedContent, $row, $actualRowInFile) === 0);
             ++$row;
