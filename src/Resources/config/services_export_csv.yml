@@ -1,6 +1,8 @@
 services:
     sylius.csv_writer:
         class: Port\Csv\CsvWriter
+        arguments:
+            - ','
 
     sylius.exporter.csv_writer:
         class: FriendsOfSylius\SyliusImportExportPlugin\Writer\CsvWriter
