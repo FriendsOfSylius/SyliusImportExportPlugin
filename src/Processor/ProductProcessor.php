@@ -122,15 +122,7 @@ final class ProductProcessor implements ResourceProcessorInterface
                 continue;
             }
 
-            $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
-            /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
-            $attr = $this->productAttributeValueFactory->createNew();
-            $attr->setAttribute($productAttr);
-            $attr->setProduct($product);
-            $attr->setLocaleCode($product->getTranslation()->getLocale());
-            $attr->setValue($data[$attrCode]);
-            $product->addAttribute($attr);
-            $this->productRepository->add($attr);
+            $this->setAttributeValue($product, $data, $attrCode);
         }
     }
 
@@ -142,5 +134,18 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setMetaDescription($data['Meta_description']);
         $product->setMetaKeywords($data['Meta_keywords']);
         $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
+    }
+
+    private function setAttributeValue(ProductInterface $product, array $data, $attrCode)
+    {
+        $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
+        /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
+        $attr = $this->productAttributeValueFactory->createNew();
+        $attr->setAttribute($productAttr);
+        $attr->setProduct($product);
+        $attr->setLocaleCode($product->getTranslation()->getLocale());
+        $attr->setValue($data[$attrCode]);
+        $product->addAttribute($attr);
+        $this->productRepository->add($attr);
     }
 }
