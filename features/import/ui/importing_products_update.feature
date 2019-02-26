@@ -16,5 +16,5 @@ Feature: Import Products from grid
     Then I should see a notification that the import was successful
     And I should see 2 products in the list
     Then I go to "/admin/export/sylius.product/csv" homepage
-    And response should contain "Code;Name;Description;Short_description;Meta_description;Meta_keywords;Main_taxon"
-    And response should contain '222333;"Product 2 update";"Description 2 update";"Short description 2 update";"Meta description 2 update";"Meta keywords 2 update";'
+    And response should contain "Code,Name,Description,Short_description,Meta_description,Meta_keywords,Main_taxon"
+    And response should contain '222333,"Product 2 update","Description 2 update","Short description 2 update","Meta description 2 update","Meta keywords 2 update",'
