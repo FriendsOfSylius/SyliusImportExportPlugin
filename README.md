@@ -99,12 +99,14 @@ fos_sylius_import_export:
 * payment_method (csv, excel, json)
 * tax_category (csv, excel, json)
 * customer (json)
+* product with a column by attribute value (csv)
 
 ### Available exporter types
 
 * country (csv, excel, json)
 * order (csv, excel, json)
 * customer (csv, excel, json)
+* product with a column by attribute value (csv)
 
 ## Example import files
 
