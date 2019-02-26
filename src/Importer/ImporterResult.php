@@ -4,11 +4,15 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
 final class ImporterResult implements ImporterResultInterface
 {
+    /** @var \Psr\Log\LoggerInterface */
+    private $logger;
+
     /** @var Stopwatch */
     private $stopwatch;
 
@@ -24,9 +28,15 @@ final class ImporterResult implements ImporterResultInterface
     /** @var StopwatchEvent */
     private $stopWatchEvent;
 
-    public function __construct(Stopwatch $stopwatch)
-    {
+    /** @var string */
+    private $message;
+
+    public function __construct(
+        Stopwatch $stopwatch,
+        LoggerInterface $logger
+    ) {
         $this->stopwatch = $stopwatch;
+        $this->logger = $logger;
     }
 
     public function start(): void
@@ -84,5 +94,20 @@ final class ImporterResult implements ImporterResultInterface
     public function getDuration(): float
     {
         return $this->stopWatchEvent->getDuration();
+    }
+
+    public function setMessage(string $message): void
+    {
+        $this->message = $message;
+    }
+
+    public function getMessage(): ?string
+    {
+        return $this->message;
+    }
+
+    public function getLogger(): LoggerInterface
+    {
+        return $this->logger;
     }
 }

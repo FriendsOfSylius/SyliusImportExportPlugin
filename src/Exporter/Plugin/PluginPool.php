@@ -6,17 +6,17 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
 class PluginPool implements PluginPoolInterface
 {
-    /** @var PluginInterface[] */
-    private $plugins;
-
     /** @var array */
     protected $exportKeys;
 
     /** @var array */
-    private $exportKeysNotFound;
+    protected $exportKeysAvailable = [];
+
+    /** @var PluginInterface[] */
+    private $plugins;
 
     /** @var array */
-    private $exportKeysAvailable = [];
+    private $exportKeysNotFound;
 
     /**
      * @param PluginInterface[] $plugins

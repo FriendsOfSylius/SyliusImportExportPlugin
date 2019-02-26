@@ -8,7 +8,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInter
 
 final class ProductPluginPool extends PluginPool
 {
-    /** @var \FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface */
+    /** @var AttributeCodesProviderInterface */
     private $attributeCodesProvider;
 
     public function __construct(
@@ -23,6 +23,7 @@ final class ProductPluginPool extends PluginPool
     public function initPlugins(array $ids): void
     {
         $this->exportKeys = \array_merge($this->exportKeys, $this->attributeCodesProvider->getAttributeCodesList());
+        $this->exportKeysAvailable = $this->exportKeys;
         parent::initPlugins($ids);
     }
 }

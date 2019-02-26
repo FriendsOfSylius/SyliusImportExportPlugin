@@ -104,5 +104,9 @@ final class ImportDataController
         );
 
         $this->flashBag->add('success', $message);
+
+        if ($result->getMessage() !== null) {
+            $this->flashBag->add('error', $result->getMessage());
+        }
     }
 }

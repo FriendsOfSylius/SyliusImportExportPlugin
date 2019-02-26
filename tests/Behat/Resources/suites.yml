@@ -95,6 +95,10 @@ default:
 
                 - test.behat.context.notification_context
                 - test.behat.context.products_context
+
+                - sylius.behat.context.setup.locale
+                - sylius.behat.context.setup.product
+                - sylius.behat.context.setup.product_attribute
             filters:
                 tags: "@managing_products && @ui"
 
@@ -148,6 +152,14 @@ default:
                 - sylius.behat.context.cli.installer
             filters:
                 tags: "@managing_customers && @cli_importer_exporter"
+
+        cli_managing_products:
+            contexts_services:
+                - sylius.behat.context.hook.doctrine_orm
+                - test.behat.context.cli_products_context
+                - sylius.behat.context.cli.installer
+            filters:
+                tags: "@managing_products && @cli_importer_exporter"
 
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:

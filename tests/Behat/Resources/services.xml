@@ -31,10 +31,9 @@
         <service id="test.behat.context.products_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\ProductsContext">
             <argument type="service" id="test.behat.page.product_index_page"/>
             <argument type="service" id="sylius.behat.context.transform.product"/>
-            <argument type="service" id="mink.default_session" />
-            <argument>%__behat__.mink.parameters%</argument>
-            <argument type="service" id="__symfony_shared__.router" />
-            <tag name="fob.context_service" />
+            <argument type="service" id="behat.mink.default_session" />
+            <argument type="service" id="behat.mink.parameters" />
+            <argument type="service" id="router" />
         </service>
 
         <service id="test.behat.context.cli_countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCountriesContext">
@@ -80,6 +79,14 @@
         <service id="test.behat.context.cli_customers_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliCustomersContext">
             <argument type="service" id="kernel" />
             <argument type="service" id="sylius.repository.customer" />
+            <argument type="service" id="sylius.importers_registry" />
+            <argument type="service" id="sylius.exporters_registry" />
+            <argument type="service" id="service_container" />
+            <argument>%behat.files_directory%</argument>
+        </service>
+        <service id="test.behat.context.cli_products_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CliProductsContext">
+            <argument type="service" id="kernel" />
+            <argument type="service" id="sylius.repository.product" />
             <argument type="service" id="sylius.importers_registry" />
             <argument type="service" id="sylius.exporters_registry" />
             <argument type="service" id="service_container" />

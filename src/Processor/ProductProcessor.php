@@ -4,12 +4,15 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
+use Sylius\Component\Product\Model\ProductAttribute;
+use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
@@ -18,6 +21,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    /** @var \Doctrine\ORM\EntityManagerInterface */
+    private $manager;
+    /** @var TransformerPoolInterface|null */
+    private $transformerPool;
     /** @var ProductFactoryInterface */
     private $resourceProductFactory;
     /** @var TaxonFactoryInterface */
@@ -54,6 +61,8 @@ final class ProductProcessor implements ResourceProcessorInterface
         AttributeCodesProviderInterface $attributeCodesProvider,
         FactoryInterface $productAttributeValueFactory,
         SlugGeneratorInterface $slugGenerator,
+        ?TransformerPoolInterface $transformerPool,
+        EntityManagerInterface $manager,
         array $headerKeys
     ) {
         $this->resourceProductFactory = $productFactory;
@@ -67,6 +76,8 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->attributeCodesProvider = $attributeCodesProvider;
         $this->headerKeys = $headerKeys;
         $this->slugGenerator = $slugGenerator;
+        $this->transformerPool = $transformerPool;
+        $this->manager = $manager;
     }
 
     /**
@@ -100,24 +111,34 @@ final class ProductProcessor implements ResourceProcessorInterface
         return $product;
     }
 
-    private function setMainTaxon(ProductInterface $product, array $data)
+    private function setMainTaxon(ProductInterface $product, array $data): void
     {
-        /** @var TaxonInterface|null $mainTaxon */
-        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]);
-
         /** @var ProductInterface $product */
-        $product->setMainTaxon($mainTaxon);
+        $product->setMainTaxon($this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]));
     }
 
     private function setAttributesData(ProductInterface $product, array $data): void
     {
         foreach ($this->attrCode as $attrCode) {
+            $attributeValue = $product->getAttributeByCodeAndLocale($attrCode);
+
             if (empty($data[$attrCode])) {
+                if ($attributeValue !== null) {
+                    $product->removeAttribute($attributeValue);
+                }
+
                 continue;
             }
 
-            if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
-                $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
+            if ($attributeValue !== null) {
+                if (null !== $this->transformerPool) {
+                    $data[$attrCode] = $this->transformerPool->handle(
+                        $attributeValue->getType(),
+                        $data[$attrCode]
+                    );
+                }
+
+                $attributeValue->setValue($data[$attrCode]);
 
                 continue;
             }
@@ -126,7 +147,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         }
     }
 
-    private function setDetails(ProductInterface $product, array $data)
+    private function setDetails(ProductInterface $product, array $data): void
     {
         $product->setName($data['Name']);
         $product->setDescription($data['Description']);
@@ -136,16 +157,22 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
     }
 
-    private function setAttributeValue(ProductInterface $product, array $data, $attrCode)
+    private function setAttributeValue(ProductInterface $product, array $data, string $attrCode): void
     {
+        /** @var ProductAttribute $productAttr */
         $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
-        /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
+        /** @var ProductAttributeValueInterface $attr */
         $attr = $this->productAttributeValueFactory->createNew();
         $attr->setAttribute($productAttr);
         $attr->setProduct($product);
         $attr->setLocaleCode($product->getTranslation()->getLocale());
+
+        if (null !== $this->transformerPool) {
+            $data[$attrCode] = $this->transformerPool->handle($productAttr->getType(), $data[$attrCode]);
+        }
+
         $attr->setValue($data[$attrCode]);
         $product->addAttribute($attr);
-        $this->productRepository->add($attr);
+        $this->manager->persist($attr);
     }
 }
