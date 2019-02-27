@@ -14,13 +14,13 @@ class ImportDataControllerSpec extends ObjectBehavior
 {
     function let(
         ServiceRegistryInterface $registry,
-        FlashBagInterface $session,
+        FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
         $this->beConstructedWith(
             $registry,
-            $session,
+            $flashBag,
             $formFactory,
             $twig
         );

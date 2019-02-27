@@ -10,7 +10,7 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourcesCollectionProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ExportDataControllerSpec extends ObjectBehavior
 {
@@ -18,14 +18,14 @@ class ExportDataControllerSpec extends ObjectBehavior
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ResourcesCollectionProviderInterface $resourcesCollectionProvider,
-        ParameterBagInterface $parameterBag,
+        ContainerInterface $container,
         EntityManager $entityManager
     ) {
         $this->beConstructedWith(
             $registry,
             $requestConfigurationFactory,
             $resourcesCollectionProvider,
-            $parameterBag,
+            $container,
             $entityManager
         );
     }

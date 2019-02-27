@@ -19,18 +19,18 @@ use Sylius\Component\Registry\ServiceRegistryInterface;
 use Sylius\Component\Resource\Metadata\Metadata;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class ExportDataController
 {
+    /** @var \Symfony\Component\DependencyInjection\ContainerInterface */
+    private $container;
+
     /** @var EntityManager */
     private $entityManager;
-
-    /** @var ParameterBagInterface */
-    private $parameterBag;
 
     /** @var ServiceRegistryInterface */
     private $registry;
@@ -45,14 +45,14 @@ final class ExportDataController
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ResourcesCollectionProviderInterface $resourcesCollectionProvider,
-        ParameterBagInterface $parameterBag,
+        ContainerInterface $container,
         EntityManager $entityManager
     ) {
         $this->registry = $registry;
         $this->requestConfigurationFactory = $requestConfigurationFactory;
         $this->resourcesCollectionProvider = $resourcesCollectionProvider;
-        $this->parameterBag = $parameterBag;
         $this->entityManager = $entityManager;
+        $this->container = $container;
     }
 
     public function exportAction(Request $request, string $resource, string $format): Response
@@ -66,7 +66,7 @@ final class ExportDataController
     {
         [$applicationName, $resource] = explode('.', $exporter);
         $metadata = Metadata::fromAliasAndConfiguration($exporter,
-            $this->parameterBag->get('sylius.resources')[$exporter]);
+            $this->container->getParameter('sylius.resources')[$exporter]);
         $configuration = $this->requestConfigurationFactory->create($metadata, $request);
 
         $name = ExporterRegistry::buildServiceName($exporter, $format);
@@ -93,10 +93,10 @@ final class ExportDataController
     {
         $parameter = \sprintf('sylius.model.%s.class', $resource);
 
-        if (!$this->parameterBag->has($parameter)) {
+        if (!$this->container->hasParameter($parameter)) {
             throw new \Exception(sprintf("Parameter '%s' is not defined", $parameter));
         }
-        $entityName = $this->parameterBag->get($parameter);
+        $entityName = $this->container->getParameter($parameter);
 
         return new EntityRepository($this->entityManager, new ClassMetadata($entityName));
     }
