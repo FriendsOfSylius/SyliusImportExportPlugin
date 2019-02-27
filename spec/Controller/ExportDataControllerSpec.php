@@ -4,30 +4,34 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
+use Doctrine\ORM\EntityManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController;
 use PhpSpec\ObjectBehavior;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourcesCollectionProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 class ExportDataControllerSpec extends ObjectBehavior
 {
     function let(
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
-        ResourcesCollectionProviderInterface $resourcesCollectionProvider
+        ResourcesCollectionProviderInterface $resourcesCollectionProvider,
+        ParameterBagInterface $parameterBag,
+        EntityManager $entityManager
     ) {
-        $this->beConstructedWith($registry, $requestConfigurationFactory, $resourcesCollectionProvider);
+        $this->beConstructedWith(
+            $registry,
+            $requestConfigurationFactory,
+            $resourcesCollectionProvider,
+            $parameterBag,
+            $entityManager
+        );
     }
 
     function it_is_initializable()
     {
         $this->shouldHaveType(ExportDataController::class);
-    }
-
-    function it_implements_the_plugin_pool_interface()
-    {
-        $this->shouldImplement(Controller::class);
     }
 }

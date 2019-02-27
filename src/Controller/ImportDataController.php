@@ -8,22 +8,22 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use Sylius\Component\Registry\ServiceRegistry;
+use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
 
 final class ImportDataController
 {
-    /** @var ServiceRegistry */
-    private $registry;
+    /** @var FlashBagInterface */
+    private $flashBag;
 
-    /** @var Session */
-    private $session;
+    /** @var ServiceRegistryInterface */
+    private $registry;
 
     /** @var FormFactoryInterface */
     private $formFactory;
@@ -32,15 +32,15 @@ final class ImportDataController
     private $twig;
 
     public function __construct(
-        ServiceRegistry $registry,
-        Session $session,
+        ServiceRegistryInterface $registry,
+        FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
         \Twig_Environment $twig
     ) {
         $this->registry = $registry;
-        $this->session = $session;
         $this->formFactory = $formFactory;
         $this->twig = $twig;
+        $this->flashBag = $flashBag;
     }
 
     public function importFormAction(Request $request): Response
@@ -81,7 +81,7 @@ final class ImportDataController
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->registry->has($name)) {
             $message = sprintf("No importer found of type '%s' for format '%s'", $importer, $format);
-            $this->session->getFlashBag()->add('error', $message);
+            $this->flashBag->add('error', $message);
         }
 
         /** @var UploadedFile $file */
@@ -103,6 +103,6 @@ final class ImportDataController
             count($result->getFailedRows())
         );
 
-        $this->session->getFlashBag()->add('success', $message);
+        $this->flashBag->add('success', $message);
     }
 }
