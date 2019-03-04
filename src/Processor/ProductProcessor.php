@@ -10,6 +10,7 @@ use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
+use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
@@ -100,7 +101,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         return $product;
     }
 
-    private function setMainTaxon(ProductInterface $product, array $data)
+    private function setMainTaxon(ProductInterface $product, array $data): void
     {
         /** @var TaxonInterface|null $mainTaxon */
         $mainTaxon = $this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]);
@@ -126,7 +127,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         }
     }
 
-    private function setDetails(ProductInterface $product, array $data)
+    private function setDetails(ProductInterface $product, array $data): void
     {
         $product->setName($data['Name']);
         $product->setDescription($data['Description']);
@@ -136,10 +137,10 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
     }
 
-    private function setAttributeValue(ProductInterface $product, array $data, $attrCode)
+    private function setAttributeValue(ProductInterface $product, array $data, string $attrCode): void
     {
         $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
-        /** @var \Sylius\Component\Product\Model\ProductAttributeValueInterface $attr */
+        /** @var ProductAttributeValueInterface $attr */
         $attr = $this->productAttributeValueFactory->createNew();
         $attr->setAttribute($productAttr);
         $attr->setProduct($product);

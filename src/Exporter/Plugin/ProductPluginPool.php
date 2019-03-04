@@ -8,7 +8,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInter
 
 final class ProductPluginPool extends PluginPool
 {
-    /** @var \FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface */
+    /** @var AttributeCodesProviderInterface */
     private $attributeCodesProvider;
 
     public function __construct(

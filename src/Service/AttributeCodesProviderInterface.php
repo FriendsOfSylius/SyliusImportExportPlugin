@@ -6,5 +6,8 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Service;
 
 interface AttributeCodesProviderInterface
 {
+    /**
+     * @return string[]
+     */
     public function getAttributeCodesList(): array;
 }

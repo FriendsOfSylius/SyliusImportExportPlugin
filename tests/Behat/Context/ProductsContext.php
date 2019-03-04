@@ -45,7 +45,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @When I import product data from :file :format file
      */
-    public function iImportProductDataFromCsvFile(string $file, string $format)
+    public function iImportProductDataFromCsvFile(string $file, string $format): void
     {
         $this->productIndexPage->importData($file, $format);
     }
@@ -53,7 +53,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @When I open the product admin index page
      */
-    public function iOpenTheProductIndexPage()
+    public function iOpenTheProductIndexPage(): void
     {
         $this->productIndexPage->open();
     }
@@ -61,7 +61,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @Then I should see an export button
      */
-    public function iShouldSeeExportButton()
+    public function iShouldSeeExportButton(): void
     {
         Assert::assertEquals(
             'Export',
@@ -72,7 +72,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @Then I click on :element
      */
-    public function iClickOn($element)
+    public function iClickOn(string $element): void
     {
         $page = $this->getSession()->getPage();
         $findName = $page->find('css', $element);
@@ -85,7 +85,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @Then I should see a link to export products to CSV
      */
-    public function iShouldSeeExportCSVLink()
+    public function iShouldSeeExportCSVLink(): void
     {
         Assert::assertContains(
             'CSV',
@@ -96,7 +96,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @Then the product :product should appear in the registry
      */
-    public function theProductShouldAppearInTheRegistry($productname)
+    public function theProductShouldAppearInTheRegistry(string $productname): void
     {
         $product = $this->productContext->getProductByName($productname);
 
@@ -109,7 +109,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @Then :amount products should be in the registry
      */
-    public function amountProductsShouldBeInTheRegistry($amount)
+    public function amountProductsShouldBeInTheRegistry(int $amount): void
     {
         $productCount = $this->productContext->getProductCount();
 
@@ -134,7 +134,7 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * @When I go to :hp homepage
      */
-    public function goToSpecificHomepage($hp)
+    public function goToSpecificHomepage(string $hp): void
     {
         $this->getSession(null)->visit($hp);
     }
@@ -142,11 +142,9 @@ final class ProductsContext extends SymfonyPage implements Context
     /**
      * Checks that response body contains specific text.
      *
-     * @param string $text
-     *
      * @Then response should contain :text
      */
-    public function theResponseShouldContain($text)
+    public function theResponseShouldContain(string $text): void
     {
         $responseText = $this->getSession()->getPage()->getContent();
 

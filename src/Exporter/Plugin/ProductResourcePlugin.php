@@ -35,20 +35,20 @@ final class ProductResourcePlugin extends ResourcePlugin
         $this->addDataForResource($resource, 'Meta_keywords', $translation->getMetaKeywords());
     }
 
-    private function addTaxonData(ProductInterface $resource)
+    private function addTaxonData(ProductInterface $resource): void
     {
         $taxonSlug = '';
 
         /** @var \Sylius\Component\Core\Model\TaxonInterface $taxon */
         $taxon = $resource->getMainTaxon();
-        if ($taxon !== null) {
+        if (null !== $taxon) {
             $taxonSlug = $taxon->getSlug();
         }
 
         $this->addDataForResource($resource, 'Main_taxon', $taxonSlug);
     }
 
-    private function addAttributeData(ProductInterface $resource)
+    private function addAttributeData(ProductInterface $resource): void
     {
         $attributes = $resource->getAttributes();
 
