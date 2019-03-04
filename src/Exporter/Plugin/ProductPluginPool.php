@@ -23,6 +23,7 @@ final class ProductPluginPool extends PluginPool
     public function initPlugins(array $ids): void
     {
         $this->exportKeys = \array_merge($this->exportKeys, $this->attributeCodesProvider->getAttributeCodesList());
+        $this->exportKeysAvailable = $this->exportKeys;
         parent::initPlugins($ids);
     }
 }
