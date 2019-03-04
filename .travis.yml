@@ -19,6 +19,7 @@ env:
         - SYLIUS_CACHE_DIR=$HOME/.sylius-cache
         - SYLIUS_BUILD_DIR=etc/build
     matrix:
+        - DEPENDENCY_VERSIONS="sylius/sylius:1.3.* symfony/symfony:4.2.*"
         - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:4.1.*"
         - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
         - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"

@@ -14,8 +14,14 @@ default:
                 class: AppKernel
                 path: tests/Application/app/AppKernel.php
                 bootstrap: vendor/autoload.php
+            env_file: ~
 
         Lakion\Behat\MinkDebugExtension:
             directory: etc/build
             clean_start: false
             screenshot: true
+
+cached:
+    extensions:
+        FriendsOfBehat\SymfonyExtension:
+            env_file: ~
