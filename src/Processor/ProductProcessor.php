@@ -6,7 +6,6 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
-use Sylius\Component\Core\Model\TaxonInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
@@ -103,11 +102,8 @@ final class ProductProcessor implements ResourceProcessorInterface
 
     private function setMainTaxon(ProductInterface $product, array $data): void
     {
-        /** @var TaxonInterface|null $mainTaxon */
-        $mainTaxon = $this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]);
-
         /** @var ProductInterface $product */
-        $product->setMainTaxon($mainTaxon);
+        $product->setMainTaxon($this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]));
     }
 
     private function setAttributesData(ProductInterface $product, array $data): void
