@@ -8,7 +8,7 @@ use Behat\Behat\Context\Context;
 use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\TaxonCreatePageInterface;
 use Webmozart\Assert\Assert;
 
-class TaxonomiesContext implements Context
+final class TaxonomiesContext implements Context
 {
     /** @var TaxonCreatePageInterface */
     private $taxonomyCreatePage;

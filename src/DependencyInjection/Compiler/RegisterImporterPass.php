@@ -83,7 +83,7 @@ final class RegisterImporterPass implements CompilerPassInterface
         ;
     }
 
-    public function buildEventHookName(string $type): string
+    private function buildEventHookName(string $type): string
     {
         if (isset($this->eventHookNames[$type])) {
             return $this->eventHookNames[$type];

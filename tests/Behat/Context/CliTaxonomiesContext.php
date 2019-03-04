@@ -12,7 +12,7 @@ final class CliTaxonomiesContext extends CliBaseContext
     /**
      * @Then I should have at least the following taxonomy codes in the database:
      */
-    public function iShouldHaveAtLeastTheFollowingTaxonomyCodesInTheDatabase(TableNode $taxonomyCodes)
+    public function iShouldHaveAtLeastTheFollowingTaxonomyCodesInTheDatabase(TableNode $taxonomyCodes): void
     {
         foreach ($taxonomyCodes as $taxonomyCode) {
             $taxonomy = $this->repository->findBy(['code' => $taxonomyCode]);

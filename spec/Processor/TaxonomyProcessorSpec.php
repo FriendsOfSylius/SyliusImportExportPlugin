@@ -13,7 +13,7 @@ use Sylius\Component\Locale\Provider\LocaleProviderInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
-class TaxonomyProcessorSpec extends ObjectBehavior
+final class TaxonomyProcessorSpec extends ObjectBehavior
 {
     public function let(
         TaxonFactoryInterface $taxonFactory,

@@ -8,7 +8,7 @@ use Behat\Mink\Session;
 use Sylius\Behat\Page\Admin\Taxon\CreatePage;
 use Symfony\Component\Routing\RouterInterface;
 
-class TaxonCreatePage extends CreatePage implements TaxonCreatePageInterface
+final class TaxonCreatePage extends CreatePage implements TaxonCreatePageInterface
 {
     /** @var string */
     protected $filesPath;
