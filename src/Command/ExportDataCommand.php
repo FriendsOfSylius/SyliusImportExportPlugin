@@ -60,7 +60,10 @@ final class ExportDataCommand extends Command
 
         if (empty($exporter)) {
             $this->listExporters($input, $output);
+
+            return;
         }
+
         $format = $input->getOption('format');
         $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
 
