@@ -15,5 +15,5 @@ Feature: Export links on Countries grid
     And I should see 10 countries in the list
     Then I go to "/admin/export/sylius.country/csv" homepage
     And response should contain "Id,Code,Enabled"
-    And response should contain "1,AD,1"
-    And response should contain "13,US,1"
+    And response should contain "AD,1"
+    And response should contain "US,1"
