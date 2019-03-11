@@ -30,9 +30,17 @@ matrix:
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
         -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
+        -
             php: 7.1
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
+        -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.0.* symfony/symfony:3.4.*"
         -
             php: 7.1
             env:
