@@ -1,4 +1,10 @@
 services:
+    # Parameter Bag
+    sylius.parameter_bag:
+        class: FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\ParameterBag\ParameterBag
+        arguments:
+            - "@service_container"
+
     # Controllers for Admin-Integration
     sylius.controller.import_data:
         public: true
@@ -17,7 +23,7 @@ services:
             - "@sylius.exporters_registry"
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
-            - "@service_container"
+            - "@sylius.parameter_bag"
             - "@doctrine.orm.entity_manager"
         tags: ['controller.service_arguments']
 
