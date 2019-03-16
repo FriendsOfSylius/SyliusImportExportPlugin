@@ -17,10 +17,16 @@ env:
 
 matrix:
     include:
+        # Sylius 1.3
         -
             php: 7.3
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.3.* symfony/symfony:4.1.*"
+        -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.3.* symfony/symfony:4.1.*"
+        # Sylius 1.2
         -
             php: 7.2
             env:
@@ -30,6 +36,11 @@ matrix:
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
         -
+            php: 7.1
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
+        # Sylius 1.1
+        -
             php: 7.2
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
@@ -37,6 +48,7 @@ matrix:
             php: 7.1
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
+        # Sylius 1.0
         -
             php: 7.2
             env:
