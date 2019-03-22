@@ -6,9 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer;
 
 abstract class Handler implements HandlerInterface
 {
-    /**
-     * @var HandlerInterface
-     */
+    /** @var HandlerInterface */
     private $successor;
 
     /**

@@ -11,34 +11,22 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class ResourcePlugin implements PluginInterface
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $fieldNames = [];
 
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     protected $repository;
 
-    /**
-     * @var PropertyAccessorInterface
-     */
+    /** @var PropertyAccessorInterface */
     protected $propertyAccessor;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     protected $entityManager;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $data;
 
-    /**
-     * @var ResourceInterface[]
-     */
+    /** @var ResourceInterface[] */
     protected $resources;
 
     public function __construct(

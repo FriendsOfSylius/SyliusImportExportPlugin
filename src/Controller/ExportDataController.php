@@ -23,19 +23,13 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 final class ExportDataController extends Controller
 {
-    /**
-     * @var ServiceRegistryInterface
-     */
+    /** @var ServiceRegistryInterface */
     private $registry;
 
-    /**
-     * @var RequestConfigurationFactoryInterface
-     */
+    /** @var RequestConfigurationFactoryInterface */
     private $requestConfigurationFactory;
 
-    /**
-     * @var ResourcesCollectionProviderInterface
-     */
+    /** @var ResourcesCollectionProviderInterface */
     private $resourcesCollectionProvider;
 
     public function __construct(

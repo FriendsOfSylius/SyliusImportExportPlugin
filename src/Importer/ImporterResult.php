@@ -9,29 +9,19 @@ use Symfony\Component\Stopwatch\StopwatchEvent;
 
 final class ImporterResult implements ImporterResultInterface
 {
-    /**
-     * @var Stopwatch
-     */
+    /** @var Stopwatch */
     private $stopwatch;
 
-    /**
-     * @var int[]
-     */
+    /** @var int[] */
     private $success = [];
 
-    /**
-     * @var int[]
-     */
+    /** @var int[] */
     private $skipped = [];
 
-    /**
-     * @var int[]
-     */
+    /** @var int[] */
     private $failed = [];
 
-    /**
-     * @var StopwatchEvent
-     */
+    /** @var StopwatchEvent */
     private $stopWatchEvent;
 
     public function __construct(Stopwatch $stopwatch)

@@ -8,7 +8,7 @@ use Sylius\Component\Registry\ServiceRegistry;
 
 final class ExporterRegistry extends ServiceRegistry
 {
-    const EVENT_HOOK_NAME_PREFIX_GRID_BUTTONS = 'app.grid_event_listener.admin.crud';
+    public const EVENT_HOOK_NAME_PREFIX_GRID_BUTTONS = 'app.grid_event_listener.admin.crud';
 
     public static function buildServiceName(string $type, string $format): string
     {

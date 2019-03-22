@@ -12,29 +12,19 @@ use Interop\Queue\PsrQueue;
 
 class MqItemReader implements ItemReaderInterface
 {
-    /**
-     * @var PsrContext
-     */
+    /** @var PsrContext */
     private $context;
 
-    /**
-     * @var PsrQueue
-     */
+    /** @var PsrQueue */
     private $queue;
 
-    /**
-     * @var PsrConnectionFactory
-     */
+    /** @var PsrConnectionFactory */
     private $psrConnectionFactory;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $messagesImportedCount;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $messagesSkippedCount;
 
     public function __construct(PsrConnectionFactory $psrConnectionFactory)

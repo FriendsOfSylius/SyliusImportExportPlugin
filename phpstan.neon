@@ -1,11 +1,4 @@
-includes:
-	- vendor/phpstan/phpstan-symfony/extension.neon
-	- vendor/phpstan/phpstan-webmozart-assert/extension.neon
-
 parameters:
-    symfony:
-        container_xml_path: tests/Application/var/cache/dev/appDevDebugProjectContainer.xml
-
     excludes_analyse:
         # Makes PHPStan crash
         - 'src/DependencyInjection/Configuration.php'
@@ -17,4 +10,8 @@ parameters:
     ignoreErrors:
         - '/Parameter #1 $configuration of method Symfony\Component\DependencyInjection\Extension\Extension::processConfiguration() expects Symfony\Component\Config\Definition\ConfigurationInterface, Symfony\Component\Config\Definition\ConfigurationInterface|null given./'
         - '/Parameter #1 $iterator of function iterator_to_array expects Traversable, array|Traversable given./'
-        - '#does not call parent constructor from#'
+        - '/does not call parent constructor from/'
+        - '/Return type \(void\) of method FriendsOfSylius\\SyliusImportExportPlugin\\Command\\ImportDataFromMessageQueueCommand::execute\(\) should be compatible with return type \(int\|null\) of method Symfony\\Component\\Console\\Command\\Command::execute\(\)/'
+        - '/Return type \(void\) of method FriendsOfSylius\\SyliusImportExportPlugin\\Command\\ExportDataCommand::execute\(\) should be compatible with return type \(int\|null\) of method Symfony\\Component\\Console\\Command\\Command::execute\(\)/'
+        - '/Return type \(void\) of method FriendsOfSylius\\SyliusImportExportPlugin\\Command\\ExportDataToMessageQueueCommand::execute\(\) should be compatible with return type \(int\|null\) of method Symfony\\Component\\Console\\Command\\Command::execute\(\)/'
+        - '/Return type \(void\) of method FriendsOfSylius\\SyliusImportExportPlugin\\Command\\ImportDataCommand::execute\(\) should be compatible with return type \(int\|null\) of method Symfony\\Component\\Console\\Command\\Command::execute\(\)/'

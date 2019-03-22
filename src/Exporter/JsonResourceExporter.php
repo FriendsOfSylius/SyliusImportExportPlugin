@@ -11,9 +11,7 @@ final class JsonResourceExporter extends ResourceExporter
 {
     private $data = [];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $filename;
 
     /**

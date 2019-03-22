@@ -13,9 +13,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ImportType extends AbstractType
 {
-    /**
-     * @var ImporterRegistry
-     */
+    /** @var ImporterRegistry */
     private $importerRegistry;
 
     public function __construct(ImporterRegistry $importerRegistry)

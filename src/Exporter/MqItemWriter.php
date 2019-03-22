@@ -11,24 +11,16 @@ use Interop\Queue\PsrQueue;
 
 class MqItemWriter implements ItemWriterInterface
 {
-    /**
-     * @var PsrConnectionFactory
-     */
+    /** @var PsrConnectionFactory */
     private $psrConnectionFactory;
 
-    /**
-     * @var PsrContext
-     */
+    /** @var PsrContext */
     private $context;
 
-    /**
-     * @var PsrQueue
-     */
+    /** @var PsrQueue */
     private $queue;
 
-    /**
-     * @var PsrConsumer
-     */
+    /** @var PsrConsumer */
     private $consumer;
 
     public function __construct(PsrConnectionFactory $psrConnectionFactory)
