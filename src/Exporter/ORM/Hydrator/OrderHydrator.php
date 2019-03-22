@@ -12,9 +12,7 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class OrderHydrator implements HydratorInterface
 {
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $repository;
 
     public function __construct(

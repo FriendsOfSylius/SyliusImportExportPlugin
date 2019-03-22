@@ -11,19 +11,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class ExportButtonGridListener
 {
-    /**
-     * @var RequestStack
-     */
+    /** @var RequestStack */
     private $requestStack;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $resource;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $formats;
 
     /**

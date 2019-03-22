@@ -12,44 +12,28 @@ use Port\Reader\ReaderFactory;
 
 class ResourceImporter implements ImporterInterface
 {
-    /**
-     * @var ReaderFactory
-     */
+    /** @var ReaderFactory */
     private $readerFactory;
 
-    /**
-     * @var ObjectManager
-     */
+    /** @var ObjectManager */
     protected $objectManager;
 
-    /**
-     * @var ResourceProcessorInterface
-     */
+    /** @var ResourceProcessorInterface */
     protected $resourceProcessor;
 
-    /**
-     * @var ImporterResultInterface
-     */
+    /** @var ImporterResultInterface */
     protected $result;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $batchSize;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $failOnIncomplete;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $stopOnFailure;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $batchCount = 0;
 
     public function __construct(

@@ -15,9 +15,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 final class ImportDataCommand extends Command
 {
-    /**
-     * @var ImporterRegistry
-     */
+    /** @var ImporterRegistry */
     private $importerRegistry;
 
     public function __construct(ImporterRegistry $importerRegistry)

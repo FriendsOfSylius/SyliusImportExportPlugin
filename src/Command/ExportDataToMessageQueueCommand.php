@@ -20,9 +20,7 @@ final class ExportDataToMessageQueueCommand extends Command
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var ExporterRegistry
-     */
+    /** @var ExporterRegistry */
     private $exporterRegistry;
 
     public function __construct(ExporterRegistry $exporterRegistry)

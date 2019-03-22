@@ -17,14 +17,10 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class OrderResourcePlugin extends ResourcePlugin
 {
-    /**
-     * @var AddressConcatenationInterface
-     */
+    /** @var AddressConcatenationInterface */
     private $addressConcatenation;
 
-    /**
-     * @var HydratorInterface
-     */
+    /** @var HydratorInterface */
     private $orderHydrator;
 
     public function __construct(

@@ -13,29 +13,19 @@ use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 final class PaymentMethodProcessor implements ResourceProcessorInterface
 {
-    /**
-     * @var PaymentMethodFactoryInterface
-     */
+    /** @var PaymentMethodFactoryInterface */
     private $resourceFactory;
 
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $resourceRepository;
 
-    /**
-     * @var MetadataValidatorInterface
-     */
+    /** @var MetadataValidatorInterface */
     private $metadataValidator;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $headerKeys;
 
     /**

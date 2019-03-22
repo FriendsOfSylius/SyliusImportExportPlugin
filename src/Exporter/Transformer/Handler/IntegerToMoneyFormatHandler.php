@@ -8,14 +8,10 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
 
 final class IntegerToMoneyFormatHandler extends Handler
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $keys;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $format;
 
     /**
