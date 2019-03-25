@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\AccessorNotFoundException;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Model\ResourceInterface;
@@ -33,6 +34,11 @@ final class ResourceProcessor implements ResourceProcessorInterface
     private $metadataValidator;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @var string[]
      */
     private $headerKeys;
@@ -45,6 +51,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
         RepositoryInterface $resourceRepository,
         PropertyAccessorInterface $propertyAccessor,
         MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager,
         array $headerKeys
     ) {
         $this->resourceFactory = $resourceFactory;
@@ -52,6 +59,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
         $this->propertyAccessor = $propertyAccessor;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
+        $this->entityManager = $entityManager;
     }
 
     /**
@@ -81,7 +89,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
             $this->propertyAccessor->setValue($resource, $headerKey, $dataValue);
         }
 
-        $this->resourceRepository->add($resource);
+        $this->entityManager->persist($resource);
     }
 
     /**

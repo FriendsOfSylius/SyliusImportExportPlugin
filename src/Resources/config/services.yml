@@ -174,6 +174,7 @@ services:
             - "@sylius.repository.country"
             - "@property_accessor"
             - "@sylius.importer.metadata_validator"
+            - "@doctrine.orm.entity_manager"
             - ["Code"]
 
     sylius.processor.tax_categories:
@@ -183,6 +184,7 @@ services:
             - "@sylius.repository.tax_category"
             - "@property_accessor"
             - "@sylius.importer.metadata_validator"
+            - "@doctrine.orm.entity_manager"
             - ["Code", "Name", "Description"]
 
     sylius.processor.customer_groups:
@@ -192,6 +194,7 @@ services:
             - "@sylius.repository.customer_group"
             - "@property_accessor"
             - "@sylius.importer.metadata_validator"
+            - "@doctrine.orm.entity_manager"
             - ["Code", "Name"]
 
     sylius.processor.customers:
@@ -201,6 +204,7 @@ services:
             - "@sylius.repository.customer"
             - "@property_accessor"
             - "@sylius.importer.metadata_validator"
+            - "@doctrine.orm.entity_manager"
             - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
 
     # Definition of custom Processors, which can have additional logic to handle dependencies to other resources
@@ -210,4 +214,5 @@ services:
             - "@sylius.factory.payment_method"
             - "@sylius.repository.payment_method"
             - "@sylius.importer.metadata_validator"
+            - "@doctrine.orm.entity_manager"
             - ['Code', 'Name', 'Instructions', 'Gateway']

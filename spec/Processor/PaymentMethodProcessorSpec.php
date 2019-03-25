@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidatorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\PaymentMethodProcessor;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
@@ -18,9 +19,10 @@ class PaymentMethodProcessorSpec extends ObjectBehavior
     function let(
         PaymentMethodFactoryInterface $factory,
         RepositoryInterface $repository,
-        MetadataValidatorInterface $metadataValidator
+        MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager
     ) {
-        $this->beConstructedWith($factory, $repository, $metadataValidator, []);
+        $this->beConstructedWith($factory, $repository, $metadataValidator, $entityManager, []);
     }
 
     function it_is_initializable()
@@ -38,18 +40,19 @@ class PaymentMethodProcessorSpec extends ObjectBehavior
         PaymentMethodInterface $paymentMethod,
         GatewayConfigInterface $gatewayConfig,
         MetadataValidatorInterface $metadataValidator,
-        RepositoryInterface $repository
+        RepositoryInterface $repository,
+        EntityManagerInterface $entityManager
     ) {
         $headerKeys = ['Code', 'Name', 'Instructions', 'Gateway'];
         $dataset = ['Code' => 'OFFLINE', 'Name' => 'Offline', 'Instructions' => 'Offline payment method instructions.', 'Gateway' => 'offline'];
 
-        $this->beConstructedWith($factory, $repository, $metadataValidator, $headerKeys);
+        $this->beConstructedWith($factory, $repository, $metadataValidator, $entityManager, $headerKeys);
 
         $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
 
         $repository->findOneBy(['code' => 'OFFLINE'])->willReturn(null);
         $factory->createWithGateway('offline')->willReturn($paymentMethod);
-        $repository->add($paymentMethod)->shouldBeCalledTimes(1);
+        $entityManager->persist($paymentMethod)->shouldBeCalledTimes(1);
 
         $gatewayConfig->setGatewayName('Offline')->shouldBeCalled();
 

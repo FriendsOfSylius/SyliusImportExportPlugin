@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\AccessorNotFoundException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\MetadataValidatorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor;
@@ -20,9 +21,10 @@ class ResourceProcessorSpec extends ObjectBehavior
         FactoryInterface $factory,
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
-        MetadataValidatorInterface $metadataValidator
+        MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, []);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $entityManager, []);
     }
 
     function it_is_initializable()
@@ -40,17 +42,18 @@ class ResourceProcessorSpec extends ObjectBehavior
         TaxCategoryInterface $taxCategory,
         PropertyAccessorInterface $propertyAccessor,
         RepositoryInterface $repository,
-        MetadataValidatorInterface $metadataValidator
+        MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager
     ) {
         $headerKeys = ['Code', 'Name', 'Description'];
         $dataset = ['Code' => 'BOOKS', 'Name' => 'books', 'Description' => 'tax category for books'];
 
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $headerKeys);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $entityManager, $headerKeys);
 
         $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
 
         $repository->findOneBy(['code' => 'BOOKS'])->willReturn(null);
-        $repository->add($taxCategory)->shouldBeCalledTimes(1);
+        $entityManager->persist($taxCategory)->shouldBeCalledTimes(1);
         $factory->createNew()->willReturn($taxCategory);
 
         $propertyAccessor->isReadable($taxCategory, 'Code')
@@ -75,17 +78,18 @@ class ResourceProcessorSpec extends ObjectBehavior
         TaxCategoryInterface $country,
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
-        MetadataValidatorInterface $metadataValidator
+        MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager
     ) {
         $headerKeys = ['Code'];
         $dataset = ['Code' => 'DE'];
 
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $headerKeys);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $entityManager, $headerKeys);
 
         $metadataValidator->validateHeaders($headerKeys, $dataset)->shouldBeCalled();
 
         $repository->findOneBy(['code' => 'DE'])->willReturn(null);
-        $repository->add($country)->shouldBeCalledTimes(1);
+        $entityManager->persist($country)->shouldBeCalledTimes(1);
 
         $factory->createNew()->willReturn($country);
 
@@ -96,6 +100,7 @@ class ResourceProcessorSpec extends ObjectBehavior
             ->shouldBeCalled();
 
         $this->process($dataset);
+        $entityManager->flush();
     }
 
     function it_throws_accessor_not_found_exception_for_non_existing_header_keys(
@@ -103,9 +108,10 @@ class ResourceProcessorSpec extends ObjectBehavior
         TaxCategoryInterface $country,
         RepositoryInterface $repository,
         PropertyAccessorInterface $propertyAccessor,
-        MetadataValidatorInterface $metadataValidator
+        MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager
     ) {
-        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, ['Code', 'not_existing_header_key']);
+        $this->beConstructedWith($factory, $repository, $propertyAccessor, $metadataValidator, $entityManager, ['Code', 'not_existing_header_key']);
         $repository->findOneBy(['code' => 'DE'])->willReturn(null);
         $factory->createNew()->willReturn($country);
         $repository->add($country)->shouldNotBeCalled();
