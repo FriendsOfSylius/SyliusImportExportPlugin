@@ -8,11 +8,7 @@
         "sylius/sylius": "^1.0",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^3.3 | ^4.1",
-        "queue-interop/queue-interop": "^0.6.2",
-        "phpstan/phpstan-webmozart-assert": "^0.11.1",
-        "phpstan/phpstan-symfony": "^0.11.2",
-        "phpstan/phpstan-doctrine": "^0.11.2",
-        "phpstan/phpstan-shim": "^0.11.4"
+        "queue-interop/queue-interop": "^0.6.2"
     },
     "suggest": {
         "portphp/spreadsheet": "To support importing Excel and LibreOffice Calc files, use version ^1.1",
@@ -37,7 +33,11 @@
         "friends-of-behat/symfony-extension": "^1.0",
         "friends-of-behat/variadic-extension": "^1.0",
         "lakion/mink-debug-extension": "^1.2.3",
-        "phpspec/phpspec": "^4.0",
+        "phpspec/phpspec": "^5.0",
+        "phpstan/phpstan-webmozart-assert": "^0.11.1",
+        "phpstan/phpstan-symfony": "^0.11.2",
+        "phpstan/phpstan-doctrine": "^0.11.2",
+        "phpstan/phpstan-shim": "^0.11.4",
         "phpunit/phpunit": "^5.6",
         "portphp/csv": "^1.1.0",
         "portphp/spreadsheet": "^1.0.0-alpha",
