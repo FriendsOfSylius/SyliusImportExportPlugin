@@ -59,7 +59,7 @@ class ResourcePluginSpec extends ObjectBehavior
         );
 
         $entityManager->getClassMetadata(Argument::type('string'))->willReturn($classMetadata);
-        $classMetadata->getColumnNames()->willReturn(
+        $classMetadata->getFieldNames()->willReturn(
             [
                 'Code',
                 'Name',
