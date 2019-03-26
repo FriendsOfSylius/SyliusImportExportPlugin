@@ -50,7 +50,7 @@ class ResourceImporter implements ImporterInterface
     /**
      * @var int
      */
-    private $batchCount = 0;
+    protected $batchCount = 0;
 
     public function __construct(
         ReaderFactory $readerFactory,
