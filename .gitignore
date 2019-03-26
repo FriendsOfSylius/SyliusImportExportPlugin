@@ -1,6 +1,7 @@
 /bin/
 !/bin/.gitkeep
 
+/composer.lock
 /vendor/
 /node_modules/
 
