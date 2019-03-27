@@ -65,7 +65,7 @@ class OrderResourcePluginSpec extends ObjectBehavior
         );
 
         $entityManager->getClassMetadata(Argument::type('string'))->willReturn($classMetadata);
-        $classMetadata->getColumnNames()->willReturn(
+        $classMetadata->getFieldNames()->willReturn(
             [
                 'ShippingAddressId',
                 'BillingAddressId',

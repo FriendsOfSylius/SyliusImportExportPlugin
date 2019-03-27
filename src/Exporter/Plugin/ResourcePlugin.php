@@ -118,7 +118,7 @@ class ResourcePlugin implements PluginInterface
     {
         $fields = $this->entityManager->getClassMetadata(\get_class($resource));
 
-        foreach ($fields->getColumnNames() as $index => $field) {
+        foreach ($fields->getFieldNames() as $index => $field) {
             $this->fieldNames[$index] = ucfirst($field);
 
             if (!$this->propertyAccessor->isReadable($resource, $field)) {
