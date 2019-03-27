@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use Payum\Core\Model\GatewayConfigInterface;
 use Sylius\Component\Core\Factory\PaymentMethodFactoryInterface;
@@ -28,23 +29,30 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
     private $metadataValidator;
 
     /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    /**
      * @var string[]
      */
     private $headerKeys;
 
     /**
-     * @param string[]                         $headerKeys
+     * @param string[] $headerKeys
      */
     public function __construct(
         PaymentMethodFactoryInterface $factory,
         RepositoryInterface $repository,
         MetadataValidatorInterface $metadataValidator,
+        EntityManagerInterface $entityManager,
         array $headerKeys
     ) {
         $this->resourceFactory = $factory;
         $this->resourceRepository = $repository;
         $this->metadataValidator = $metadataValidator;
         $this->headerKeys = $headerKeys;
+        $this->entityManager = $entityManager;
     }
 
     public function process(array $data): void
@@ -59,7 +67,7 @@ final class PaymentMethodProcessor implements ResourceProcessorInterface
         $paymentMethod->setName($data['Name']);
         $paymentMethod->setInstructions($data['Instructions']);
 
-        $this->resourceRepository->add($paymentMethod);
+        $this->entityManager->persist($paymentMethod);
     }
 
     private function getPaymentMethod(string $code, string $gateway): PaymentMethodInterface

@@ -38,7 +38,7 @@ class JsonResourceImporterSpec extends ObjectBehavior
         ImporterResultInterface $importerResult
     ) {
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
-        $objectManager->flush()->shouldBeCalledTimes(0);
+        $objectManager->flush()->shouldBeCalledTimes(1);
 
         $importerResult->start()->shouldBeCalledTimes(1);
         $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
@@ -53,7 +53,7 @@ class JsonResourceImporterSpec extends ObjectBehavior
         ResourceProcessorInterface $resourceProcessor
     ) {
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
-        $objectManager->flush()->shouldBeCalledTimes(0);
+        $objectManager->flush()->shouldBeCalledTimes(1);
 
         $importerResult->start()->shouldBeCalledTimes(1);
         $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);
@@ -68,7 +68,7 @@ class JsonResourceImporterSpec extends ObjectBehavior
         ResourceProcessorInterface $resourceProcessor
     ) {
         $resourceProcessor->process(Argument::type('array'))->shouldBeCalledTimes(2);
-        $objectManager->flush()->shouldBeCalledTimes(0);
+        $objectManager->flush()->shouldBeCalledTimes(1);
 
         $importerResult->start()->shouldBeCalledTimes(1);
         $importerResult->success(Argument::type('int'))->shouldBeCalledTimes(2);

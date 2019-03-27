@@ -210,6 +210,7 @@ sylius.processor.foo:
         - "@sylius.repository.foo"
         - "@property_accessor"
         - "@sylius.importer.metadata_validator"
+        - "@doctrine.orm.entity_manager"
         - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
 
@@ -234,6 +235,7 @@ class FooProcessor implements ResourceProcessorInterface
          - "@sylius.factory.foo"
          - "@sylius.repository.foo"
          - "@sylius.importer.metadata_validator"
+         - "@doctrine.orm.entity_manager"
          - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
 ```
 

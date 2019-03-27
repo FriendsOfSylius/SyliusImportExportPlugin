@@ -23,7 +23,7 @@ final class Configuration implements ConfigurationInterface
                     ->addDefaultsIfNotSet()
                     ->children()
                         ->booleanNode('web_ui')->defaultTrue()->end()
-                        ->integerNode('batch_size')->defaultValue(0)->end()
+                        ->integerNode('batch_size')->defaultValue(100)->end()
                         ->booleanNode('fail_on_incomplete')->defaultFalse()->end()
                         ->booleanNode('stop_on_failure')->defaultFalse()->end()
                     ->end()
