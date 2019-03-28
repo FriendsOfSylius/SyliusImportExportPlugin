@@ -19,7 +19,7 @@ class JsonResourceImporterSpec extends ObjectBehavior
         ResourceProcessorInterface $resourceProcessor,
         ImporterResultInterface $importerResult
     ) {
-        $this->beConstructedWith($objectManager, $resourceProcessor, $importerResult, false, false, false);
+        $this->beConstructedWith($objectManager, $resourceProcessor, $importerResult, 0, false, false);
     }
 
     function it_is_initializable()
