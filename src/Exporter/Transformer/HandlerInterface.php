@@ -15,9 +15,6 @@ interface HandlerInterface
 
     /**
      * Loops through handlers until it gets satisfying result
-     *
-     *
-     * @return string
      */
     public function handle($key, $value);
 }

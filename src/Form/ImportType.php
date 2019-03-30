@@ -23,13 +23,13 @@ class ImportType extends AbstractType
         $this->importerRegistry = $importerRegistry;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setRequired('importer_type');
         $resolver->setAllowedTypes('importer_type', 'string');
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('format', ChoiceType::class, [

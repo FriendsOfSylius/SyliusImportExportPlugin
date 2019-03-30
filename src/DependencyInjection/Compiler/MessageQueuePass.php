@@ -13,7 +13,7 @@ final class MessageQueuePass implements CompilerPassInterface
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $config = $container->getParameter('sylius.message_queue');
 

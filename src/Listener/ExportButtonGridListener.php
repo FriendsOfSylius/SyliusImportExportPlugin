@@ -35,12 +35,12 @@ final class ExportButtonGridListener
         $this->formats = $formats;
     }
 
-    public function setRequest(RequestStack $requestStack)
+    public function setRequest(RequestStack $requestStack): void
     {
         $this->requestStack = $requestStack;
     }
 
-    public function onSyliusGridAdmin(GridDefinitionConverterEvent $event)
+    public function onSyliusGridAdmin(GridDefinitionConverterEvent $event): void
     {
         $grid = $event->getGrid();
 

@@ -30,7 +30,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($key, $value)
+    protected function process($key, $value): ?string
     {
         return money_format($this->format, $value / 100);
     }
