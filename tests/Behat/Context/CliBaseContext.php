@@ -20,59 +20,37 @@ use Symfony\Component\HttpKernel\KernelInterface;
 
 class CliBaseContext implements Context
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $cliArguments = [];
 
-    /**
-     * @var KernelInterface
-     */
+    /** @var KernelInterface */
     protected $kernel;
 
-    /**
-     * @var Application
-     */
+    /** @var Application */
     protected $application;
 
-    /**
-     * @var CommandTester
-     */
+    /** @var CommandTester */
     protected $tester;
 
-    /**
-     * @var Command
-     */
+    /** @var Command */
     protected $command;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $filePath;
 
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     protected $repository;
 
-    /**
-     * @var ImporterRegistry
-     */
+    /** @var ImporterRegistry */
     private $importerRegistry;
 
-    /**
-     * @var ExporterRegistry
-     */
+    /** @var ExporterRegistry */
     private $exporterRegistry;
 
-    /**
-     * @var ContainerInterface
-     */
+    /** @var ContainerInterface */
     private $container;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $exportFile;
 
     public function __construct(
