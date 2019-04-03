@@ -19,9 +19,7 @@ final class ImportDataFromMessageQueueCommand extends Command
 {
     use ContainerAwareTrait;
 
-    /**
-     * @var ImporterRegistry
-     */
+    /** @var ImporterRegistry */
     private $importerRegistry;
 
     public function __construct(ImporterRegistry $importerRegistry)

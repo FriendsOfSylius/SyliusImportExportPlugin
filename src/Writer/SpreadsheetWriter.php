@@ -10,24 +10,16 @@ use Port\Spreadsheet\SpreadsheetWriter as PortSpreadsheetWriter;
 
 class SpreadsheetWriter implements WriterInterface
 {
-    /**
-     * @var PortSpreadsheetWriterFactoryInterface
-     */
+    /** @var PortSpreadsheetWriterFactoryInterface */
     private $portSpreadsheetWriterFactory;
 
-    /**
-     * @var PortSpreadsheetWriter
-     */
+    /** @var PortSpreadsheetWriter */
     private $writer;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $filename;
 
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $temporaryFolder;
 
     public function __construct(PortSpreadsheetWriterFactoryInterface $portSpreadsheetWriterFactory, ?string $temporaryFolder = null)

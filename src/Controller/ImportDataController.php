@@ -19,24 +19,16 @@ use Symfony\Component\HttpFoundation\Session\Session;
 
 final class ImportDataController
 {
-    /**
-     * @var ServiceRegistry
-     */
+    /** @var ServiceRegistry */
     private $registry;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var FormFactoryInterface
-     */
+    /** @var FormFactoryInterface */
     private $formFactory;
 
-    /**
-     * @var \Twig_Environment
-     */
+    /** @var \Twig_Environment */
     private $twig;
 
     public function __construct(

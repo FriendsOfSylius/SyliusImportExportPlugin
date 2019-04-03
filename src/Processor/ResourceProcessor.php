@@ -13,34 +13,22 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ResourceProcessor implements ResourceProcessorInterface
 {
-    /**
-     * @var FactoryInterface
-     */
+    /** @var FactoryInterface */
     private $resourceFactory;
 
-    /**
-     * @var RepositoryInterface
-     */
+    /** @var RepositoryInterface */
     private $resourceRepository;
 
-    /**
-     * @var PropertyAccessorInterface
-     */
+    /** @var PropertyAccessorInterface */
     private $propertyAccessor;
 
-    /**
-     * @var MetadataValidatorInterface
-     */
+    /** @var MetadataValidatorInterface */
     private $metadataValidator;
 
-    /**
-     * @var EntityManagerInterface
-     */
+    /** @var EntityManagerInterface */
     private $entityManager;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $headerKeys;
 
     /**

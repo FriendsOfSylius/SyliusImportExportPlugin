@@ -10,24 +10,16 @@ use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 
 class ResourceExporter implements ResourceExporterInterface
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $resourceKeys;
 
-    /**
-     * @var WriterInterface
-     */
+    /** @var WriterInterface */
     protected $writer;
 
-    /**
-     * @var PluginPoolInterface
-     */
+    /** @var PluginPoolInterface */
     protected $pluginPool;
 
-    /**
-     * @var TransformerPoolInterface|null
-     */
+    /** @var TransformerPoolInterface|null */
     protected $transformerPool;
 
     /**

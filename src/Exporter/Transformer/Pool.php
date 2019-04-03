@@ -6,14 +6,10 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer;
 
 final class Pool implements TransformerPoolInterface
 {
-    /**
-     * @var HandlerInterface
-     */
+    /** @var HandlerInterface */
     private $handler;
 
-    /**
-     * @var \IteratorAggregate
-     */
+    /** @var \IteratorAggregate */
     private $generator;
 
     public function __construct(\IteratorAggregate $generator)

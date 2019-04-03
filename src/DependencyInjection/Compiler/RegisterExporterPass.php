@@ -17,15 +17,13 @@ final class RegisterExporterPass implements CompilerPassInterface
     private const CLASS_CSV_WRITER = CsvWriter::class;
     private const CLASS_SPREADSHEET_WRITER = SpreadsheetWriter::class;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $typesAndFormats = [];
 
     /**
      * {@inheritdoc}
      */
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $serviceId = 'sylius.exporters_registry';
         if ($container->has($serviceId) == false) {

@@ -8,14 +8,10 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
 
 final class IntegerToMoneyFormatHandler extends Handler
 {
-    /**
-     * @var array
-     */
+    /** @var array */
     private $keys;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $format;
 
     /**
@@ -30,7 +26,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($key, $value)
+    protected function process($key, $value): ?string
     {
         return money_format($this->format, $value / 100);
     }

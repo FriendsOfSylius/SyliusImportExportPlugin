@@ -11,19 +11,13 @@ use Symfony\Component\HttpFoundation\RequestStack;
 
 final class ExportButtonGridListener
 {
-    /**
-     * @var RequestStack
-     */
+    /** @var RequestStack */
     private $requestStack;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $resource;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $formats;
 
     /**
@@ -35,12 +29,12 @@ final class ExportButtonGridListener
         $this->formats = $formats;
     }
 
-    public function setRequest(RequestStack $requestStack)
+    public function setRequest(RequestStack $requestStack): void
     {
         $this->requestStack = $requestStack;
     }
 
-    public function onSyliusGridAdmin(GridDefinitionConverterEvent $event)
+    public function onSyliusGridAdmin(GridDefinitionConverterEvent $event): void
     {
         $grid = $event->getGrid();
 

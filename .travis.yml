@@ -97,6 +97,7 @@ before_script:
 
 script:
     - composer validate --strict
+    - composer analyse
     - bin/phpstan analyse -c phpstan.neon -l max src/
     - bin/ecs check src/ spec/ tests/Behat/
 

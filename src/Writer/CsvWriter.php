@@ -9,9 +9,7 @@ use Port\Csv\CsvWriter as PortCsvWriter;
 
 class CsvWriter implements WriterInterface
 {
-    /**
-     * @var PortCsvWriter
-     */
+    /** @var PortCsvWriter */
     private $writer;
 
     public function __construct(PortCsvWriter $writer)
