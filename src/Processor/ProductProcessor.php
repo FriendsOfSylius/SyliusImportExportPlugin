@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
+use Sylius\Component\Product\Model\ProductAttribute;
 use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
@@ -18,6 +20,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    /** @var TransformerPoolInterface|null */
+    private $transformerPool;
     /** @var ProductFactoryInterface */
     private $resourceProductFactory;
     /** @var TaxonFactoryInterface */
@@ -54,6 +58,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         AttributeCodesProviderInterface $attributeCodesProvider,
         FactoryInterface $productAttributeValueFactory,
         SlugGeneratorInterface $slugGenerator,
+        ?TransformerPoolInterface $transformerPool,
         array $headerKeys
     ) {
         $this->resourceProductFactory = $productFactory;
@@ -67,6 +72,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->attributeCodesProvider = $attributeCodesProvider;
         $this->headerKeys = $headerKeys;
         $this->slugGenerator = $slugGenerator;
+        $this->transformerPool = $transformerPool;
     }
 
     /**
@@ -114,6 +120,10 @@ final class ProductProcessor implements ResourceProcessorInterface
             }
 
             if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
+                if (null !== $this->transformerPool) {
+                    $data[$attrCode] = $this->transformerPool->handle($product->getAttributeByCodeAndLocale($attrCode)->getType(), $data[$attrCode]);
+                }
+
                 $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
 
                 continue;
@@ -135,14 +145,20 @@ final class ProductProcessor implements ResourceProcessorInterface
 
     private function setAttributeValue(ProductInterface $product, array $data, string $attrCode): void
     {
+        /** @var ProductAttribute $productAttr */
         $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
         /** @var ProductAttributeValueInterface $attr */
         $attr = $this->productAttributeValueFactory->createNew();
         $attr->setAttribute($productAttr);
         $attr->setProduct($product);
         $attr->setLocaleCode($product->getTranslation()->getLocale());
+
+        if (null !== $this->transformerPool) {
+            $data[$attrCode] = $this->transformerPool->handle($productAttr->getType(), $data[$attrCode]);
+        }
+
         $attr->setValue($data[$attrCode]);
         $product->addAttribute($attr);
-        $this->productRepository->add($attr);
+        $this->productAttributeRepository->add($attr);
     }
 }

@@ -90,6 +90,31 @@ services:
         tags:
             - { name: sylius.exporter_transformer }
 
+    sylius.exporters_transformer_array:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\ArrayToStringHandler
+        tags:
+            - { name: sylius.exporter_transformer }
+
+    # Default import transformers and a default transformers pool
+    sylius.importers_transformer_pool:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Pool
+        arguments: [!tagged sylius.importer_transformer]
+
+    sylius.importers_transformer_datetime:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler\StringToDateTimeHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_array:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler\StringToArrayHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
+    sylius.importers_transformer_integer:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler\StringToIntegerHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
     # Commands
     sylius.command.import_data:
         class: FriendsOfSylius\SyliusImportExportPlugin\Command\ImportDataCommand
@@ -284,4 +309,5 @@ services:
             - "@sylius.service.attributes_code"
             - "@sylius.factory.product_attribute_value"
             - "@sylius.generator.slug"
+            - "@sylius.importers_transformer_pool"
             - ['Code', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon']

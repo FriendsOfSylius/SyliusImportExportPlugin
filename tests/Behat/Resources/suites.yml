@@ -95,6 +95,8 @@ default:
 
                 - test.behat.context.notification_context
                 - test.behat.context.products_context
+
+                - sylius.behat.context.setup.product_attribute
             filters:
                 tags: "@managing_products && @ui"
 
