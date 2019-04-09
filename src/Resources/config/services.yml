@@ -16,15 +16,40 @@ services:
             - "@twig"
         tags: ['controller.service_arguments']
 
-    sylius.controller.export_data:
+    sylius.controller.export_data_country:
         public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
         arguments:
             - "@sylius.exporters_registry"
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
-            - "@sylius.parameter_bag"
+            - "@sylius.repository.country"
             - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    sylius.controller.export_data_order:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.order"
+            - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    sylius.controller.export_data_customer:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.customer"
+            - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
         tags: ['controller.service_arguments']
 
     # Form Type
