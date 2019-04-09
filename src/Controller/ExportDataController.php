@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
-use Doctrine\ORM\EntityManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ExporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporterInterface;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
@@ -29,9 +28,6 @@ final class ExportDataController
     /** @var RepositoryInterface */
     private $repository;
 
-    /** @var EntityManager */
-    private $entityManager;
-
     /** @var ServiceRegistryInterface */
     private $registry;
 
@@ -46,13 +42,11 @@ final class ExportDataController
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ResourcesCollectionProviderInterface $resourcesCollectionProvider,
         RepositoryInterface $repository,
-        EntityManager $entityManager,
         array $syliusResources
     ) {
         $this->registry = $registry;
         $this->requestConfigurationFactory = $requestConfigurationFactory;
         $this->resourcesCollectionProvider = $resourcesCollectionProvider;
-        $this->entityManager = $entityManager;
         $this->repository = $repository;
         $this->syliusResources = $syliusResources;
     }

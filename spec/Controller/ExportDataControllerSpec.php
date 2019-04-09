@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Controller;
 
-use Doctrine\ORM\EntityManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController;
 use PhpSpec\ObjectBehavior;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
@@ -18,15 +17,13 @@ class ExportDataControllerSpec extends ObjectBehavior
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ResourcesCollectionProviderInterface $resourcesCollectionProvider,
-        RepositoryInterface $repository,
-        EntityManager $entityManager
+        RepositoryInterface $repository
     ) {
         $this->beConstructedWith(
             $registry,
             $requestConfigurationFactory,
             $resourcesCollectionProvider,
             $repository,
-            $entityManager,
             []
         );
     }
