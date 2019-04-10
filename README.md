@@ -308,11 +308,26 @@ app_export_data_foo:
     methods: [GET]
     defaults:
         resource: sylius.foo
-        _controller: sylius.controller.export_data:exportAction
+        _controller: sylius.controller.export_data_foo:exportAction
         _sylius:
             filterable: true
             grid: sylius_admin_foo # Name of defined grid here
 ```
+and the associate controller
+
+```yaml
+sylius.controller.export_data_foo:
+    public: true
+    class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+    arguments:
+        - "@sylius.exporters_registry"
+        - "@sylius.resource_controller.request_configuration_factory"
+        - "@sylius.resource_controller.resources_collection_provider"
+        - "@sylius.repository.foo"
+        - "%sylius.resources%"
+    tags: ['controller.service_arguments']
+```
+
 
 In case you don't add it, the UI exporters will still function. They will simply load all data of that resource for the export (similar as CLI).
 
@@ -368,12 +383,26 @@ app_export_data_country:
     methods: [GET]
     defaults:
         resource: sylius.country
-        _controller: sylius.controller.export_data:exportAction
+        _controller: sylius.controller.export_data_contry:exportAction
         _sylius:
             filterable: true
             grid: sylius_admin_country
 ```   
-   
+
+and the associate controller
+
+```yaml
+sylius.controller.export_data_country:
+    public: true
+    class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+    arguments:
+        - "@sylius.exporters_registry"
+        - "@sylius.resource_controller.request_configuration_factory"
+        - "@sylius.resource_controller.resources_collection_provider"
+        - "@sylius.repository.country"
+        - "%sylius.resources%"
+    tags: ['controller.service_arguments']
+```
 
 ### PluginPool
 The idea behind the plugin pool is, to be able to have different kind of plugins, which could possibly
