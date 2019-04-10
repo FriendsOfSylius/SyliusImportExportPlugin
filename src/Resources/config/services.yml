@@ -24,7 +24,6 @@ services:
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
             - "@sylius.repository.country"
-            - "@doctrine.orm.entity_manager"
             - "%sylius.resources%"
         tags: ['controller.service_arguments']
 
