@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -20,6 +21,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    /** @var \Doctrine\ORM\EntityManagerInterface */
+    private $manager;
     /** @var TransformerPoolInterface|null */
     private $transformerPool;
     /** @var ProductFactoryInterface */
@@ -59,6 +62,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         FactoryInterface $productAttributeValueFactory,
         SlugGeneratorInterface $slugGenerator,
         ?TransformerPoolInterface $transformerPool,
+        EntityManagerInterface $manager,
         array $headerKeys
     ) {
         $this->resourceProductFactory = $productFactory;
@@ -73,6 +77,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->headerKeys = $headerKeys;
         $this->slugGenerator = $slugGenerator;
         $this->transformerPool = $transformerPool;
+        $this->manager = $manager;
     }
 
     /**
@@ -121,7 +126,10 @@ final class ProductProcessor implements ResourceProcessorInterface
 
             if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
                 if (null !== $this->transformerPool) {
-                    $data[$attrCode] = $this->transformerPool->handle($product->getAttributeByCodeAndLocale($attrCode)->getType(), $data[$attrCode]);
+                    $data[$attrCode] = $this->transformerPool->handle(
+                        $product->getAttributeByCodeAndLocale($attrCode)->getType(),
+                        $data[$attrCode]
+                    );
                 }
 
                 $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
@@ -159,6 +167,6 @@ final class ProductProcessor implements ResourceProcessorInterface
 
         $attr->setValue($data[$attrCode]);
         $product->addAttribute($attr);
-        $this->productAttributeRepository->add($attr);
+        $this->manager->persist($attr);
     }
 }

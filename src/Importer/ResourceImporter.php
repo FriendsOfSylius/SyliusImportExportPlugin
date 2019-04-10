@@ -87,6 +87,8 @@ class ResourceImporter implements ImporterInterface
                 $this->batchCount = 0;
             }
         } catch (ItemIncompleteException $e) {
+            $this->result->setMessage($e->getMessage());
+            $this->result->getLogger()->critical($e->getMessage());
             if ($this->failOnIncomplete) {
                 $this->result->failed($i);
                 if ($this->stopOnFailure) {
@@ -97,6 +99,8 @@ class ResourceImporter implements ImporterInterface
             }
         } catch (ImporterException $e) {
             $this->result->failed($i);
+            $this->result->setMessage($e->getMessage());
+            $this->result->getLogger()->critical($e->getMessage());
             if ($this->stopOnFailure) {
                 return true;
             }

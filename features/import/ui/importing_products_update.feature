@@ -2,7 +2,7 @@
 Feature: Import Products from grid
   In order to have my products exported to an external target
   As an Administrator
-  I want to be able to export product data to csv file from backOffice
+  I want to be able to import product data to csv file from backOffice
 
   Background:
     Given I am logged in as an administrator

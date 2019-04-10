@@ -8,9 +8,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler;
 
 final class StringToDateTimeHandler extends Handler
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $format;
 
     public function __construct(string $format = 'Y-m-d')

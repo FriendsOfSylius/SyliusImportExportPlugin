@@ -33,7 +33,7 @@ class ArrayToStringHandlerSpec extends ObjectBehavior
     {
         $array = ['a', 'b', 'c'];
         $this->handle('test', $array)->shouldBeString();
-        $this->handle('test', $array)->shouldBe('a,b,c');
+        $this->handle('test', $array)->shouldBe('a|b|c');
     }
 
     function it_should_process_via_pool()
@@ -48,6 +48,6 @@ class ArrayToStringHandlerSpec extends ObjectBehavior
 
         $result = $pool->handle('test', $array);
 
-        Assert::same('a,b,c', $result);
+        Assert::same('a|b|c', $result);
     }
 }
