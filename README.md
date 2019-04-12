@@ -313,7 +313,7 @@ app_export_data_foo:
             filterable: true
             grid: sylius_admin_foo # Name of defined grid here
 ```
-and the associate controller
+And add the associated controller service definition to your services
 
 ```yaml
 sylius.controller.export_data_foo:
@@ -389,7 +389,7 @@ app_export_data_country:
             grid: sylius_admin_country
 ```   
 
-and the associate controller
+And add the associated controller service definition to your services
 
 ```yaml
 sylius.controller.export_data_country:

@@ -23,7 +23,7 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 final class ExportDataController
 {
     /** @var array */
-    private $syliusResources;
+    private $resources;
 
     /** @var RepositoryInterface */
     private $repository;
@@ -42,13 +42,13 @@ final class ExportDataController
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
         ResourcesCollectionProviderInterface $resourcesCollectionProvider,
         RepositoryInterface $repository,
-        array $syliusResources
+        array $resources
     ) {
         $this->registry = $registry;
         $this->requestConfigurationFactory = $requestConfigurationFactory;
         $this->resourcesCollectionProvider = $resourcesCollectionProvider;
         $this->repository = $repository;
-        $this->syliusResources = $syliusResources;
+        $this->resources = $resources;
     }
 
     public function exportAction(Request $request, string $resource, string $format): Response
@@ -61,7 +61,7 @@ final class ExportDataController
     private function exportData(Request $request, string $exporter, string $format, string $outputFilename): Response
     {
         $metadata = Metadata::fromAliasAndConfiguration($exporter,
-            $this->syliusResources[$exporter]);
+            $this->resources[$exporter]);
         $configuration = $this->requestConfigurationFactory->create($metadata, $request);
 
         $name = ExporterRegistry::buildServiceName($exporter, $format);

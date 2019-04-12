@@ -1,10 +1,9 @@
 <?php
 
 /*
- * This file is need while SyliusImportExportPlugin support Symfony version < 4.1
- * because ParameterBag isn't service before this version.
+ * This is file is required as long as SyliusImportExportPlugin supports Symfony versions lower than 4.1. Before this version, ParameterBag wasn't a service available.
  *
- * See : https://symfony.com/blog/new-in-symfony-4-1-getting-container-parameters-as-a-service
+ * See: https://symfony.com/blog/new-in-symfony-4-1-getting-container-parameters-as-a-service
  */
 
 declare(strict_types=1);
@@ -15,7 +14,7 @@ use Symfony\Component\DependencyInjection\Container;
 use Symfony\Component\DependencyInjection\ParameterBag\FrozenParameterBag;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
-class ParameterBag extends FrozenParameterBag implements ParameterBagInterface
+final class ParameterBag extends FrozenParameterBag implements ParameterBagInterface
 {
     private $container;
 
