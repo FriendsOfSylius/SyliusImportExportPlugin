@@ -9,25 +9,27 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Bundle\ResourceBundle\Controller\ResourcesCollectionProviderInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
 
 class ExportDataControllerSpec extends ObjectBehavior
 {
     function let(
         ServiceRegistryInterface $registry,
         RequestConfigurationFactoryInterface $requestConfigurationFactory,
-        ResourcesCollectionProviderInterface $resourcesCollectionProvider
+        ResourcesCollectionProviderInterface $resourcesCollectionProvider,
+        RepositoryInterface $repository
     ) {
-        $this->beConstructedWith($registry, $requestConfigurationFactory, $resourcesCollectionProvider);
+        $this->beConstructedWith(
+            $registry,
+            $requestConfigurationFactory,
+            $resourcesCollectionProvider,
+            $repository,
+            []
+        );
     }
 
     function it_is_initializable()
     {
         $this->shouldHaveType(ExportDataController::class);
-    }
-
-    function it_implements_the_plugin_pool_interface()
-    {
-        $this->shouldImplement(Controller::class);
     }
 }

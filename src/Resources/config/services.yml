@@ -1,21 +1,55 @@
 services:
+    # Parameter Bag
+    sylius.parameter_bag:
+        class: FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\ParameterBag\ParameterBag
+        arguments:
+            - "@service_container"
+
     # Controllers for Admin-Integration
     sylius.controller.import_data:
         public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
             - "@sylius.importers_registry"
-            - "@session"
+            - "@session.flash_bag"
             - "@form.factory"
             - "@twig"
+        tags: ['controller.service_arguments']
 
-    sylius.controller.export_data:
+    sylius.controller.export_data_country:
         public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
         arguments:
             - "@sylius.exporters_registry"
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.country"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    sylius.controller.export_data_order:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.order"
+            - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    sylius.controller.export_data_customer:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.customer"
+            - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
 
     # Form Type
     sylius.form.type.import:

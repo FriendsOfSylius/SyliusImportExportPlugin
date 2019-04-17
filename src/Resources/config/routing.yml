@@ -7,31 +7,31 @@ app_import_data:
 
 ## Export routes for specific settings
 app_export_data_country:
-    path: /export/sylius.country/{format}
+    path: /export/{resource_country}/{format}
     methods: [GET]
     defaults:
         resource: sylius.country
-        _controller: sylius.controller.export_data:exportAction
+        _controller: sylius.controller.export_data_country:exportAction
         _sylius:
             filterable: true
             grid: sylius_admin_country
 
 app_export_data_order:
-    path: /export/sylius.order/{format}
+    path: /export/{resource_order}/{format}
     methods: [GET]
     defaults:
         resource: sylius.order
-        _controller: sylius.controller.export_data:exportAction
+        _controller: sylius.controller.export_data_order:exportAction
         _sylius:
             filterable: true
             grid: sylius_admin_order
 
 app_export_data_customer:
-    path: /export/sylius.customer/{format}
+    path: /export/{resource_customer}/{format}
     methods: [GET]
     defaults:
         resource: sylius.customer
-        _controller: sylius.controller.export_data:exportAction
+        _controller: sylius.controller.export_data_customer:exportAction
         _sylius:
             filterable: true
             grid: sylius_admin_customer
@@ -40,8 +40,3 @@ app_export_data_customer:
 app_export_data:
     path: /export/{resource}/{format}
     methods: [GET]
-    defaults:
-        _controller: sylius.controller.export_data:exportAction
-        _sylius:
-            paginate: false
-            filterable: false
