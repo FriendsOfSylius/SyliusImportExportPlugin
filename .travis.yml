@@ -20,13 +20,22 @@ matrix:
     include:
         # Sylius 1.4
         -
-            php: 7.3
-            env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.4.* symfony/symfony:4.2.*"
-        -
             php: 7.2
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.4.* symfony/symfony:4.2.*"
+        -
+            php: 7.3
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.4.* symfony/symfony:4.2.*"
+        # Sylius 1.5
+        -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.5.* symfony/symfony:4.2.*"
+        -
+            php: 7.3
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.5.* symfony/symfony:4.2.*"
 
 before_install:
     - phpenv config-rm xdebug.ini
