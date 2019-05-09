@@ -1,7 +1,7 @@
 default:
     suites:
         ui_managing_payment_methods:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
 
                 - sylius.behat.context.setup.channel
@@ -33,7 +33,7 @@ default:
                 tags: "@managing_payment_methods && @ui"
 
         ui_managing_tax_categories:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
 
                 - sylius.behat.context.transform.shared_storage
@@ -51,7 +51,7 @@ default:
                 tags: "@managing_tax_categories && @ui"
 
         ui_managing_countries:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
 
                 - sylius.behat.context.transform.country
@@ -69,7 +69,7 @@ default:
                 tags: "@managing_countries && @ui"
 
         ui_managing_customer_groups:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - sylius.behat.context.transform.shared_storage
                 - sylius.behat.context.setup.admin_security
@@ -81,7 +81,7 @@ default:
                 tags: "@managing_customer_groups && @ui"
 
         cli_managing_countries:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_countries_context
                 - sylius.behat.context.cli.installer
@@ -89,7 +89,7 @@ default:
                 tags: "@managing_countries && @cli_importer_exporter"
 
         cli_managing_customer_groups:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_customer_groups_context
                 - sylius.behat.context.cli.installer
@@ -97,7 +97,7 @@ default:
                 tags: "@managing_customer_groups && @cli_importer"
 
         cli_managing_tax_categories:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.transform.shared_storage
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_tax_categories_context
@@ -108,7 +108,7 @@ default:
                 tags: "@managing_tax_categories && @cli_importer_exporter"
 
         cli_managing_payment_methods:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_payment_methods_context
                 - sylius.behat.context.cli.installer
@@ -116,7 +116,7 @@ default:
                 tags: "@managing_payment_methods && @cli_importer"
 
         cli_managing_orders:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_orders_context
                 - sylius.behat.context.cli.installer
@@ -124,7 +124,7 @@ default:
                 tags: "@managing_orders && @cli_importer_exporter"
 
         cli_managing_customers:
-            contexts_services:
+            contexts:
                 - sylius.behat.context.hook.doctrine_orm
                 - test.behat.context.cli_customers_context
                 - sylius.behat.context.cli.installer

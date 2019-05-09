@@ -10,5 +10,8 @@
 
 /tests/Application/yarn.lock
 
+/behat.yml
+/phpspec.yml
+
 /tests/Behat/Resources/fixtures/export/*
 !/tests/Behat/Resources/fixtures/export/.gitkeep

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page;
 
+use ArrayAccess;
 use Behat\Mink\Session;
 use Sylius\Behat\Page\Admin\Crud\IndexPage;
 use Sylius\Behat\Service\Accessor\TableAccessorInterface;
@@ -16,7 +17,7 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
 
     public function __construct(
         Session $session,
-        array $parameters,
+        ArrayAccess $parameters,
         RouterInterface $router,
         TableAccessorInterface $tableAccessor,
         string $routeName,
