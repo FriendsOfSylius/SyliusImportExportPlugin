@@ -6,6 +6,7 @@
     </parameters>
     <services>
         <defaults public="true" />
+
         <service id="test.behat.context.notification_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\NotificationContext">
             <argument type="service" id="sylius.behat.notification_checker"/>
         </service>
