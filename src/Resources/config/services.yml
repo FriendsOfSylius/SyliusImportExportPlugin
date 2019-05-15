@@ -35,7 +35,6 @@ services:
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
             - "@sylius.repository.order"
-            - "@doctrine.orm.entity_manager"
             - "%sylius.resources%"
         tags: ['controller.service_arguments']
 
@@ -47,7 +46,17 @@ services:
             - "@sylius.resource_controller.request_configuration_factory"
             - "@sylius.resource_controller.resources_collection_provider"
             - "@sylius.repository.customer"
-            - "@doctrine.orm.entity_manager"
+            - "%sylius.resources%"
+        tags: ['controller.service_arguments']
+
+    sylius.controller.export_data_product:
+        public: true
+        class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
+        arguments:
+            - "@sylius.exporters_registry"
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_controller.resources_collection_provider"
+            - "@sylius.repository.product"
             - "%sylius.resources%"
         tags: ['controller.service_arguments']
 
