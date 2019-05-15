@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "sylius/sylius": "~1.4.0",
+        "sylius/sylius": "^1.4",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^3.3 | ^4.1",
         "queue-interop/queue-interop": "^0.6.2"
