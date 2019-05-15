@@ -9,7 +9,7 @@
         <testsuite name="SyliusImportExportPlugin Test Suite">
             <directory>tests</directory>
         </testsuite>
-        <env name="APP_ENV" value="test"/>
+        <server name="APP_ENV" value="test"/>
         <env name="SHELL_VERBOSITY" value="-1" />
     </testsuites>
 
