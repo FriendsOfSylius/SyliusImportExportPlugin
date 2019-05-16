@@ -120,19 +120,25 @@ final class ProductProcessor implements ResourceProcessorInterface
     private function setAttributesData(ProductInterface $product, array $data): void
     {
         foreach ($this->attrCode as $attrCode) {
+            $attributeValue = $product->getAttributeByCodeAndLocale($attrCode);
+
             if (empty($data[$attrCode])) {
+                if ($attributeValue !== null) {
+                    $product->removeAttribute($attributeValue);
+                }
+
                 continue;
             }
 
-            if ($product->getAttributeByCodeAndLocale($attrCode) !== null) {
+            if ($attributeValue !== null) {
                 if (null !== $this->transformerPool) {
                     $data[$attrCode] = $this->transformerPool->handle(
-                        $product->getAttributeByCodeAndLocale($attrCode)->getType(),
+                        $attributeValue->getType(),
                         $data[$attrCode]
                     );
                 }
 
-                $product->getAttributeByCodeAndLocale($attrCode)->setValue($data[$attrCode]);
+                $attributeValue->setValue($data[$attrCode]);
 
                 continue;
             }
