@@ -57,6 +57,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
     {
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
+        /** @var ResourceInterface $resource */
         $resource = $this->getResource($data);
 
         foreach ($this->headerKeys as $headerKey) {
