@@ -12,42 +12,30 @@ cache:
 
 env:
     global:
+        - APP_ENV=test
         - SYLIUS_CACHE_DIR=$HOME/.sylius-cache
         - SYLIUS_BUILD_DIR=etc/build
 
 matrix:
     include:
-        # Sylius 1.3
+        # Sylius 1.4
+        -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.4.* symfony/symfony:4.2.*"
         -
             php: 7.3
             env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.3.* symfony/symfony:4.1.*"
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.4.* symfony/symfony:4.2.*"
+        # Sylius 1.5
         -
             php: 7.2
             env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.3.* symfony/symfony:4.1.*"
-        # Sylius 1.2
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.5.* symfony/symfony:4.2.*"
         -
-            php: 7.2
+            php: 7.3
             env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:4.1.*"
-        -
-            php: 7.2
-            env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
-        -
-            php: 7.1
-            env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.2.* symfony/symfony:3.4.*"
-        # Sylius 1.1
-        -
-            php: 7.2
-            env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
-        -
-            php: 7.1
-            env:
-                - DEPENDENCY_VERSIONS="sylius/sylius:1.1.* symfony/symfony:3.4.*"
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.5.* symfony/symfony:4.2.*"
 
 before_install:
     - phpenv config-rm xdebug.ini
@@ -60,11 +48,11 @@ install:
     - (cd tests/Application && yarn install)
 
 before_script:
-    - (cd tests/Application && bin/console doctrine:database:create --env=test -vvv)
-    - (cd tests/Application && bin/console doctrine:schema:create --env=test -vvv)
-    - (cd tests/Application && bin/console assets:install web --env=test -vvv)
-    - (cd tests/Application && bin/console cache:warmup --env=dev -vvv)
-    - (cd tests/Application && yarn run gulp)
+    - (cd tests/Application && bin/console doctrine:database:create -vvv)
+    - (cd tests/Application && bin/console doctrine:schema:create -vvv)
+    - (cd tests/Application && bin/console assets:install public -vvv)
+    - (cd tests/Application && bin/console cache:warmup -vvv)
+    - (cd tests/Application && yarn build)
 
     # Configure display
     - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1680x1050x16
@@ -93,16 +81,15 @@ before_script:
     - java -Dwebdriver.chrome.driver=$SYLIUS_CACHE_DIR/chromedriver -jar $SYLIUS_CACHE_DIR/selenium.jar > /dev/null 2>&1 &
 
     # Run webserver
-    - (cd tests/Application && bin/console server:run 127.0.0.1:8080 -d web --env=test --quiet > /dev/null 2>&1 &)
+    - (cd tests/Application && bin/console server:run 127.0.0.1:8080 --quiet > /dev/null 2>&1 &)
 
 script:
     - composer validate --strict
     - composer analyse
-    - bin/phpstan analyse -c phpstan.neon -l max src/
-    - bin/ecs check src/ spec/ tests/Behat/
 
+    - bin/phpunit
     - bin/phpspec run
-    - bin/behat features/ --strict -vvv --no-interaction || bin/behat features/ --strict -vvv --no-interaction --rerun
+    - bin/behat --strict -vvv --no-interaction features/ || vendor/bin/behat --strict -vvv --no-interaction --rerun features/
 
 after_failure:
     - vendor/lakion/mink-debug-extension/travis/tools/upload-textfiles "${SYLIUS_BUILD_DIR}/*.log"

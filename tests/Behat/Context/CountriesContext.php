@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
+use ArrayAccess;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ResponseTextException;
@@ -26,7 +27,7 @@ final class CountriesContext extends SymfonyPage implements Context
         ResourceIndexPageInterface $countryIndexPage,
         CountryContext $countryContext,
         Session $session,
-        array $parameters,
+        ArrayAccess $parameters,
         RouterInterface $router
     ) {
         $this->countryIndexPage = $countryIndexPage;
