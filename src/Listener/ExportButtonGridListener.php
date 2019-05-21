@@ -89,10 +89,12 @@ final class ExportButtonGridListener
             $parameters['criteria'] = $currentRequest->query->get('criteria');
         }
 
+        [$domaine, $ressource] = \explode('.', $this->resource);
+
         return [
             'label' => 'fos.import_export.ui.types.' . $format,
             'icon' => 'file archive',
-            'route' => 'app_export_data',
+            'route' => 'app_export_data_' . $ressource,
             'parameters' => $parameters,
         ];
     }

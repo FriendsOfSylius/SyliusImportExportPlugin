@@ -35,8 +35,3 @@ app_export_data_customer:
         _sylius:
             filterable: true
             grid: sylius_admin_customer
-
-## Backup route
-app_export_data:
-    path: /export/{resource}/{format}
-    methods: [GET]
