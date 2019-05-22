@@ -92,6 +92,10 @@ final class RegisterExporterPass implements CompilerPassInterface
             return;
         }
 
+        if (!$container->has($this->getControllerName($type))) {
+            return;
+        }
+
         $container
             ->register(
                 $eventHookName,
@@ -117,5 +121,14 @@ final class RegisterExporterPass implements CompilerPassInterface
         }
 
         return 'sylius.grid.admin_' . $type;
+    }
+
+    private function getControllerName(string $type): string
+    {
+        if (strpos($type, '.') !== false) {
+            $type = substr($type, strpos($type, '.') + 1);
+        }
+
+        return 'sylius.controller.export_data_' . $type;
     }
 }

@@ -7,7 +7,7 @@ app_import_data:
 
 ## Export routes for specific settings
 app_export_data_country:
-    path: /export/{resource_country}/{format}
+    path: /export/sylius.country/{format}
     methods: [GET]
     defaults:
         resource: sylius.country
@@ -17,7 +17,7 @@ app_export_data_country:
             grid: sylius_admin_country
 
 app_export_data_order:
-    path: /export/{resource_order}/{format}
+    path: /export/sylius.order/{format}
     methods: [GET]
     defaults:
         resource: sylius.order
@@ -27,7 +27,7 @@ app_export_data_order:
             grid: sylius_admin_order
 
 app_export_data_customer:
-    path: /export/{resource_customer}/{format}
+    path: /export/sylius.customer/{format}
     methods: [GET]
     defaults:
         resource: sylius.customer
