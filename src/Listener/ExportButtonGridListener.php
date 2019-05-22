@@ -91,7 +91,7 @@ final class ExportButtonGridListener
 
         $ressource = $this->resource;
 
-        $explode = \explode('.', $this->resource);
+        $explode = explode('.', $this->resource);
         if (\is_array($explode) && !empty($explode)) {
             $ressource = \end($explode);
         }
