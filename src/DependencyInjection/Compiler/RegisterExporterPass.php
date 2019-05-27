@@ -129,6 +129,6 @@ final class RegisterExporterPass implements CompilerPassInterface
             $type = substr($type, strpos($type, '.') + 1);
         }
 
-        return 'sylius.controller.export_data_' . $type;
+        return \sprintf('sylius.controller.export_data_%s', $type);
     }
 }

@@ -99,7 +99,7 @@ final class ExportButtonGridListener
         return [
             'label' => 'fos.import_export.ui.types.' . $format,
             'icon' => 'file archive',
-            'route' => 'app_export_data_' . $ressource,
+            'route' => \sprintf('app_export_data_%s', $ressource),
             'parameters' => $parameters,
         ];
     }

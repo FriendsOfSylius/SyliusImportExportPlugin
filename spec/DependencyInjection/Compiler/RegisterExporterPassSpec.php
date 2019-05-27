@@ -46,11 +46,13 @@ class RegisterExporterPassSpec extends ObjectBehavior
         ]);
 
         $container->getParameter('sylius.exporter.web_ui')->willReturn(true);
-        $container->has('app.grid_event_listener.admin.crud_' . $exporterType . '_' . $exporterFormat . '_export')->willReturn(false);
-        $container->has('sylius.controller.export_data_' . $exporterType)->willReturn(false);
+
+        $parameterName = \sprintf('app.grid_event_listener.admin.crud_%s_%s_export', $exporterType, $exporterFormat);
+        $container->has($parameterName)->willReturn(false);
+        $container->has(\sprintf('sylius.controller.export_data_%s', $exporterType))->willReturn(false);
 
         $container->register(
-            'app.grid_event_listener.admin.crud_' . $exporterType . '_' . $exporterFormat . '_export',
+            $parameterName,
             ExportButtonGridListener::class
         )->willReturn($blockEventDefinition);
 
@@ -63,7 +65,7 @@ class RegisterExporterPassSpec extends ObjectBehavior
         }))->willReturn($blockEventDefinition);
         $blockEventDefinition->addTag('kernel.event_listener',
             [
-                'event' => 'sylius.grid.admin_' . $exporterType,
+                'event' => \sprintf('sylius.grid.admin_%s', $exporterType),
                 'method' => 'onSyliusGridAdmin',
             ])->willReturn($blockEventDefinition);
 
