@@ -13,6 +13,5 @@ Feature: Export Products from grid
     When I open the product admin index page
     And I should see 1 products in the list
     Then I go to "/admin/export/sylius.product/csv" homepage
-    And response should contain "Code,Name,Description,Short_description,Meta_description,Meta_keywords,Main_taxon"
-    And response should contain '123456,"Product 1","Description 1","Short description 1","Meta description 1","Meta keywords 1",'
-    And response should contain '222333,"Product 2","Description 2","Short description 2","Meta description 2","Meta keywords 2",'
+    And response should contain "Code,Locale,Name,Description,Short_description,Meta_description,Meta_keywords,Main_taxon,Taxons,Channels,Enabled"
+    And response should contain 'T_SHIRT_COOL,en_US,"T-shirt cool",,,,,,,,1'

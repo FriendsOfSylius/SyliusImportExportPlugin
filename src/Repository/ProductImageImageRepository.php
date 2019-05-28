@@ -12,6 +12,7 @@ final class ProductImageImageRepository extends EntityRepository implements Prod
     {
         return $this->createQueryBuilder('p')
             ->groupBy('p.type')
+            ->addGroupBy('p.id')
             ->getQuery()
             ->getArrayResult();
     }
