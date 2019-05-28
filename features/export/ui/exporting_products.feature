@@ -6,13 +6,12 @@ Feature: Export Products from grid
 
   Background:
     Given I am logged in as an administrator
+    And the store has a product "T-shirt cool"
 
   @ui
   Scenario: Exporting products should export all of them
     When I open the product admin index page
-    And I import product data from "products.csv" csv file
-    Then I should see a notification that the import was successful
-    And I should see 2 products in the list
+    And I should see 1 products in the list
     Then I go to "/admin/export/sylius.product/csv" homepage
     And response should contain "Code,Name,Description,Short_description,Meta_description,Meta_keywords,Main_taxon"
     And response should contain '123456,"Product 1","Description 1","Short description 1","Meta description 1","Meta keywords 1",'

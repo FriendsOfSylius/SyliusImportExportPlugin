@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context;
 
+use ArrayAccess;
 use Behat\Behat\Context\Context;
 use Behat\Mink\Exception\ElementNotFoundException;
 use Behat\Mink\Exception\ResponseTextException;
@@ -25,7 +26,7 @@ final class ProductsContext extends SymfonyPage implements Context
         ResourceIndexPageInterface $productIndexPage,
         ProductContext $productContext,
         Session $session,
-        array $parameters,
+        ArrayAccess $parameters,
         RouterInterface $router
     ) {
         $this->productIndexPage = $productIndexPage;
