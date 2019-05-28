@@ -119,6 +119,11 @@ services:
         tags:
             - { name: sylius.importer_transformer }
 
+    sylius.importers_transformer_boolean:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler\StringToBooleanHandler
+        tags:
+            - { name: sylius.importer_transformer }
+
     sylius.importers_transformer_integer:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\Handler\StringToIntegerHandler
         tags:
@@ -237,8 +242,9 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ProductPluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.products"]
-            - ['Code', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon']
+            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled']
             - "@sylius.service.attributes_code"
+            - "@sylius.service.product_image_code"
 
     # Service for gathering Information about Import
     sylius.importer.result:
@@ -260,6 +266,11 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProvider
         arguments:
             - "@sylius.repository.product_attribute"
+
+    sylius.service.product_image_code:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider
+        arguments:
+            - "@sylius.repository.product_image"
 
     # generic ResourceProcessors, which can work with just Property-Accessors
     sylius.processor.countries:
@@ -324,7 +335,24 @@ services:
             - "@sylius.repository.product_attribute"
             - "@sylius.service.attributes_code"
             - "@sylius.factory.product_attribute_value"
+            - "@sylius.repository.channel"
+            - '@sylius.factory.product_taxon'
+            - '@sylius.factory.product_image'
+            - '@sylius.repository.product_taxon'
+            - '@sylius.repository.product_image'
+            - '@sylius.service.product_image_code'
             - "@sylius.generator.slug"
             - "@sylius.importers_transformer_pool"
             - "@doctrine.orm.entity_manager"
-            - ['Code', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon']
+            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled']
+
+    sylius.class_metadata.product_image:
+        class: Doctrine\ORM\Mapping\ClassMetadata
+        factory:   'doctrine.orm.default_entity_manager:getClassMetadata'
+        arguments: ['Sylius\Component\Core\Model\ProductImage']
+
+    sylius.repository.product_image:
+        class: FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageImageRepository
+        arguments:
+            - '@doctrine.orm.default_entity_manager'
+            - '@sylius.class_metadata.product_image'

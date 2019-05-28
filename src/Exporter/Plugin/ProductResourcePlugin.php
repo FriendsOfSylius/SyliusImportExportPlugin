@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
+use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 
 final class ProductResourcePlugin extends ResourcePlugin
@@ -21,6 +23,8 @@ final class ProductResourcePlugin extends ResourcePlugin
             $this->addTranslationData($resource);
             $this->addTaxonData($resource);
             $this->addAttributeData($resource);
+            $this->addChannelData($resource);
+            $this->addImageData($resource);
         }
     }
 
@@ -28,6 +32,7 @@ final class ProductResourcePlugin extends ResourcePlugin
     {
         $translation = $resource->getTranslation();
 
+        $this->addDataForResource($resource, 'Locale', $translation->getLocale());
         $this->addDataForResource($resource, 'Name', $translation->getName());
         $this->addDataForResource($resource, 'Description', $translation->getDescription());
         $this->addDataForResource($resource, 'Short_description', $translation->getShortDescription());
@@ -37,15 +42,39 @@ final class ProductResourcePlugin extends ResourcePlugin
 
     private function addTaxonData(ProductInterface $resource): void
     {
-        $taxonSlug = '';
+        $mainTaxonSlug = '';
 
         /** @var \Sylius\Component\Core\Model\TaxonInterface $taxon */
-        $taxon = $resource->getMainTaxon();
-        if (null !== $taxon) {
-            $taxonSlug = $taxon->getSlug();
+        $mainTaxon = $resource->getMainTaxon();
+        if (null !== $mainTaxon) {
+            $mainTaxonSlug = $mainTaxon->getCode();
         }
 
-        $this->addDataForResource($resource, 'Main_taxon', $taxonSlug);
+        $this->addDataForResource($resource, 'Main_taxon', $mainTaxonSlug);
+
+        $taxonsSlug = '';
+        $taxons = $resource->getTaxons();
+        foreach ($taxons as $taxon) {
+            $taxonsSlug .= $taxon->getCode() . '|';
+        }
+
+        $taxonsSlug = \rtrim($taxonsSlug, '|');
+        $this->addDataForResource($resource, 'Taxons', $taxonsSlug);
+    }
+
+    private function addChannelData(ProductInterface $resource): void
+    {
+        $channelSlug = '';
+
+        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channel */
+        $channels = $resource->getChannels();
+        foreach ($channels as $channel) {
+            $channelSlug .= $channel->getCode() . '|';
+        }
+
+        $channelSlug = \rtrim($channelSlug, '|');
+
+        $this->addDataForResource($resource, 'Channels', $channelSlug);
     }
 
     private function addAttributeData(ProductInterface $resource): void
@@ -55,6 +84,16 @@ final class ProductResourcePlugin extends ResourcePlugin
         /** @var AttributeValueInterface $attribute */
         foreach ($attributes as $attribute) {
             $this->addDataForResource($resource, $attribute->getCode(), $attribute->getValue());
+        }
+    }
+
+    private function addImageData(ProductInterface $resource)
+    {
+        $images = $resource->getImages();
+
+        /** @var ImageInterface $image */
+        foreach ($images as $image) {
+            $this->addDataForResource($resource, ImageTypesProvider::IMAGES_PREFIX . $image->getType(), $image->getPath());
         }
     }
 }

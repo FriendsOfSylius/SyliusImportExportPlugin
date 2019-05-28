@@ -11,7 +11,7 @@ default:
 
         Behat\MinkExtension:
             files_path: "%paths.base%/vendor/sylius/sylius/src/Sylius/Behat/Resources/fixtures/"
-            base_url: "http://localhost:8080/"
+            base_url: "https://toupargel.oan.host.synosaas.com/"
             default_session: symfony
             javascript_session: chrome
             sessions:
