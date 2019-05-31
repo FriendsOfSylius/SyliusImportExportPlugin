@@ -159,7 +159,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->addTaxonToProduct($product, $data['Main_taxon']);
     }
 
-    private function setTaxons(ProductInterface $product, array $data)
+    private function setTaxons(ProductInterface $product, array $data): void
     {
         $taxonCodes = \explode('|', $data['Taxons']);
         foreach ($taxonCodes as $taxonCode) {
@@ -230,7 +230,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->manager->persist($attr);
     }
 
-    private function setChannel(ProductInterface $product, array $data)
+    private function setChannel(ProductInterface $product, array $data): void
     {
         $channels = \explode('|', $data['Channels']);
         foreach ($channels as $channelCode) {
@@ -265,7 +265,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->addProductTaxon($productTaxon);
     }
 
-    private function setImage(ProductInterface $product, array $data)
+    private function setImage(ProductInterface $product, array $data): void
     {
         $productImageCodes = $this->imageTypesProvider->getProductImagesCodesList(false);
         foreach ($productImageCodes as $imageType) {

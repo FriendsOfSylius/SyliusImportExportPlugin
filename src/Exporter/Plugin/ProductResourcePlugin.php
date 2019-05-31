@@ -87,7 +87,7 @@ final class ProductResourcePlugin extends ResourcePlugin
         }
     }
 
-    private function addImageData(ProductInterface $resource)
+    private function addImageData(ProductInterface $resource): void
     {
         $images = $resource->getImages();
 
