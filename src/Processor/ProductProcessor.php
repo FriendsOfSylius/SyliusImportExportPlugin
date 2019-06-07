@@ -202,12 +202,12 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setCurrentLocale($data['Locale']);
         $product->setFallbackLocale($data['Locale']);
 
-        $product->setName($data['Name']);
+        $product->setName(substr($data['Name'], 0, 255));
         $product->setEnabled((bool) $data['Enabled']);
         $product->setDescription($data['Description']);
-        $product->setShortDescription($data['Short_description']);
-        $product->setMetaDescription($data['Meta_description']);
-        $product->setMetaKeywords($data['Meta_keywords']);
+        $product->setShortDescription(substr($data['Short_description'], 0, 255));
+        $product->setMetaDescription(substr($data['Meta_description'], 0, 255));
+        $product->setMetaKeywords(substr($data['Meta_keywords'], 0, 255));
         $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
     }
 
