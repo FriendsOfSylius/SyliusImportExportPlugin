@@ -11,9 +11,11 @@ use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInter
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductTaxonRepository;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductTaxonInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
 use Sylius\Component\Core\Model\Taxon;
 use Sylius\Component\Core\Repository\ProductRepositoryInterface;
 use Sylius\Component\Product\Factory\ProductFactoryInterface;
@@ -28,6 +30,8 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    /** @var FactoryInterface */
+    private $channelPricingFactory;
     /** @var ChannelRepositoryInterface */
     private $channelRepository;
     /** @var FactoryInterface */
@@ -68,6 +72,10 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $attributeCodesProvider;
     /** @var SlugGeneratorInterface */
     private $slugGenerator;
+    /** @var FactoryInterface */
+    private $productVariantFactory;
+    /** @var RepositoryInterface */
+    private $productVariantRepository;
 
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -82,8 +90,11 @@ final class ProductProcessor implements ResourceProcessorInterface
         ChannelRepositoryInterface $channelRepository,
         FactoryInterface $productTaxonFactory,
         FactoryInterface $productImageFactory,
+        FactoryInterface $productVariantFactory,
+        FactoryInterface $channelPricingFactory,
         ProductTaxonRepository $productTaxonRepository,
         ProductImageRepositoryInterface $productImageRepository,
+        RepositoryInterface $productVariantRepository,
         ImageTypesProvider $imageTypesProvider,
         SlugGeneratorInterface $slugGenerator,
         ?TransformerPoolInterface $transformerPool,
@@ -109,6 +120,9 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productImageFactory = $productImageFactory;
         $this->productImageRepository = $productImageRepository;
         $this->imageTypesProvider = $imageTypesProvider;
+        $this->productVariantFactory = $productVariantFactory;
+        $this->productVariantRepository = $productVariantRepository;
+        $this->channelPricingFactory = $channelPricingFactory;
     }
 
     /**
@@ -123,6 +137,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product = $this->getProduct($data['Code']);
 
         $this->setDetails($product, $data);
+        $this->setVariant($product, $data);
         $this->setAttributesData($product, $data);
         $this->setMainTaxon($product, $data);
         $this->setTaxons($product, $data);
@@ -145,6 +160,18 @@ final class ProductProcessor implements ResourceProcessorInterface
         return $product;
     }
 
+    private function getProductVariant(string $code): ProductVariantInterface
+    {
+        /** @var ProductVariantInterface|null $productVariant */
+        $productVariant = $this->productVariantRepository->findOneBy(['code' => $code]);
+        if ($productVariant === null) {
+            /** @var ProductVariantInterface $productVariant */
+            $productVariant = $this->productVariantFactory->createNew();
+            $productVariant->setCode($code);
+        }
+        return $productVariant;
+    }
+
     private function setMainTaxon(ProductInterface $product, array $data): void
     {
         /** @var Taxon|null $taxon */
@@ -163,7 +190,9 @@ final class ProductProcessor implements ResourceProcessorInterface
     {
         $taxonCodes = \explode('|', $data['Taxons']);
         foreach ($taxonCodes as $taxonCode) {
-            $this->addTaxonToProduct($product, $taxonCode);
+            if ($taxonCode !== $data['Main_taxon']) {
+                $this->addTaxonToProduct($product, $taxonCode);
+            }
         }
     }
 
@@ -209,6 +238,26 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setMetaDescription(substr($data['Meta_description'], 0, 255));
         $product->setMetaKeywords(substr($data['Meta_keywords'], 0, 255));
         $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
+    }
+
+    private function setVariant(ProductInterface $product, array $data): void
+    {
+        $productVariant = $this->getProductVariant($product->getCode());
+        $productVariant->setCurrentLocale($data['Locale']);
+        $productVariant->setCurrentLocale($data['Locale']);
+        $productVariant->setName(substr($data['Name'], 0, 255));
+
+        $channels = \explode('|', $data['Channels']);
+        foreach ($channels as $channelCode) {
+            /** @var ChannelPricingInterface $channelPricing */
+            $channelPricing = $this->channelPricingFactory->createNew();
+            $channelPricing->setChannelCode($channelCode);
+            $channelPricing->setPrice((int) $data['Price']);
+            $channelPricing->setOriginalPrice((int) $data['Price']);
+            $productVariant->addChannelPricing($channelPricing);
+        }
+
+        $product->addVariant($productVariant);
     }
 
     private function setAttributeValue(ProductInterface $product, array $data, string $attrCode): void

@@ -242,7 +242,7 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ProductPluginPool
         arguments:
             - ["@sylius.exporter.plugin.resource.products"]
-            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled']
+            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled', 'Price']
             - "@sylius.service.attributes_code"
             - "@sylius.service.product_image_code"
 
@@ -338,13 +338,16 @@ services:
             - "@sylius.repository.channel"
             - '@sylius.factory.product_taxon'
             - '@sylius.factory.product_image'
+            - '@sylius.factory.product_variant'
+            - '@sylius.factory.channel_pricing'
             - '@sylius.repository.product_taxon'
             - '@sylius.repository.product_image'
+            - '@sylius.repository.product_variant'
             - '@sylius.service.product_image_code'
             - "@sylius.generator.slug"
             - "@sylius.importers_transformer_pool"
             - "@doctrine.orm.entity_manager"
-            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled']
+            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled', 'Price']
 
     sylius.class_metadata.product_image:
         class: Doctrine\ORM\Mapping\ClassMetadata

@@ -55,7 +55,7 @@ services:
         arguments:
             - "@sylius.exporter.csv_writer"
             - "@sylius.exporter.pluginpool.products"
-            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled']
+            - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled', 'Price']
             - "@sylius.service.attributes_code"
             - "@sylius.service.product_image_code"
             - "@sylius.exporters_transformer_pool"
