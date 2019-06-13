@@ -169,6 +169,7 @@ final class ProductProcessor implements ResourceProcessorInterface
             $productVariant = $this->productVariantFactory->createNew();
             $productVariant->setCode($code);
         }
+
         return $productVariant;
     }
 

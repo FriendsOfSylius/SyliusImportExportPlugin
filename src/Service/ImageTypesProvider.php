@@ -18,32 +18,44 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
         $this->productImageRepository = $productImageRepository;
     }
 
-    public function getProductImagesCodesList(?bool $prefix = true): array
+    public function getProductImagesCodesList(): array
+    {
+        return $this->extractProductImagesType();
+    }
+
+    public function getProductImagesCodesWithPrefixList(): array
+    {
+        return $this->extractProductImagesType(self::IMAGES_PREFIX);
+    }
+
+    public function extractImageTypeFromImport(array $keys): array
+    {
+        $keys = \array_filter($keys, function($value) {
+            return \mb_substr($value, 0, \mb_strlen(self::IMAGES_PREFIX)) === self::IMAGES_PREFIX;
+        });
+
+        $keys = \array_map(array(self::class, 'extractTypeOfImage'), $keys);
+
+        return $keys;
+    }
+
+    private function extractProductImagesType(string $prefix = ''): array
     {
         $attrSlug = [];
         $productImages = $this->productImageRepository->findTypes();
         foreach ($productImages as $attr) {
-            if (!empty($attr['type'])) {
-                if ($prefix) {
-                    $attrSlug[] = self::IMAGES_PREFIX . $attr['type'];
-                } else {
-                    $attrSlug[] = $attr['type'];
-                }
+            if (empty($attr['type'])) {
+                continue;
             }
+
+            $attrSlug[] = $prefix . $attr['type'];
         }
 
         return $attrSlug;
     }
 
-    public function extractImageTypeFromImport(array $keys): array
+    private function extractTypeOfImage(string $value): string
     {
-        $types = [];
-        foreach ($keys as $key) {
-            if (\mb_substr($key, 0, \mb_strlen(self::IMAGES_PREFIX)) === self::IMAGES_PREFIX) {
-                $types[] = \mb_substr($key, \mb_strlen(self::IMAGES_PREFIX));
-            }
-        }
-
-        return $types;
+        return \mb_substr($value, \mb_strlen(self::IMAGES_PREFIX));
     }
 }

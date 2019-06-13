@@ -6,5 +6,9 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Service;
 
 interface ImageTypesProviderInterface
 {
-    public function getProductImagesCodesList(?bool $prefix = true): array;
+    public function getProductImagesCodesList(): array;
+
+    public function getProductImagesCodesWithPrefixList(): array;
+
+    public function extractImageTypeFromImport(array $keys): array;
 }

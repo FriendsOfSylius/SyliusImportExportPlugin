@@ -122,17 +122,6 @@ final class ProductsContext extends SymfonyPage implements Context
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getDefinedElements(): array
-    {
-        return array_merge(parent::getDefinedElements(), [
-            'export_button_text' => '.buttons div.dropdown span.text',
-            'export_links' => '.buttons div.dropdown div.menu',
-        ]);
-    }
-
-    /**
      * @When I go to :hp homepage
      */
     public function goToSpecificHomepage(string $hp): void
@@ -154,5 +143,16 @@ final class ProductsContext extends SymfonyPage implements Context
         }
 
         throw new ResponseTextException(sprintf("Response '%s' does not contain: '%s'", $responseText, $text), $this->getDriver());
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function getDefinedElements(): array
+    {
+        return array_merge(parent::getDefinedElements(), [
+            'export_button_text' => '.buttons div.dropdown span.text',
+            'export_links' => '.buttons div.dropdown div.menu',
+        ]);
     }
 }
