@@ -88,10 +88,17 @@ final class ImportDataController
         $file = $form->get('import-data')->getData();
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
+
+        if (null === $file) {
+            throw new ImporterException('No file selected');
+        }
+
         $path = $file->getRealPath();
+
         if (false === $path) {
             throw new ImporterException(sprintf('File %s could not be loaded', $file->getClientOriginalName()));
         }
+
         $result = $service->import($path);
 
         $message = sprintf(
@@ -104,5 +111,9 @@ final class ImportDataController
         );
 
         $this->flashBag->add('success', $message);
+
+        if ($result->getMessage() !== null) {
+            $this->flashBag->add('error', $result->getMessage());
+        }
     }
 }

@@ -35,3 +35,13 @@ app_export_data_customer:
         _sylius:
             filterable: true
             grid: sylius_admin_customer
+
+app_export_data_product:
+    path: /export/sylius.product/{format}
+    methods: [GET]
+    defaults:
+        resource: sylius.product
+        _controller: sylius.controller.export_data_product:exportAction
+        _sylius:
+            filterable: true
+            grid: sylius_admin_product

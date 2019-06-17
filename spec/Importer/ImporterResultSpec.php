@@ -6,14 +6,15 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult;
 use PhpSpec\ObjectBehavior;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
 class ImporterResultSpec extends ObjectBehavior
 {
-    function let(Stopwatch $stopwatch)
+    function let(Stopwatch $stopwatch, LoggerInterface $logger)
     {
-        $this->beConstructedWith($stopwatch);
+        $this->beConstructedWith($stopwatch, $logger);
     }
 
     function it_is_initializable()
