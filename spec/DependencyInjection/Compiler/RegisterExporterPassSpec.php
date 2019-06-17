@@ -29,7 +29,8 @@ class RegisterExporterPassSpec extends ObjectBehavior
         Definition $exporterRegistry,
         Definition $blockEventDefinition
     ) {
-        $exporterType = 'csv';
+        $exporterType = 'country';
+        $exporterFormat = 'csv';
 
         $container->has('sylius.exporters_registry')->willReturn(true);
 
@@ -39,29 +40,32 @@ class RegisterExporterPassSpec extends ObjectBehavior
             'exporter_id' => [
                 [
                     'type' => $exporterType,
-                    'format' => 'exporter_format',
+                    'format' => $exporterFormat,
                 ],
             ],
         ]);
 
         $container->getParameter('sylius.exporter.web_ui')->willReturn(true);
-        $container->has('app.grid_event_listener.admin.crud_csv_exporter_format_export')->willReturn(false);
+
+        $parameterName = \sprintf('app.grid_event_listener.admin.crud_%s_%s_export', $exporterType, $exporterFormat);
+        $container->has($parameterName)->willReturn(false);
+        $container->has(\sprintf('sylius.controller.export_data_%s', $exporterType))->willReturn(false);
 
         $container->register(
-            'app.grid_event_listener.admin.crud_csv_exporter_format_export',
+            $parameterName,
             ExportButtonGridListener::class
         )->willReturn($blockEventDefinition);
 
         $blockEventDefinition->setAutowired(false)->willReturn($blockEventDefinition);
 
-        $blockEventDefinition->addArgument(['exporter_format'])->willReturn($blockEventDefinition);
-        $blockEventDefinition->addArgument('csv')->willReturn($blockEventDefinition);
+        $blockEventDefinition->addArgument($exporterType)->willReturn($blockEventDefinition);
+        $blockEventDefinition->addArgument([$exporterFormat])->willReturn($blockEventDefinition);
         $blockEventDefinition->addMethodCall('setRequest', Argument::that(function ($input) {
             return is_array($input);
         }))->willReturn($blockEventDefinition);
         $blockEventDefinition->addTag('kernel.event_listener',
             [
-                'event' => 'sylius.grid.admin_csv',
+                'event' => \sprintf('sylius.grid.admin_%s', $exporterType),
                 'method' => 'onSyliusGridAdmin',
             ])->willReturn($blockEventDefinition);
 
