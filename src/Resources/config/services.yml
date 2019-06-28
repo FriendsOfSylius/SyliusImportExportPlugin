@@ -343,6 +343,7 @@ services:
             - '@sylius.repository.product_taxon'
             - '@sylius.repository.product_image'
             - '@sylius.repository.product_variant'
+            - '@sylius.repository.channel_pricing'
             - '@sylius.service.product_image_code'
             - "@sylius.generator.slug"
             - "@sylius.importers_transformer_pool"
