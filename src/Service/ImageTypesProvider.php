@@ -51,6 +51,8 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
             $attrSlug[] = $prefix . $attr['type'];
         }
 
+        $attrSlug = \array_unique($attrSlug);
+
         return $attrSlug;
     }
 
