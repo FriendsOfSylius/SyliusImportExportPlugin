@@ -30,6 +30,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    private $channelPricingRepository;
     /** @var FactoryInterface */
     private $channelPricingFactory;
     /** @var ChannelRepositoryInterface */
@@ -64,6 +65,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $headerKeys;
     /** @var array */
     private $attrCode;
+    /** @var array */
+    private $imageCode;
     /** @var RepositoryInterface */
     private $productAttributeRepository;
     /** @var FactoryInterface */
@@ -95,6 +98,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         ProductTaxonRepository $productTaxonRepository,
         ProductImageRepositoryInterface $productImageRepository,
         RepositoryInterface $productVariantRepository,
+        RepositoryInterface $channelPricingRepository,
         ImageTypesProvider $imageTypesProvider,
         SlugGeneratorInterface $slugGenerator,
         ?TransformerPoolInterface $transformerPool,
@@ -123,6 +127,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productVariantFactory = $productVariantFactory;
         $this->productVariantRepository = $productVariantRepository;
         $this->channelPricingFactory = $channelPricingFactory;
+        $this->channelPricingRepository = $channelPricingRepository;
     }
 
     /**
@@ -131,7 +136,10 @@ final class ProductProcessor implements ResourceProcessorInterface
     public function process(array $data): void
     {
         $this->attrCode = $this->attributeCodesProvider->getAttributeCodesList();
+        $this->imageCode = $this->imageTypesProvider->getProductImagesCodesList();
+
         $this->headerKeys = \array_merge($this->headerKeys, $this->attrCode);
+        $this->headerKeys = \array_merge($this->headerKeys, $this->imageCode);
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
         $product = $this->getProduct($data['Code']);
@@ -250,12 +258,20 @@ final class ProductProcessor implements ResourceProcessorInterface
 
         $channels = \explode('|', $data['Channels']);
         foreach ($channels as $channelCode) {
-            /** @var ChannelPricingInterface $channelPricing */
-            $channelPricing = $this->channelPricingFactory->createNew();
-            $channelPricing->setChannelCode($channelCode);
+            $channelPricing = $this->channelPricingRepository->findOneBy([
+                'channelCode' => $channelCode,
+                'productVariant' => $productVariant
+            ]);
+
+            if (null === $product) {
+                /** @var ChannelPricingInterface $channelPricing */
+                $channelPricing = $this->channelPricingFactory->createNew();
+                $channelPricing->setChannelCode($channelCode);
+                $productVariant->addChannelPricing($channelPricing);
+            }
+
             $channelPricing->setPrice((int) $data['Price']);
             $channelPricing->setOriginalPrice((int) $data['Price']);
-            $productVariant->addChannelPricing($channelPricing);
         }
 
         $product->addVariant($productVariant);
