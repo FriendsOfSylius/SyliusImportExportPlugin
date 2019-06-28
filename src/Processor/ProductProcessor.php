@@ -65,6 +65,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $headerKeys;
     /** @var array */
     private $attrCode;
+    /** @var array */
+    private $imageCode;
     /** @var RepositoryInterface */
     private $productAttributeRepository;
     /** @var FactoryInterface */
@@ -134,7 +136,10 @@ final class ProductProcessor implements ResourceProcessorInterface
     public function process(array $data): void
     {
         $this->attrCode = $this->attributeCodesProvider->getAttributeCodesList();
+        $this->imageCode = $this->imageTypesProvider->getProductImagesCodesList();
+
         $this->headerKeys = \array_merge($this->headerKeys, $this->attrCode);
+        $this->headerKeys = \array_merge($this->headerKeys, $this->imageCode);
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
         $product = $this->getProduct($data['Code']);
@@ -258,7 +263,7 @@ final class ProductProcessor implements ResourceProcessorInterface
                 'productVariant' => $productVariant
             ]);
 
-            if (null === $product) {
+            if (null === $channelPricing) {
                 /** @var ChannelPricingInterface $channelPricing */
                 $channelPricing = $this->channelPricingFactory->createNew();
                 $channelPricing->setChannelCode($channelCode);
