@@ -263,7 +263,7 @@ final class ProductProcessor implements ResourceProcessorInterface
                 'productVariant' => $productVariant
             ]);
 
-            if (null === $product) {
+            if (null === $channelPricing) {
                 /** @var ChannelPricingInterface $channelPricing */
                 $channelPricing = $this->channelPricingFactory->createNew();
                 $channelPricing->setChannelCode($channelCode);
