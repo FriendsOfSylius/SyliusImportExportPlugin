@@ -206,6 +206,8 @@ services:
             - "@sylius.repository.product"
             - "@property_accessor"
             - "@doctrine.orm.entity_manager"
+            - '@sylius.repository.channel_pricing'
+            - '@sylius.repository.product_variant'
 
     # ORM hydrators to improve performance
     sylius.exporter.orm.hydrator.orders:

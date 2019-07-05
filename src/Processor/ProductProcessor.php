@@ -30,6 +30,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    /** @var RepositoryInterface */
     private $channelPricingRepository;
     /** @var FactoryInterface */
     private $channelPricingFactory;

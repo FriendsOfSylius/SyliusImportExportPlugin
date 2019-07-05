@@ -4,13 +4,34 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 
+use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
+use Sylius\Component\Core\Model\ProductVariantInterface;
+use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductResourcePlugin extends ResourcePlugin
 {
+    /** @var RepositoryInterface */
+    private $channelPricingRepository;
+    /** @var RepositoryInterface */
+    private $productVariantRepository;
+
+    public function __construct(
+        RepositoryInterface $repository,
+        PropertyAccessorInterface $propertyAccessor,
+        EntityManagerInterface $entityManager,
+        RepositoryInterface $channelPricingRepository,
+        RepositoryInterface $productVariantRepository
+    ) {
+        parent::__construct($repository, $propertyAccessor, $entityManager);
+        $this->channelPricingRepository = $channelPricingRepository;
+        $this->productVariantRepository = $productVariantRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -25,6 +46,7 @@ final class ProductResourcePlugin extends ResourcePlugin
             $this->addAttributeData($resource);
             $this->addChannelData($resource);
             $this->addImageData($resource);
+            $this->addPriceData($resource);
         }
     }
 
@@ -94,6 +116,26 @@ final class ProductResourcePlugin extends ResourcePlugin
         /** @var ImageInterface $image */
         foreach ($images as $image) {
             $this->addDataForResource($resource, ImageTypesProvider::IMAGES_PREFIX . $image->getType(), $image->getPath());
+        }
+    }
+
+    private function addPriceData(ProductInterface $resource): void
+    {
+        /** @var ProductVariantInterface|null $productVariant */
+        $productVariant = $this->productVariantRepository->findOneBy(['code' => $resource->getCode()]);
+        if ($productVariant === null) {
+            return;
+        }
+
+        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channel */
+        $channels = $resource->getChannels();
+        foreach ($channels as $channel) {
+            $channelPricing = $this->channelPricingRepository->findOneBy([
+                'channelCode' => $channel->getCode(),
+                'productVariant' => $productVariant
+            ]);
+
+            $this->addDataForResource($resource, 'Price', $channelPricing->getPrice());
         }
     }
 }
