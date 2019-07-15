@@ -30,11 +30,11 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
 
     public function extractImageTypeFromImport(array $keys): array
     {
-        $keys = \array_filter($keys, function($value) {
+        $keys = \array_filter($keys, function ($value) {
             return \mb_substr($value, 0, \mb_strlen(self::IMAGES_PREFIX)) === self::IMAGES_PREFIX;
         });
 
-        $keys = \array_map(array(self::class, 'extractTypeOfImage'), $keys);
+        $keys = \array_map([self::class, 'extractTypeOfImage'], $keys);
 
         return $keys;
     }

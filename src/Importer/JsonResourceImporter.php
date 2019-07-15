@@ -13,7 +13,7 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
     public function __construct(
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
-        ImporterResultInterface $importerResult,
+        ImportResultLoggerInterface $importerResult,
         int $batchSize,
         bool $failOnIncomplete,
         bool $stopOnFailure

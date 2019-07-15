@@ -21,7 +21,7 @@ class ResourceImporter implements ImporterInterface
     /** @var ResourceProcessorInterface */
     protected $resourceProcessor;
 
-    /** @var ImporterResultInterface */
+    /** @var ImportResultLoggerInterface */
     protected $result;
 
     /** @var int */
@@ -40,7 +40,7 @@ class ResourceImporter implements ImporterInterface
         ReaderFactory $readerFactory,
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
-        ImporterResultInterface $importerResult,
+        ImportResultLoggerInterface $importerResult,
         int $batchSize,
         bool $failOnIncomplete,
         bool $stopOnFailure

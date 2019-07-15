@@ -9,6 +9,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoo
 use FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageRepositoryInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
+use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProviderInterface;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductTaxonRepository;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
@@ -44,7 +45,7 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productImageFactory;
     /** @var ProductImageRepositoryInterface */
     private $productImageRepository;
-    /** @var ImageTypesProvider */
+    /** @var ImageTypesProviderInterface */
     private $imageTypesProvider;
     /** @var \Doctrine\ORM\EntityManagerInterface */
     private $manager;
@@ -100,7 +101,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         ProductImageRepositoryInterface $productImageRepository,
         RepositoryInterface $productVariantRepository,
         RepositoryInterface $channelPricingRepository,
-        ImageTypesProvider $imageTypesProvider,
+        ImageTypesProviderInterface $imageTypesProvider,
         SlugGeneratorInterface $slugGenerator,
         ?TransformerPoolInterface $transformerPool,
         EntityManagerInterface $manager,
@@ -261,7 +262,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         foreach ($channels as $channelCode) {
             $channelPricing = $this->channelPricingRepository->findOneBy([
                 'channelCode' => $channelCode,
-                'productVariant' => $productVariant
+                'productVariant' => $productVariant,
             ]);
 
             if (null === $channelPricing) {
@@ -334,7 +335,7 @@ final class ProductProcessor implements ResourceProcessorInterface
 
     private function setImage(ProductInterface $product, array $data): void
     {
-        $productImageCodes = $this->imageTypesProvider->getProductImagesCodesList(false);
+        $productImageCodes = $this->imageTypesProvider->getProductImagesCodesList();
         foreach ($productImageCodes as $imageType) {
             /** @var ProductImageInterface $productImage */
             $productImageByType = $product->getImagesByType($imageType);

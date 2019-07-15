@@ -132,7 +132,7 @@ final class ProductResourcePlugin extends ResourcePlugin
         foreach ($channels as $channel) {
             $channelPricing = $this->channelPricingRepository->findOneBy([
                 'channelCode' => $channel->getCode(),
-                'productVariant' => $productVariant
+                'productVariant' => $productVariant,
             ]);
 
             $this->addDataForResource($resource, 'Price', $channelPricing->getPrice());

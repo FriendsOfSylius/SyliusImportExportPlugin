@@ -8,6 +8,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -84,7 +85,7 @@ final class ImportDataController
             $this->flashBag->add('error', $message);
         }
 
-        /** @var UploadedFile $file */
+        /** @var UploadedFile|null $file */
         $file = $form->get('import-data')->getData();
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
@@ -99,6 +100,7 @@ final class ImportDataController
             throw new ImporterException(sprintf('File %s could not be loaded', $file->getClientOriginalName()));
         }
 
+        /** @var ImporterResult $result */
         $result = $service->import($path);
 
         $message = sprintf(
