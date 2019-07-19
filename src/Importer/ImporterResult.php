@@ -8,7 +8,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\Component\Stopwatch\StopwatchEvent;
 
-final class ImporterResult implements ImporterResultInterface, ImportResultLoggerAwareInterface
+final class ImporterResult implements ImportResultLoggerInterface
 {
     /** @var \Psr\Log\LoggerInterface */
     private $logger;
