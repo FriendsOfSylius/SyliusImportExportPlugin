@@ -7,6 +7,7 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResultInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImportResultLoggerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 use PhpSpec\ObjectBehavior;
@@ -21,7 +22,7 @@ class ResourceImporterSpec extends ObjectBehavior
         ReaderFactory $readerFactory,
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
-        ImporterResultInterface $importerResult
+        ImportResultLoggerInterface $importerResult
     ) {
         $this->beConstructedWith($readerFactory, $objectManager, $resourceProcessor, $importerResult, false, false, false);
     }

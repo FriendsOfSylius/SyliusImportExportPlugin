@@ -6,6 +6,7 @@ namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResultInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImportResultLoggerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
@@ -17,7 +18,7 @@ class JsonResourceImporterSpec extends ObjectBehavior
     function let(
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
-        ImporterResultInterface $importerResult
+        ImportResultLoggerInterface $importerResult
     ) {
         $this->beConstructedWith($objectManager, $resourceProcessor, $importerResult, 0, false, false);
     }
