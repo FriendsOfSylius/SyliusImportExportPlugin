@@ -255,7 +255,6 @@ final class ProductProcessor implements ResourceProcessorInterface
     {
         $productVariant = $this->getProductVariant($product->getCode());
         $productVariant->setCurrentLocale($data['Locale']);
-        $productVariant->setCurrentLocale($data['Locale']);
         $productVariant->setName(substr($data['Name'], 0, 255));
 
         $channels = \explode('|', $data['Channels']);
