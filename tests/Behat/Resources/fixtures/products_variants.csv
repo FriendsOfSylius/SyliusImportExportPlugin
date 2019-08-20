@@ -1,0 +1,3 @@
+Product_id,Tax_category_id,Shipping_category_id,Position,Name,Locale
+123456,,,0,Product 1,en_GB
+123456,,,1,Produit 1,fr_FR
