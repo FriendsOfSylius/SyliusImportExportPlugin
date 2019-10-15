@@ -36,7 +36,10 @@ class ImportType extends AbstractType
                 'multiple' => false,
                 'required' => true,
             ])
-            ->add('import-data', FileType::class, ['required' => true])
+            ->add('import-data', FileType::class, [
+                'required' => true,
+                'block_name' => 'import_data',
+            ])
         ;
     }
 
