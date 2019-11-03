@@ -64,7 +64,11 @@ final class ImportDataController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->importData($importer, $form);
+            try {
+                $this->importData($importer, $form);
+            } catch (\Throwable $exception) {
+                $this->flashBag->add('error', $exception->getMessage());
+            }
         }
         $referer = $request->headers->get('referer');
 
@@ -82,7 +86,8 @@ final class ImportDataController
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->registry->has($name)) {
             $message = sprintf("No importer found of type '%s' for format '%s'", $importer, $format);
-            $this->flashBag->add('error', $message);
+
+            throw new ImporterException($message);
         }
 
         /** @var UploadedFile|null $file */
@@ -115,7 +120,7 @@ final class ImportDataController
         $this->flashBag->add('success', $message);
 
         if ($result->getMessage() !== null) {
-            $this->flashBag->add('error', $result->getMessage());
+            throw new ImporterException($result->getMessage());
         }
     }
 }

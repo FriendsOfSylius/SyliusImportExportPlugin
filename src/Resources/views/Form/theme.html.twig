@@ -1,0 +1,15 @@
+{% extends '@SyliusAdmin/Form/theme.html.twig' %}
+
+{% block _import_import_data_row %}
+    {% spaceless %}
+        <label for="{{ form.vars.id }}" class="ui icon labeled button">
+            <i class="cloud upload icon"></i> {{ 'sylius.ui.choose_file'|trans }}
+        </label>
+        <div class="ui hidden element">
+            {{ form_widget(form) }}
+        </div>
+        <div class="ui element">
+            {{- form_errors(form) -}}
+        </div>
+    {% endspaceless %}
+{% endblock %}
