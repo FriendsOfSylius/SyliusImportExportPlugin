@@ -90,6 +90,18 @@ class CliBaseContext implements Context
     }
 
     /**
+     * @When I import :importType data from file :fileName file with the cli-command
+     */
+    public function iImportFileWithTheCliCommand(string $importType, string $fileName)
+    {
+        $this->cliArguments = [$importType, $fileName];
+        $this->application->add(new ImportDataCommand($this->importerRegistry));
+        $this->command = $this->application->find('sylius:import');
+        $this->tester = new CommandTester($this->command);
+        $this->tester->execute(['command' => 'sylius:import', 'importer' => $importType, 'file' => $this->filePath . '/' . $fileName]);
+    }
+
+    /**
      * @Then I should see :messagePart in the output
      */
     public function iShouldSeeInTheMessage($messagePart)

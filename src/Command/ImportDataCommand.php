@@ -6,6 +6,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Command;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
+use SplFileInfo;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -36,8 +37,7 @@ final class ImportDataCommand extends Command
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
-                // @TODO try to guess the format from the file to make this optional
-                new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to import'),
+                new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the file to import'),
                 new InputOption('details', null, InputOption::VALUE_NONE,
                     'If to return details about skipped/failed rows'),
             ]);
@@ -56,14 +56,35 @@ final class ImportDataCommand extends Command
             return;
         }
 
+        $file = $input->getArgument('file');
         $format = $input->getOption('format');
+
+        if (null === $format) {
+            try {
+                $info = new SplFileInfo($file);
+                $format = $info->getExtension();
+                $message = sprintf(
+                    '<info>The %s format has been detected.</info>',
+                    $format
+                );
+                $output->writeln($message);
+            } catch (\Throwable $exception) {
+                $output->writeln("<error>Format can't be detected.</error>");
+
+                return;
+            } finally {
+                $output->writeln('You can set it manually by using --format parameter');
+            }
+        }
+
+        if (!\is_string($format)) {
+            return;
+        }
 
         $name = ImporterRegistry::buildServiceName($importer, $format);
         if (!$this->importerRegistry->has($name)) {
             $this->listImporters($input, $output, sprintf('There is no \'%s\' importer.', $name));
         }
-
-        $file = $input->getArgument('file');
 
         /** @var ImporterInterface $service */
         $service = $this->importerRegistry->get($name);
