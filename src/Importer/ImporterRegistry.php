@@ -12,6 +12,10 @@ class ImporterRegistry extends ServiceRegistry
 
     public static function buildServiceName(string $type, string $format): string
     {
+        if (strpos($type, '.') === false) {
+            $type = 'sylius.' . $type;
+        }
+
         return sprintf('%s.%s', $type, $format);
     }
 

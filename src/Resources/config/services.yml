@@ -10,6 +10,8 @@ services:
         public: true
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
+            - "@sylius.resource_controller.request_configuration_factory"
+            - "@sylius.resource_registry"
             - "@sylius.importers_registry"
             - "@session.flash_bag"
             - "@form.factory"

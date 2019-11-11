@@ -1,0 +1,34 @@
+{% form_theme form '@FOSSyliusImportExportPlugin/Form/theme.html.twig' %}
+
+{% set index_url = path(
+    configuration.vars.index.route.name|default(configuration.getRouteName('index')),
+    configuration.vars.index.route.parameters|default(configuration.vars.route.parameters|default({}))
+    )
+%}
+
+<div class="ui segment">
+    {{ form_start(form, {
+        'action': path('fos_sylius_import_export_import_data', {'resource': resource}),
+        'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}
+    }) }}
+
+    {% include '@SyliusAdmin/Crud/form_validation_errors_checker.html.twig' ignore missing %}
+    {% if configuration.vars.templates.form is defined %}
+        {% include configuration.vars.templates.form %}
+    {% else %}
+        <div class="ui segment">
+            {{ form_widget(form) }}
+        </div>
+    {% endif %}
+
+    {{ sonata_block_render_event(event_prefix ~ '.form', {'form': form}) }}
+
+    <div class="ui hidden divider"></div>
+    <div class="ui buttons">
+        <button class="ui labeled icon primary button" type="submit" id="import-data"><i class="plus icon"></i>{{ 'fos.import_export.ui.import'|trans }}</button>
+        <a href="{{ index_url|default(app.request.headers.get('referer')) }}" class="ui button">{{ 'sylius.ui.cancel'|trans }}</a>
+    </div>
+
+    {{ form_row(form._token) }}
+    {{ form_end(form, {'render_rest': false}) }}
+</div>

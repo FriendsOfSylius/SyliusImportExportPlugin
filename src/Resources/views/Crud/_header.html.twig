@@ -1,0 +1,10 @@
+{% import '@SyliusUi/Macro/headers.html.twig' as headers %}
+
+<div class="ui stackable two column grid">
+    <div class="column">
+        {{ headers.default(header|trans, 'plus') }}
+        {% include '@FOSSyliusImportExportPlugin/Crud/_breadcrumb.html.twig' %}
+
+        {{ sonata_block_render_event(event_prefix ~ '.header') }}
+    </div>
+</div>

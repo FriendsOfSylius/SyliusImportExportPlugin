@@ -8,7 +8,7 @@
     </div>
     <div class="content active">
         {{ form_start(form, {
-            'action': path('app_import_data',  {'resource': resource}),
+            'action': path('fos_sylius_import_export_import_data',  {'resource': resource}),
             'method': 'POST',
             'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}
         }) }}

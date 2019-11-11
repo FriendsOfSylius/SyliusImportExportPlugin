@@ -9,17 +9,24 @@ use FriendsOfSylius\SyliusImportExportPlugin\Form\ImportType;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResult;
+use Sylius\Bundle\ResourceBundle\Controller\RequestConfigurationFactoryInterface;
 use Sylius\Component\Registry\ServiceRegistryInterface;
+use Sylius\Component\Resource\Metadata\RegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Twig\Environment;
 
 final class ImportDataController
 {
+    /** @var RequestConfigurationFactoryInterface */
+    private $configurationFactory;
+
+    /** @var RegistryInterface */
+    private $resourceRegistry;
+
     /** @var FlashBagInterface */
     private $flashBag;
 
@@ -33,11 +40,15 @@ final class ImportDataController
     private $twig;
 
     public function __construct(
+        RequestConfigurationFactoryInterface $configurationFactory,
+        RegistryInterface $resourceRegistry,
         ServiceRegistryInterface $registry,
         FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
-        \Twig_Environment $twig
+        Environment $twig
     ) {
+        $this->configurationFactory = $configurationFactory;
+        $this->resourceRegistry = $resourceRegistry;
         $this->registry = $registry;
         $this->formFactory = $formFactory;
         $this->twig = $twig;
@@ -57,56 +68,51 @@ final class ImportDataController
         return new Response($content);
     }
 
-    public function importAction(Request $request): RedirectResponse
+    public function importAction(Request $request, string $resource): Response
     {
-        $importer = $request->attributes->get('resource');
-        $form = $this->getForm($importer);
+        $configuration = $this->configurationFactory->create($this->resourceRegistry->get($resource), $request);
+
+        $form = $this->formFactory->create(ImportType::class, null, ['importer_type' => $resource]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $this->importData($importer, $form);
+                $this->import(
+                    $resource,
+                    $form->get('format')->getData(),
+                    $form->get('file')->getData()
+                );
             } catch (\Throwable $exception) {
                 $this->flashBag->add('error', $exception->getMessage());
             }
         }
-        $referer = $request->headers->get('referer');
 
-        return new RedirectResponse($referer);
+        return new Response(
+            $this->twig->render(
+                '@FOSSyliusImportExportPlugin/import.html.twig',
+                [
+                    'form' => $form->createView(),
+                    'resource' => $resource,
+                    'configuration' => $configuration,
+                    'metadata' => $configuration->getMetadata(),
+                ]
+            )
+        );
     }
 
-    private function getForm(string $importerType): FormInterface
+    private function getForm(string $importerType)
     {
         return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType]);
     }
 
-    private function importData(string $importer, FormInterface $form): void
+    private function import(string $type, string $format, UploadedFile $file): void
     {
-        $format = $form->get('format')->getData();
-        $name = ImporterRegistry::buildServiceName($importer, $format);
-        if (!$this->registry->has($name)) {
-            $message = sprintf("No importer found of type '%s' for format '%s'", $importer, $format);
-
-            throw new ImporterException($message);
-        }
-
-        /** @var UploadedFile|null $file */
-        $file = $form->get('import-data')->getData();
+        $name = ImporterRegistry::buildServiceName($type, $format);
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
 
-        if (null === $file) {
-            throw new ImporterException('No file selected');
-        }
-
-        $path = $file->getRealPath();
-
-        if (false === $path) {
-            throw new ImporterException(sprintf('File %s could not be loaded', $file->getClientOriginalName()));
-        }
-
         /** @var ImporterResult $result */
-        $result = $service->import($path);
+        $result = $service->import($file->getRealPath());
 
         $message = sprintf(
             'Imported via %s importer (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',

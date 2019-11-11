@@ -10,7 +10,7 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: country, format: json }
+            - { name: sylius.importer, type: sylius.country, format: json }
 
     sylius.importer.customer_group.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
@@ -22,7 +22,7 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: customer_group, format: json }
+            - { name: sylius.importer, type: sylius.customer_group, format: json }
 
     sylius.importer.payment_methods.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
@@ -34,7 +34,7 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: payment_method, format: json }
+            - { name: sylius.importer, type: sylius.payment_method, format: json }
 
     sylius.importer.tax_categories.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
@@ -46,7 +46,7 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: tax_category, format: json }
+            - { name: sylius.importer, type: sylius.tax_category, format: json }
 
 
     sylius.importer.customers.json:
@@ -59,4 +59,4 @@ services:
             - "%sylius.importer.fail_on_incomplete%"
             - "%sylius.importer.stop_on_failure%"
         tags:
-            - { name: sylius.importer, type: customer, format: json }
+            - { name: sylius.importer, type: sylius.customer, format: json }
