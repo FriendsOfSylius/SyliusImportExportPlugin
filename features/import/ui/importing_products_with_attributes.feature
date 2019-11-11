@@ -13,9 +13,10 @@ Feature: Import Products with attributes from grid
 
   @ui
   Scenario: Exporting products should export all of them
-    When I open the product admin index page
-    And I import product data from "products_attr.csv" csv file
+    Given I am on product import page
+    And I import data from "products_attr.csv" csv file
     Then I should see a notification that the import was successful
-    And I should see 2 products in the list
+    When I browse products
+    Then I should see 2 products in the list
     Then the product "Product 1" should appear in the registry
     And attribute "Attribute text" of product "Product 1" should be "Banana" in "en_US"

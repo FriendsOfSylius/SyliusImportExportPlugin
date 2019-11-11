@@ -10,9 +10,13 @@ Feature: Importing countries from excel
   @ui
   Scenario: Importing countries based on a valid excel-file
     When I open the country admin index page
-    And I import country data from "countries.xlsx" xlsx file
+    Then I should see an import button
+    When I click an import button
+    Then I should be on country import page
+    When I import data from "countries.xlsx" xlsx file
     Then I should see a notification that the import was successful
-    And I should see 10 countries in the list
+    When I open the country admin index page
+    Then I should see 10 countries in the list
     And I open the country admin index second page
     And I should see 3 countries in the list
     And the country "Andorra" should appear in the registry

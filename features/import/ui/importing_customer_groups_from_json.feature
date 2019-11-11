@@ -9,8 +9,10 @@ Feature: Importing customer-groups from json
 
   @ui
   Scenario: Importing customer-groups based on a valid json-file
-    When I import customer-group data from "customer_groups.json" json file
+    Given I am on customer group import page
+    When I import data from "customer_groups.json" json file
     Then I should see a notification that the import was successful
-    And I should see 2 customer groups in the list
+    When I want to browse customer groups
+    Then I should see 2 customer groups in the list
     And I should see the customer group "premium" in the list
     And I should see the customer group "basic" in the list

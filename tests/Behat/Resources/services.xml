@@ -7,6 +7,9 @@
     <services>
         <defaults public="true" />
 
+        <service id="test.behat.context.import_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\ImportContext">
+            <argument type="service" id="test.behat.page.import_page"/>
+        </service>
         <service id="test.behat.context.notification_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\NotificationContext">
             <argument type="service" id="sylius.behat.notification_checker"/>
         </service>
@@ -18,13 +21,7 @@
             <argument type="service" id="behat.mink.parameters" />
             <argument type="service" id="router" />
         </service>
-        <service id="test.behat.context.customer_groups_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CustomerGroupsContext">
-            <argument type="service" id="test.behat.page.customer_group_index_page"/>
-        </service>
 
-        <service id="test.behat.context.payment_methods_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\PaymentMethodsContext">
-            <argument type="service" id="test.behat.page.payment_method_index_page"/>
-        </service>
         <service id="test.behat.context.tax_categories_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\TaxCategoriesContext">
             <argument type="service" id="test.behat.page.tax_category_index_page" />
         </service>
@@ -93,24 +90,23 @@
             <argument>%behat.files_directory%</argument>
         </service>
 
-        <service id="test.behat.page.country_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.country_index_page" class="Sylius\Behat\Page\Admin\Crud\IndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_country_index</argument>
-            <argument>%behat.files_directory%</argument>
         </service>
-        <service id="test.behat.page.customer_group_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.customer_group_index_page" class="Sylius\Behat\Page\Admin\Crud\IndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_customer_group_index</argument>
-            <argument>%behat.files_directory%</argument>
         </service>
-        <service id="test.behat.page.tax_category_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.tax_category_index_page" class="Sylius\Behat\Page\Admin\Crud\IndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_tax_category_index</argument>
-            <argument>%behat.files_directory%</argument>
         </service>
-        <service id="test.behat.page.payment_method_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.payment_method_index_page" class="Sylius\Behat\Page\Admin\Crud\IndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_payment_method_index</argument>
-            <argument>%behat.files_directory%</argument>
         </service>
-        <service id="test.behat.page.product_index_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
+        <service id="test.behat.page.product_index_page" class="Sylius\Behat\Page\Admin\Crud\IndexPage" parent="sylius.behat.page.admin.crud.index" public="false">
             <argument>sylius_admin_product_index</argument>
+        </service>
+
+        <service id="test.behat.page.import_page" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceImportPage" parent="sylius.behat.symfony_page" public="false">
             <argument>%behat.files_directory%</argument>
         </service>
     </services>

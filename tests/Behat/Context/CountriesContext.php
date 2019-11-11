@@ -12,19 +12,19 @@ use Behat\Mink\Session;
 use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\CountryContext;
+use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
 final class CountriesContext extends SymfonyPage implements Context
 {
-    /** @var ResourceIndexPageInterface */
+    /** @var IndexPageInterface */
     private $countryIndexPage;
 
     /** @var CountryContext */
     private $countryContext;
 
     public function __construct(
-        ResourceIndexPageInterface $countryIndexPage,
+        IndexPageInterface $countryIndexPage,
         CountryContext $countryContext,
         Session $session,
         ArrayAccess $parameters,
@@ -44,12 +44,9 @@ final class CountriesContext extends SymfonyPage implements Context
         return 'sylius_admin_country_index';
     }
 
-    /**
-     * @When I import country data from :file :format file
-     */
-    public function iImportCountryDataFromCsvFile(string $file, string $format)
+    public function getResourceName(): string
     {
-        $this->countryIndexPage->importData($file, $format);
+        return 'sylius.country';
     }
 
     /**
@@ -77,6 +74,25 @@ final class CountriesContext extends SymfonyPage implements Context
             'Export',
             $this->getElement('export_button_text')->getText()
         );
+    }
+
+    /**
+     * @Then I should see an import button
+     */
+    public function iShouldSeeImportButton()
+    {
+        Assert::assertEquals(
+            'Import',
+            $this->getElement('import_button')->getText()
+        );
+    }
+
+    /**
+     * @Then I click an import button
+     */
+    public function iClickImportButton()
+    {
+        $button = $this->getElement('import_button')->click();
     }
 
     /**
@@ -151,6 +167,10 @@ final class CountriesContext extends SymfonyPage implements Context
         return array_merge(parent::getDefinedElements(), [
             'export_button_text' => '.buttons div.dropdown span.text',
             'export_links' => '.buttons div.dropdown div.menu',
+            'import_button' => sprintf(
+                '.button[href="%s"]',
+                $this->router->generate('fos_sylius_import_export_import_data', ['resource' => $this->getResourceName()])
+            ),
         ]);
     }
 

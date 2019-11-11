@@ -27,8 +27,8 @@ default:
                 - sylius.behat.context.ui.admin.notification
                 - sylius.behat.context.ui.shop.locale
 
+                - test.behat.context.import_context
                 - test.behat.context.notification_context
-                - test.behat.context.payment_methods_context
             filters:
                 tags: "@managing_payment_methods && @ui"
 
@@ -45,6 +45,7 @@ default:
                 - sylius.behat.context.ui.admin.managing_tax_categories
                 - sylius.behat.context.ui.admin.notification
 
+                - test.behat.context.import_context
                 - test.behat.context.notification_context
                 - test.behat.context.tax_categories_context
             filters:
@@ -63,6 +64,7 @@ default:
                 - sylius.behat.context.ui.admin.managing_countries
                 - sylius.behat.context.ui.admin.notification
 
+                - test.behat.context.import_context
                 - test.behat.context.notification_context
                 - test.behat.context.countries_context
             filters:
@@ -75,8 +77,8 @@ default:
                 - sylius.behat.context.setup.admin_security
                 - sylius.behat.context.ui.admin.managing_customer_groups
                 - sylius.behat.context.ui.admin.notification
+                - test.behat.context.import_context
                 - test.behat.context.notification_context
-                - test.behat.context.customer_groups_context
             filters:
                 tags: "@managing_customer_groups && @ui"
 
@@ -93,6 +95,7 @@ default:
                 - sylius.behat.context.ui.admin.managing_products
                 - sylius.behat.context.ui.admin.notification
 
+                - test.behat.context.import_context
                 - test.behat.context.notification_context
                 - test.behat.context.products_context
 
