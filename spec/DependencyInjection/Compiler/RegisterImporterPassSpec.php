@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler\RegisterImporterPass;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ImportButtonGridListener;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
-use Sylius\Bundle\UiBundle\Block\BlockEventListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
@@ -27,7 +27,7 @@ class RegisterImporterPassSpec extends ObjectBehavior
     function it_processes_the_importer_services(
         ContainerBuilder $container,
         Definition $importerRegistry,
-        Definition $blockEventDefinition
+        Definition $importButtonListenerDefinition
     ) {
         $importerType = 'csv';
         /**
@@ -47,8 +47,8 @@ class RegisterImporterPassSpec extends ObjectBehavior
         ]);
         $container->register(
             Argument::type('string'),
-            BlockEventListener::class
-        )->willReturn($blockEventDefinition)->shouldBeCalled();
+            ImportButtonGridListener::class
+        )->willReturn($importButtonListenerDefinition)->shouldBeCalled();
 
         /**
          * prepare the mock for the importerRegistry
@@ -61,23 +61,23 @@ class RegisterImporterPassSpec extends ObjectBehavior
         /**
          * prepare the mock for the definition of the sonata-event
          */
-        $blockEventDefinition->setAutowired(false)
+        $importButtonListenerDefinition->setAutowired(false)
             ->shouldBeCalled()
-            ->willReturn($blockEventDefinition);
+            ->willReturn($importButtonListenerDefinition);
 
-        $blockEventDefinition->addArgument(Argument::type('string'))
+        $importButtonListenerDefinition->addArgument(Argument::type('string'))
             ->shouldBeCalled()
-            ->willReturn($blockEventDefinition);
+            ->willReturn($importButtonListenerDefinition);
 
-        $blockEventDefinition->addTag(
-            'kernel.event_listener',
+        $importButtonListenerDefinition->addTag(
+                'kernel.event_listener',
                 [
-                    'event' => 'sonata.block.event.sylius.admin.' . $importerType . '.index.after_content',
-                    'method' => 'onBlockEvent',
+                    'event' => 'sylius.grid.admin_' . $importerType,
+                    'method' => 'onSyliusGridAdmin',
                 ]
-        )
+            )
             ->shouldBeCalled()
-            ->willReturn($blockEventDefinition);
+            ->willReturn($importButtonListenerDefinition);
 
         /**
          * run the test

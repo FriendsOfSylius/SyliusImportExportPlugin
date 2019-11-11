@@ -6,7 +6,6 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
 use FriendsOfSylius\SyliusImportExportPlugin\Listener\ImportButtonGridListener;
-use Sylius\Bundle\UiBundle\Block\BlockEventListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -41,39 +40,9 @@ final class RegisterImporterPass implements CompilerPassInterface
 
             if ($container->getParameter('sylius.importer.web_ui') && !in_array($type, $typesWithImportButton)) {
                 $typesWithImportButton[] = $type;
-                $this->registerImportFormBlockEvent($container, $type);
                 $this->registerEventListenerForImportButton($container, $type);
             }
         }
-    }
-
-    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
-    {
-        $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
-
-        if ($container->has($eventHookName)) {
-            return;
-        }
-
-        if (strpos($type, '.') !== false) {
-            $type = substr($type, strpos($type, '.') + 1);
-        }
-
-        $container
-            ->register(
-                $eventHookName,
-                BlockEventListener::class
-            )
-            ->setAutowired(false)
-            ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
-            ->addTag(
-                'kernel.event_listener',
-                [
-                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                    'method' => 'onBlockEvent',
-                ]
-            )
-        ;
     }
 
     private function registerEventListenerForImportButton(ContainerBuilder $container, string $type): void

@@ -55,19 +55,6 @@ final class ImportDataController
         $this->flashBag = $flashBag;
     }
 
-    public function importFormAction(Request $request): Response
-    {
-        $importer = $request->attributes->get('resource');
-        $form = $this->getForm($importer);
-
-        $content = $this->twig->render(
-            '@FOSSyliusImportExportPlugin/Crud/import_form.html.twig',
-            ['form' => $form->createView(), 'resource' => $importer]
-        );
-
-        return new Response($content);
-    }
-
     public function importAction(Request $request, string $resource): Response
     {
         $configuration = $this->configurationFactory->create($this->resourceRegistry->get($resource), $request);
@@ -100,19 +87,15 @@ final class ImportDataController
         );
     }
 
-    private function getForm(string $importerType)
-    {
-        return $this->formFactory->create(ImportType::class, null, ['importer_type' => $importerType]);
-    }
-
     private function import(string $type, string $format, UploadedFile $file): void
     {
         $name = ImporterRegistry::buildServiceName($type, $format);
         /** @var ImporterInterface $service */
         $service = $this->registry->get($name);
-
+        /** @var string $path */
+        $path = $file->getRealPath();
         /** @var ImporterResult $result */
-        $result = $service->import($file->getRealPath());
+        $result = $service->import($path);
 
         $message = sprintf(
             'Imported via %s importer (Time taken in ms: %s, Imported %s, Skipped %s, Failed %s)',
