@@ -161,6 +161,14 @@ default:
             filters:
                 tags: "@managing_products && @cli_importer_exporter"
 
+        cli_managing_imports:
+            contexts:
+                - sylius.behat.context.hook.doctrine_orm
+                - sylius.behat.context.cli.installer
+                - test.behat.context.cli_base_context
+            filters:
+                tags: "@managing_imports && @cli_importer_exporter"
+
     extensions:
         FriendsOfBehat\SuiteSettingsExtension:
             paths:
