@@ -38,7 +38,13 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
             throw new ImporterException(sprintf('File %s could not be loaded', $fileName));
         }
 
-        foreach (json_decode($contents, true) as $i => $row) {
+        $data = json_decode($contents, true);
+
+        if (is_null($data)) {
+            throw new ImporterException(sprintf('File %s is not a valid json', $fileName));
+        }
+
+        foreach ($data as $i => $row) {
             if ($this->importData($i, $row)) {
                 break;
             }
