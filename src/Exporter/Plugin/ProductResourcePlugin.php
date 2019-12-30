@@ -7,6 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin;
 use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use Sylius\Component\Attribute\Model\AttributeValueInterface;
+use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
 use Sylius\Component\Core\Model\ProductVariantInterface;
@@ -130,10 +131,15 @@ final class ProductResourcePlugin extends ResourcePlugin
         /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channel */
         $channels = $resource->getChannels();
         foreach ($channels as $channel) {
+            /** @var ChannelPricingInterface|null $channelPricing */
             $channelPricing = $this->channelPricingRepository->findOneBy([
                 'channelCode' => $channel->getCode(),
                 'productVariant' => $productVariant,
             ]);
+
+            if (null === $channelPricing) {
+                continue;
+            }
 
             $this->addDataForResource($resource, 'Price', $channelPricing->getPrice());
         }

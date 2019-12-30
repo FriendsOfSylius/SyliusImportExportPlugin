@@ -12,6 +12,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProviderInterface;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\ProductTaxonRepository;
 use Sylius\Component\Channel\Repository\ChannelRepositoryInterface;
+use Sylius\Component\Core\Model\ChannelInterface;
 use Sylius\Component\Core\Model\ChannelPricingInterface;
 use Sylius\Component\Core\Model\ProductImageInterface;
 use Sylius\Component\Core\Model\ProductInterface;
@@ -259,6 +260,7 @@ final class ProductProcessor implements ResourceProcessorInterface
 
         $channels = \explode('|', $data['Channels']);
         foreach ($channels as $channelCode) {
+            /** @var ChannelPricingInterface|null $channelPricing */
             $channelPricing = $this->channelPricingRepository->findOneBy([
                 'channelCode' => $channelCode,
                 'productVariant' => $productVariant,
@@ -301,6 +303,7 @@ final class ProductProcessor implements ResourceProcessorInterface
     {
         $channels = \explode('|', $data['Channels']);
         foreach ($channels as $channelCode) {
+            /** @var ChannelInterface|null $channel */
             $channel = $this->channelRepository->findOneBy(['code' => $channelCode]);
             if ($channel === null) {
                 continue;
