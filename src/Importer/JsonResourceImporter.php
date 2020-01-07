@@ -40,7 +40,7 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
 
         $data = json_decode($contents, true);
 
-        if (is_null($data)) {
+        if (null === $data) {
             throw new ImporterException(sprintf('File %s is not a valid json', $fileName));
         }
 
