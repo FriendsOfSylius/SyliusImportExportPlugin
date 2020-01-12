@@ -159,9 +159,9 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
   #### Notes
   
-  - Replace `foo` with the name of the type you want to implement in the following examples.
-  - Replace `bar` with the name of the format you want to implement in the following examples.
-  - Note it is of course also possible to implement a dedicated importer for `foo` type and format `bar`,
+  - Replace `app.foo` with the name of the resource (under `sylius_resource` config) you want to implement in the following examples.
+  - Replace `bar` with the name of the format you want to implement in the following examples (csv, json, ...).
+  - Note it is of course also possible to implement a dedicated importer for `app.foo` ressource and format `bar`,
     in case a generic type implementation is not possible.
 
 #### Adding a ResourceImporter
@@ -177,7 +177,7 @@ sylius.importer.foo.bar:
         - "@sylius.processor.foo"
         - "@sylius.importer.result"
     tags:
-        - { name: sylius.importer, type: foo, format: csv }
+        - { name: sylius.importer, type: app.foo, format: csv }
 ```
   
 ##### Alternatively implement a custom ResourceImporter _FooImporter_
@@ -197,7 +197,7 @@ sylius.importer.foo.bar:
       - "@sylius.processor.foo"
       - "@sylius.importer.result"
   tags:
-      - { name: sylius.importer, type: foo, format: bar }
+      - { name: sylius.importer, type: app.foo, format: bar }
 ```
 
 #### Adding a ResourceProcessor
@@ -208,8 +208,8 @@ sylius.importer.foo.bar:
 sylius.processor.foo:
     class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
     arguments:
-        - "@sylius.factory.foo"
-        - "@sylius.repository.foo"
+        - "@app.factory.foo"
+        - "@app.repository.foo"
         - "@property_accessor"
         - "@sylius.importer.metadata_validator"
         - "@doctrine.orm.entity_manager"
@@ -234,8 +234,8 @@ class FooProcessor implements ResourceProcessorInterface
  sylius.processor.tax_categories:
      class: FriendsOfSylius\SyliusImportExportPlugin\Processor\FooProcessor
      arguments:
-         - "@sylius.factory.foo"
-         - "@sylius.repository.foo"
+         - "@app.factory.foo"
+         - "@app.repository.foo"
          - "@sylius.importer.metadata_validator"
          - "@doctrine.orm.entity_manager"
          - ["HeaderKey0", "HeaderKey1", "HeaderKey2"]
