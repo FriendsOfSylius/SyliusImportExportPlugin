@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use Sylius\Bundle\UiBundle\Block\BlockEventListener;
+use FriendsOfSylius\SyliusImportExportPlugin\Listener\ImportButtonGridListener;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
@@ -17,6 +17,7 @@ final class RegisterImporterPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container): void
     {
+        $typesWithImportButton = [];
         $serviceId = 'sylius.importers_registry';
         if ($container->has($serviceId) == false) {
             return;
@@ -37,34 +38,40 @@ final class RegisterImporterPass implements CompilerPassInterface
 
             $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
-            if ($container->getParameter('sylius.importer.web_ui')) {
-                $this->registerImportFormBlockEvent($container, $type);
+            if ($container->getParameter('sylius.importer.web_ui') && !in_array($type, $typesWithImportButton)) {
+                $typesWithImportButton[] = $type;
+                $this->registerEventListenerForImportButton($container, $type);
             }
         }
     }
 
-    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
+    private function registerEventListenerForImportButton(ContainerBuilder $container, string $type): void
     {
-        $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
+        $serviceId = sprintf('fos_import_export.event_listener.%s_grid.import_button', $type);
 
-        if ($container->has($eventHookName)) {
+        if ($container->has($serviceId)) {
             return;
         }
 
         $container
-            ->register(
-                $eventHookName,
-                BlockEventListener::class
-            )
+            ->register($serviceId, ImportButtonGridListener::class)
             ->setAutowired(false)
-            ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
+            ->addArgument($type)
             ->addTag(
                 'kernel.event_listener',
                 [
-                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
-                    'method' => 'onBlockEvent',
+                    'event' => $this->getEventName($type),
+                    'method' => 'onSyliusGridAdmin',
                 ]
-            )
-        ;
+            );
+    }
+
+    private function getEventName(string $type): string
+    {
+        if (strpos($type, '.') !== false) {
+            $type = substr($type, strpos($type, '.') + 1);
+        }
+
+        return 'sylius.grid.admin_' . $type;
     }
 }

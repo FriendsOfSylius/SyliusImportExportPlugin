@@ -6,11 +6,10 @@ namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page;
 
 use ArrayAccess;
 use Behat\Mink\Session;
-use Sylius\Behat\Page\Admin\Crud\IndexPage;
-use Sylius\Behat\Service\Accessor\TableAccessorInterface;
+use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use Symfony\Component\Routing\RouterInterface;
 
-class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
+class ResourceImportPage extends SymfonyPage implements ResourceImportPageInterface
 {
     /** @var string */
     protected $filesPath;
@@ -19,19 +18,22 @@ class ResourceIndexPage extends IndexPage implements ResourceIndexPageInterface
         Session $session,
         ArrayAccess $parameters,
         RouterInterface $router,
-        TableAccessorInterface $tableAccessor,
-        string $routeName,
         string $filesPath
     ) {
-        parent::__construct($session, $parameters, $router, $tableAccessor, $routeName);
+        parent::__construct($session, $parameters, $router);
         $this->filesPath = $filesPath;
+    }
+
+    public function getRouteName(): string
+    {
+        return 'fos_sylius_import_export_import_data';
     }
 
     public function importData(string $filePath, string $format): void
     {
         $this
             ->getDocument()
-            ->find('css', 'input[id="import_import-data"]')
+            ->find('css', 'input[id="import_file"]')
             ->attachFile($this->filesPath . '/' . $filePath)
         ;
 

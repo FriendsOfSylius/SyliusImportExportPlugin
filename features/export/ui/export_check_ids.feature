@@ -9,9 +9,10 @@ Feature: Export links on Countries grid
 
   @ui
   Scenario: Exporting countries should export all of them
-    When I open the country admin index page
-    And I import country data from "countries.csv" csv file
+    Given I am on country import page
+    And I import data from "countries.csv" csv file
     Then I should see a notification that the import was successful
+    When I open the country admin index page
     And I should see 10 countries in the list
     Then I go to "/admin/export/sylius.country/csv" homepage
     And response should contain "Id,Code,Enabled"

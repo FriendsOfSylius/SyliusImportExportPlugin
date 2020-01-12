@@ -12,18 +12,18 @@ use Behat\Mink\Session;
 use FriendsOfBehat\PageObjectExtension\Page\SymfonyPage;
 use PHPUnit\Framework\Assert;
 use Sylius\Behat\Context\Transform\ProductContext;
+use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
 use Symfony\Component\Routing\RouterInterface;
-use Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page\ResourceIndexPageInterface;
 
 final class ProductsContext extends SymfonyPage implements Context
 {
-    /** @var ResourceIndexPageInterface */
+    /** @var IndexPageInterface */
     private $productIndexPage;
     /** @var ProductContext */
     private $productContext;
 
     public function __construct(
-        ResourceIndexPageInterface $productIndexPage,
+        IndexPageInterface $productIndexPage,
         ProductContext $productContext,
         Session $session,
         ArrayAccess $parameters,
@@ -41,14 +41,6 @@ final class ProductsContext extends SymfonyPage implements Context
     public function getRouteName(): string
     {
         return 'sylius_admin_product_index';
-    }
-
-    /**
-     * @When I import product data from :file :format file
-     */
-    public function iImportProductDataFromCsvFile(string $file, string $format): void
-    {
-        $this->productIndexPage->importData($file, $format);
     }
 
     /**

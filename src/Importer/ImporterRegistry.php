@@ -12,11 +12,10 @@ class ImporterRegistry extends ServiceRegistry
 
     public static function buildServiceName(string $type, string $format): string
     {
-        return sprintf('%s.%s', $type, $format);
-    }
+        if (strpos($type, '.') === false) {
+            $type = 'sylius.' . $type;
+        }
 
-    public static function buildEventHookName(string $type): string
-    {
-        return sprintf('%s_%s', self::EVENT_HOOK_NAME_PREFIX_ADMIN_CRUD_AFTER_CONTENT, $type);
+        return sprintf('%s.%s', $type, $format);
     }
 }

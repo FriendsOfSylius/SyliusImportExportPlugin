@@ -9,9 +9,10 @@ Feature: Importing tax categories from excel with the user interface
 
     @ui
     Scenario: Importing defined tax categories
-        When I browse all tax categories
-        And I import tax category data from "tax_categories.xlsx" xlsx file
+        Given I am on tax category import page
+        When I import data from "tax_categories.xlsx" xlsx file
         Then I should see a notification that the import was successful
-        And I should see 2 tax categories in the list
+        When I browse all tax categories
+        Then I should see 2 tax categories in the list
         And the tax category "books" should appear in the registry
         And the tax category "cars" should appear in the registry

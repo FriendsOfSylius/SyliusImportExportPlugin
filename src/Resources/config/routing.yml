@@ -1,9 +1,12 @@
 ## Import route
-app_import_data:
+fos_sylius_import_export_import_data:
     path: /import/{resource}
-    methods: [POST]
+    methods: [GET, POST]
     defaults:
         _controller: sylius.controller.import_data:importAction
+        _sylius:
+            section: admin
+            permission: true
 
 ## Export routes for specific settings
 app_export_data_country:

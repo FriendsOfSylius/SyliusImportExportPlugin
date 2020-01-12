@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Page;
 
-use Sylius\Behat\Page\Admin\Crud\IndexPageInterface;
+use FriendsOfBehat\PageObjectExtension\Page\PageInterface;
 
-interface ResourceIndexPageInterface extends IndexPageInterface
+interface ResourceImportPageInterface extends PageInterface
 {
     public function importData(string $filePath, string $format): void;
 }

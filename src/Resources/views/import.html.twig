@@ -1,0 +1,38 @@
+{% extends '@SyliusAdmin/layout.html.twig' %}
+
+{% set header = metadata.pluralName|capitalize ~ ' ' ~ 'fos.import_export.ui.import'|trans|lower %}
+{% set event_prefix = 'fos_import_export.admin.' ~ metadata.name ~ '.import' %}
+
+{% block title %}{{ header }} {{ parent() }}{% endblock %}
+
+{% block content %}
+    {{ sonata_block_render_event(event_prefix ~ '.before_header') }}
+
+    {% include '@FOSSyliusImportExportPlugin/Crud/_header.html.twig' %}
+
+    {{ sonata_block_render_event(event_prefix ~ '.after_header') }}
+
+    {% include '@FOSSyliusImportExportPlugin/Crud/_content.html.twig' %}
+
+    {{ sonata_block_render_event(event_prefix ~ '.after_content') }}
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    {{ sonata_block_render_event(event_prefix ~ '.stylesheets') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $(document).on('change', 'input[type="file"]', function() {
+          $('#file-name').html($(this).val());
+        });
+      });
+    </script>
+
+    {{ sonata_block_render_event(event_prefix ~ '.javascripts') }}
+{% endblock %}

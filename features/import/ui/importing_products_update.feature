@@ -9,11 +9,12 @@ Feature: Import Products from grid
 
   @ui
   Scenario: Import products should update them
-    When I open the product admin index page
-    And I import product data from "products.csv" csv file
+    Given I am on product import page
+    And I import data from "products.csv" csv file
     Then I should see a notification that the import was successful
-    And I import product data from "products_update.csv" csv file
+    And I import data from "products_update.csv" csv file
     Then I should see a notification that the import was successful
-    And I should see 2 products in the list
+    When I browse products
+    Then I should see 2 products in the list
     And the first product on the list should have name "Product 1"
     And the last product on the list should have name "Product 2 update"
