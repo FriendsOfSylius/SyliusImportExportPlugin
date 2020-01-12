@@ -129,7 +129,10 @@ final class ImportDataCommand extends Command
         $importers = [];
         foreach ($all as $importer) {
             $importer = explode('.', $importer);
-            $importers[$importer[0]][] = $importer[1];
+            $format = \array_pop($importer);
+            $type = \implode('.', $importer);
+
+            $importers[$type][] = $format;
         }
 
         $list = [];
