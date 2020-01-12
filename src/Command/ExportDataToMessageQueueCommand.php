@@ -57,8 +57,14 @@ final class ExportDataToMessageQueueCommand extends Command
             return;
         }
 
+        $domain = 'sylius';
+        // backward compatibility with the old configuration
+        if (count(\explode('.', $exporter)) === 2) {
+            [$domain, $exporter] = \explode('.', $exporter);
+        }
+
         /** @var RepositoryInterface $repository */
-        $repository = $this->container->get('sylius.repository.' . $exporter);
+        $repository = $this->container->get($domain . '.repository.' . $exporter);
 
         /** @var ResourceInterface[] $items */
         $items = $repository->findAll();
@@ -66,7 +72,7 @@ final class ExportDataToMessageQueueCommand extends Command
         /** @var array $idsToExport */
         $idsToExport = $this->prepareExport($items);
 
-        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, 'json');
+        $name = ExporterRegistry::buildServiceName($domain . '.' . $exporter, 'json');
 
         if (!$this->exporterRegistry->has($name)) {
             $this->listExporters($input, $output, sprintf('There is no \'%s\' exporter.', $name));
@@ -86,8 +92,10 @@ final class ExportDataToMessageQueueCommand extends Command
         // "sylius.country.csv" is an example of an exporter
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
-            // saves the exporter in the exporters array, sets the exporterentity as the first key of the 2d array and the exportertypes each in the second array
-            $exporters[$exporter[1]][] = $exporter[2];
+            $format = \array_pop($exporter);
+            $type = \implode('.', $exporter);
+
+            $exporters[$type][] = $format;
         }
 
         $list = [];
