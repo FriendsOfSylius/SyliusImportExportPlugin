@@ -63,7 +63,12 @@ final class ExportDataCommand extends Command
         }
 
         $format = $input->getOption('format');
-        $name = ExporterRegistry::buildServiceName('sylius.' . $exporter, $format);
+        $domain = 'sylius';
+        // backward compatibility with the old configuration
+        if (count(\explode('.', $exporter)) === 2) {
+            [$domain, $exporter] = \explode('.', $exporter);
+        }
+        $name = ExporterRegistry::buildServiceName($domain . '.' . $exporter, $format);
 
         if (!$this->exporterRegistry->has($name)) {
             $this->listExporters($input, $output, sprintf('There is no \'%s\' exporter.', $name));
@@ -72,7 +77,7 @@ final class ExportDataCommand extends Command
         $file = $input->getArgument('file');
 
         /** @var RepositoryInterface $repository */
-        $repository = $this->container->get('sylius.repository.' . $exporter);
+        $repository = $this->container->get($domain . '.repository.' . $exporter);
         $items = $repository->findAll();
         $idsToExport = array_map(function (ResourceInterface $item) {
             return $item->getId();
@@ -87,10 +92,10 @@ final class ExportDataCommand extends Command
         $service->finish();
 
         $output->writeln(sprintf(
-          "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
-          count($items),
-          $file,
-          $name
+            "<info>Exported %d item(s) to '%s' via the %s exporter</info>",
+            count($items),
+            $file,
+            $name
         ));
     }
 
@@ -102,8 +107,10 @@ final class ExportDataCommand extends Command
         // "sylius.country.csv" is an example of an exporter
         foreach ($all as $exporter) {
             $exporter = explode('.', $exporter);
-            // saves the exporter in the exporters array, sets the exporterentity as the first key of the 2d array and the exportertypes each in the second array
-            $exporters[$exporter[1]][] = $exporter[2];
+            $format = \array_pop($exporter);
+            $type = \implode('.', $exporter);
+
+            $exporters[$type][] = $format;
         }
 
         $list = [];

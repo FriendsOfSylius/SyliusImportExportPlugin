@@ -51,6 +51,12 @@ final class RegisterImporterPass implements CompilerPassInterface
             return;
         }
 
+        $domain = 'sylius';
+        // backward compatibility with the old configuration
+        if (count(\explode('.', $type)) === 2) {
+            [$domain, $type] = \explode('.', $type);
+        }
+
         $container
             ->register(
                 $eventHookName,
@@ -61,7 +67,11 @@ final class RegisterImporterPass implements CompilerPassInterface
             ->addTag(
                 'kernel.event_listener',
                 [
-                    'event' => 'sonata.block.event.sylius.admin.' . $type . '.index.after_content',
+                    'event' => \sprintf(
+                        'sonata.block.event.%s.admin.%s.index.after_content',
+                        $domain,
+                        $type
+                    ),
                     'method' => 'onBlockEvent',
                 ]
             )
