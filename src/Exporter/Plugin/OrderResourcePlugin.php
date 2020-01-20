@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator\HydratorInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AddressConcatenationInterface;
 use Sylius\Component\Core\Model\OrderInterface;
+use Sylius\Component\Order\Model\OrderInterface as OrderInterfaceB;
 use Sylius\Component\Core\Model\OrderItemInterface;
 use Sylius\Component\Product\Model\ProductInterface;
 use Sylius\Component\Product\Model\ProductVariantInterface;
@@ -47,6 +48,7 @@ class OrderResourcePlugin extends ResourcePlugin
         foreach ($this->resources as $resource) {
             // insert customer information to specific fields
             $this->addCustomerData($resource);
+            
 
             // insert shippingaddress to the specific field
             $this->addShippingAddressData($resource);
@@ -57,6 +59,20 @@ class OrderResourcePlugin extends ResourcePlugin
             $items = $this->getItemsAndCount($resource);
 
             $this->addOrderItemData($items, $resource);
+            $this->addDataForResource($resource, 'Currency_code',
+            $resource->getCurrencyCode());
+            $this->addDataForResource($resource, 'Checkout_completed_at', $resource->getCheckoutCompletedAt());
+            $this->addDataForResource($resource, 'Payment_state', $resource->getPaymentState());
+            $this->addDataForResource($resource, 'Checkout_state', $resource->getCheckoutState());
+            $this->addDataForResource($resource, 'Shipping_state',
+            $resource->getShippingState());
+            $this->addDataForResource($resource, 'Token_value',
+            $resource->getTokenValue());
+            $this->addDataForResource($resource, 'Customer_ip',
+            $resource->getCustomerIp());
+            /** @var OrderInterfaceB $resourceB */
+            $this->addDataForResource($resource, 'Notes',
+            $resourceB->getNotes());
         }
     }
 
