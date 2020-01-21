@@ -71,7 +71,7 @@ class OrderResourcePlugin extends ResourcePlugin
             $this->addDataForResource($resource, 'Customer_ip',
             $resource->getCustomerIp());
             $this->addDataForResource($resource, 'Notes',
-            $resourceB->getNotes());
+            $resource->getNotes());
         }
     }
 
