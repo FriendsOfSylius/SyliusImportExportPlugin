@@ -70,7 +70,6 @@ class OrderResourcePlugin extends ResourcePlugin
             $resource->getTokenValue());
             $this->addDataForResource($resource, 'Customer_ip',
             $resource->getCustomerIp());
-            /** @var OrderInterfaceB $resourceB */
             $this->addDataForResource($resource, 'Notes',
             $resourceB->getNotes());
         }
