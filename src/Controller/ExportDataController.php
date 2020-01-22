@@ -79,8 +79,7 @@ final class ExportDataController
             ResponseHeaderBag::DISPOSITION_ATTACHMENT,
             $outputFilename
         );
-        
-        
+
         $response->headers->set('Content-Type', 'application/' . $format);
         $response->headers->set('Content-Disposition', $disposition);
 
