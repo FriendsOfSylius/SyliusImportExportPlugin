@@ -45,9 +45,9 @@ class OrderResourcePlugin extends ResourcePlugin
 
         /** @var OrderInterface $resource */
         foreach ($this->resources as $resource) {
-            // insert general fields 
+            // insert general fields
             $this->addGeneralData($resource);
-            
+
             // insert customer information to specific fields
             $this->addCustomerData($resource);
 
