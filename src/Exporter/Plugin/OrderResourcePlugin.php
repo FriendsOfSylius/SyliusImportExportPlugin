@@ -45,6 +45,9 @@ class OrderResourcePlugin extends ResourcePlugin
 
         /** @var OrderInterface $resource */
         foreach ($this->resources as $resource) {
+            // insert general fields
+            $this->addGeneralData($resource);
+
             // insert customer information to specific fields
             $this->addCustomerData($resource);
 
@@ -58,6 +61,18 @@ class OrderResourcePlugin extends ResourcePlugin
 
             $this->addOrderItemData($items, $resource);
         }
+    }
+
+    private function addGeneralData(OrderInterface $resource): void
+    {
+        $this->addDataForResource($resource, 'Currency_code', $resource->getCurrencyCode());
+        $this->addDataForResource($resource, 'Checkout_completed_at', $resource->getCheckoutCompletedAt());
+        $this->addDataForResource($resource, 'Payment_state', $resource->getPaymentState());
+        $this->addDataForResource($resource, 'Checkout_state', $resource->getCheckoutState());
+        $this->addDataForResource($resource, 'Shipping_state', $resource->getShippingState());
+        $this->addDataForResource($resource, 'Token_value', $resource->getTokenValue());
+        $this->addDataForResource($resource, 'Customer_ip', $resource->getCustomerIp());
+        $this->addDataForResource($resource, 'Notes', $resource->getNotes());
     }
 
     private function addCustomerData(OrderInterface $resource): void
