@@ -15,12 +15,12 @@ final class TaxonCreatePage extends CreatePage implements TaxonCreatePageInterfa
 
     public function __construct(
         Session $session,
-        array $parameters,
+        $minkParameters,
         RouterInterface $router,
         string $routeName,
         string $filesPath
     ) {
-        parent::__construct($session, $parameters, $router, $routeName);
+        parent::__construct($session, $minkParameters, $router, $routeName);
         $this->filesPath = $filesPath;
     }
 
@@ -38,6 +38,6 @@ final class TaxonCreatePage extends CreatePage implements TaxonCreatePageInterfa
             ->selectOption($format)
         ;
 
-        $this->getDocument()->pressButton('Import Data');
+        $this->getDocument()->pressButton('import-data');
     }
 }
