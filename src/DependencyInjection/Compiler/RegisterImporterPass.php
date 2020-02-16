@@ -12,6 +12,18 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterImporterPass implements CompilerPassInterface
 {
+    private $eventHookNames = [
+        'taxonomy' => 'app.block_event_listener.admin.taxon.create.after_content',
+    ];
+
+    private $eventNames = [
+        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
+    ];
+
+    private $templateNames = [
+        'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig',
+    ];
+
     /**
      * {@inheritdoc}
      */
@@ -31,6 +43,7 @@ final class RegisterImporterPass implements CompilerPassInterface
             if (!isset($attributes[0]['format'])) {
                 throw new \InvalidArgumentException('Tagged importer ' . $id . ' needs to have a format');
             }
+
             $type = $attributes[0]['type'];
             $format = $attributes[0]['format'];
             $name = ImporterRegistry::buildServiceName($type, $format);
@@ -45,10 +58,44 @@ final class RegisterImporterPass implements CompilerPassInterface
 
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
     {
-        $eventHookName = ImporterRegistry::buildEventHookName($type) . '.import';
+        $eventHookName = $this->buildEventHookName($type);
 
         if ($container->has($eventHookName)) {
             return;
+        }
+
+        $eventName = $this->buildEventName($type);
+        $templateName = $this->buildTemplateName($type);
+        $container
+            ->register(
+                $eventHookName,
+                BlockEventListener::class
+            )
+            ->setAutowired(false)
+            ->addArgument($templateName)
+            ->addTag(
+                'kernel.event_listener',
+                [
+                    'event' => $eventName,
+                    'method' => 'onBlockEvent',
+                ]
+            )
+        ;
+    }
+
+    private function buildEventHookName(string $type): string
+    {
+        if (isset($this->eventHookNames[$type])) {
+            return $this->eventHookNames[$type];
+        }
+
+        return sprintf('app.block_event_listener.admin.crud.after_content_%s.import', $type);
+    }
+
+    private function buildEventName(string $type): string
+    {
+        if (isset($this->eventNames[$type])) {
+            return $this->eventNames[$type];
         }
 
         $domain = 'sylius';
@@ -57,24 +104,19 @@ final class RegisterImporterPass implements CompilerPassInterface
             [$domain, $type] = \explode('.', $type);
         }
 
-        $container
-            ->register(
-                $eventHookName,
-                BlockEventListener::class
-            )
-            ->setAutowired(false)
-            ->addArgument('@FOSSyliusImportExportPlugin/Crud/import.html.twig')
-            ->addTag(
-                'kernel.event_listener',
-                [
-                    'event' => \sprintf(
-                        'sonata.block.event.%s.admin.%s.index.after_content',
-                        $domain,
-                        $type
-                    ),
-                    'method' => 'onBlockEvent',
-                ]
-            )
-        ;
+        return \sprintf(
+            'sonata.block.event.%s.admin.%s.index.after_content',
+            $domain,
+            $type
+        );
+    }
+
+    private function buildTemplateName(string $type): string
+    {
+        if (isset($this->templateNames[$type])) {
+            return $this->templateNames[$type];
+        }
+
+        return '@FOSSyliusImportExportPlugin/Crud/import.html.twig';
     }
 }
