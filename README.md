@@ -14,9 +14,6 @@
     <a href="http://travis-ci.org/FriendsOfSylius/SyliusImportExportPlugin" title="Build status">
         <img src="https://img.shields.io/travis/FriendsOfSylius/SyliusImportExportPlugin/master.svg" />
     </a>
-    <a href="https://scrutinizer-ci.com/g/FriendsOfSylius/SyliusImportExportPlugin/" title="Scrutinizer">
-        <img src="https://img.shields.io/scrutinizer/g/FriendsOfSylius/SyliusImportExportPlugin.svg" />
-    </a>
 </p>
 
 <p align="center">
