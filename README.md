@@ -69,7 +69,7 @@ fos_sylius_import_export:
 ### Routing configuration (only necessary if `web_ui` is set to `true`):
 
 ```yaml
-# config/routes/sylius_import_export.yaml
+# config/routes/fos_sylius_import_export.yaml
 
 sylius_import_export:
     resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
