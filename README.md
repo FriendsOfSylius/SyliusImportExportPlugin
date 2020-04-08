@@ -31,26 +31,29 @@
 
   - Run `composer require friendsofsylius/sylius-import-export-plugin`
 
-3. Add plugin dependencies to your AppKernel.php file:
+3. Register the bundle:
 
-````php
-public function registerBundles()
-{
-    return array_merge(parent::registerBundles(), [
-        ...
-        new FriendsOfSylius\SyliusImportExportPlugin\FOSSyliusImportExportPlugin(),
-    ]);
-}
-````
+```php
+<?php
+
+// config/bundles.php
+
+return [
+    // ...
+    FriendsOfSylius\SyliusImportExportPlugin\FOSSyliusImportExportPlugin::class => ['all' => true],
+];
+```
 
 ## Configuration
 
 ### Application configuration:
 
 ```yaml
+# config/packages/fos_sylius_import_export.yaml
+
 fos_sylius_import_export:
     importer:
-      # set to false to not add an upload form to the entity overview pages
+        # set to false to not add an upload form to the entity overview pages
         web_ui:               true
         # set to an integer value bigger than 0 to flush the object manager in regular intervals
         batch_size:           0
@@ -66,14 +69,20 @@ fos_sylius_import_export:
 ### Routing configuration (only necessary if `web_ui` is set to `true`):
 
 ```yaml
+# config/routes/fos_sylius_import_export.yaml
+
 sylius_import_export:
     resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
     prefix: /admin
 ```
 
-### Message queue configuration:
+### Message queue configuration
+
 Any library implementing the **"queue-interop/queue-interop"** can be used as the message queue. Following is the "enqueue/redis" library shown as an example usage.
+
 ```yaml
+# config/services.yaml
+
 # define a service which will be used as the queue
 services:
     redis_connection_factory:
@@ -81,6 +90,8 @@ services:
 ```
 
 ```yaml
+# config/packages/fos_sylius_import_export.yaml
+
 # use the defined service
 fos_sylius_import_export:
     message_queue:
@@ -118,43 +129,33 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
   - Get list of available importers
 
-    ```bash
-    $ bin/console sylius:import
-    ```
+        $ bin/console sylius:import
 
   - Import a file using the `tax_category` importer
 
-    ```bash
-    $ bin/console sylius:import tax_category my/tax/categories/csv/file.csv --format=csv
-    ```
+        $ bin/console sylius:import tax_category my/tax/categories/csv/file.csv --format=csv
   
   - Import from message queue using the `country` importer
   
-      ```bash
-      $ bin/console sylius:import-from-message-queue country
-      ```
+        $ bin/console sylius:import-from-message-queue country
    
   - To make the importer wait 1s for messages to get into the message queue (default, does not wait)
   
-      ```bash
-      $ bin/console sylius:import-from-message-queue country --timeout=1000
-      ```
+        $ bin/console sylius:import-from-message-queue country --timeout=1000
    
   - Export data of resources to file using `country` exporter
-    ```bash
-    $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
-    ```
+
+        $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
     
   - Export data of resources to message queue using `country` exporter
-    ```bash
-    $ bin/console sylius:export-to-message-queue country
-    ```
+  
+        $ bin/console sylius:export-to-message-queue country
 
 ## Development
 
 ### Adding new importer types
 
-  #### Notes
+#### Notes
   
   - Replace `app.foo` with the name of the resource (under `sylius_resource` config) you want to implement in the following examples.
   - Replace `bar` with the name of the format you want to implement in the following examples (csv, json, ...).
@@ -166,6 +167,8 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 ##### Define Importer-Service for Generic Importer in services_bar.yml with ResourceImporter
  
 ```yaml
+# config/services.yaml
+
 sylius.importer.foo.bar:
     class: FriendsOfSylius\SyliusImportExportPlugin\Importer\ResourceImporter
     arguments:
@@ -186,8 +189,10 @@ class FooImporter implements ImporterInterface
 ##### Define service instead of the above mentioned
 
 ```yaml
+# config/services.yaml
+
 sylius.importer.foo.bar:
-  class: FriendsOfSylius\SyliusImportExportPlugin\Importer\FooImporter
+  class: App\FooImporter
   arguments:
       - "@sylius.factory.bar_reader"
       - "@sylius.manager.foo"
@@ -202,6 +207,8 @@ sylius.importer.foo.bar:
 ##### Define processor service with generic ResourceProcessor in services.yml
 
 ```yaml
+# config/services.yaml
+
 sylius.processor.foo:
     class: FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessor
     arguments:
@@ -228,6 +235,8 @@ class FooProcessor implements ResourceProcessorInterface
 ##### Define processor service with _FooProcessor_ in services.yml instead of the above mentioned generic one
  
 ```yaml
+# config/services.yaml
+
  sylius.processor.tax_categories:
      class: FriendsOfSylius\SyliusImportExportPlugin\Processor\FooProcessor
      arguments:
@@ -239,11 +248,13 @@ class FooProcessor implements ResourceProcessorInterface
 ```
 
 #### Validating Metadata
+
 Each Processor has defined mandatory 'HeaderKeys'. For basic validation of these HeaderKeys you can use 
 "@sylius.importer.metadata_validator". Of course it is also possible to implement you own Validator, by implementing the 
 MetadataValidatorInterface and injecting it in your FooProcessor instead of the generic one.
 
 ### Defining new Exporters
+
 #### Notes
   
   - Replace `foo` with the name of the type you want to implement in the following examples.
@@ -252,11 +263,14 @@ MetadataValidatorInterface and injecting it in your FooProcessor instead of the 
     in case a generic type implementation is not possible.
 
 ### Exporters
+
 #### Adding a ResourceExporter
 
 Define your ResourceExporter in services_bar.yml (at the moment only csv is supported for export)
 
 ```yaml
+# config/services.yaml
+
   sylius.exporter.foo.bar:
      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
      arguments:
@@ -271,6 +285,8 @@ Define your ResourceExporter in services_bar.yml (at the moment only csv is supp
 Note that `app.foo` is the alias as you have named your resource:
 
 ```yaml
+# config/packages/_sylius.yaml
+
 sylius_resource:
     resources:
         app.foo:
@@ -279,6 +295,8 @@ sylius_resource:
 Define the PluginPool for your ResourceExporter in services.yml
 
 ```yaml
+# config/services.yaml
+
 # PluginPools for Exporters. Can contain multiple Plugins
   sylius.exporter.pluginpool.foo:
       class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
@@ -290,6 +308,8 @@ Define the PluginPool for your ResourceExporter in services.yml
 Define the Plugin for your FooResource in services.yml
 
 ```yaml
+# config/services.yaml
+
   # Plugins for Exporters
   sylius.exporter.plugin.resource.foo:
       class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
@@ -302,6 +322,8 @@ Define the Plugin for your FooResource in services.yml
 In case you want to use the grid filters (in the admin) to filter your output, add to your routing:
 
 ```yaml
+# config/services.yaml
+
 app_export_data_foo:
     path: /admin/export/sylius.resource/{format}
     methods: [GET]
@@ -315,6 +337,8 @@ app_export_data_foo:
 And add the associated controller service definition to your services
 
 ```yaml
+# config/services.yaml
+
 sylius.controller.export_data_foo:
     public: true
     class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
@@ -331,8 +355,11 @@ sylius.controller.export_data_foo:
 In case you don't add it, the UI exporters will still function. They will simply load all data of that resource for the export (similar as CLI).
 
 ### A real example
+
 Define the Countries-Exporter in services_csv.yml
 ```yaml
+# config/services.yaml
+
   sylius.exporter.countries.csv:
      class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\ResourceExporter
      arguments:
@@ -347,6 +374,8 @@ Define the Countries-Exporter in services_csv.yml
 Define the PluginPool for the Countries-Exporter in services.yml
 
 ```yaml
+# config/services.yaml
+
 # PluginPools for Exporters. Can contain multiple Plugins
   sylius.exporter.pluginpool.countries:
       class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\PluginPool
@@ -358,6 +387,8 @@ Define the PluginPool for the Countries-Exporter in services.yml
 Define the Plugin for the Country-Resource in services.yml
 
 ```yaml
+# config/services.yaml
+
   # Plugins for Exporters
   sylius.exporter.plugin.resource.country:
       class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Plugin\ResourcePlugin
@@ -370,13 +401,13 @@ Define the Plugin for the Country-Resource in services.yml
 
 The exporter will instantly be available as a exporter for the command line.
 
-   ```bash
-   $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
-   ```
+    $ bin/console sylius:export country my/countries/export/csv/file.csv --format=csv
    
 Optional add the routing:
 
 ```yaml
+# config/routes.yaml
+
 app_export_data_country:
     path: /admin/export/sylius.country/{format}
     methods: [GET]
@@ -391,6 +422,8 @@ app_export_data_country:
 And add the associated controller service definition to your services
 
 ```yaml
+# config/services.yaml
+
 sylius.controller.export_data_country:
     public: true
     class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ExportDataController
@@ -404,6 +437,7 @@ sylius.controller.export_data_country:
 ```
 
 ### PluginPool
+
 The idea behind the plugin pool is, to be able to have different kind of plugins, which could possibly
 provide data based on a custom sql that queries additional data for the exported resource, such as the 
 preferred brand of a customer. 
@@ -414,32 +448,25 @@ With the provided keys you can influence which fields of a resource are exported
 
   - Test application install
 
-    ```bash
-    $ composer require sylius/sylius symfony/symfony
-    $ (cd tests/Application && yarn install)
-    $ (cd tests/Application && yarn run gulp)
-    $ (cd tests/Application && bin/console assets:install web -e test)
+        $ composer require sylius/sylius symfony/symfony
+        $ (cd tests/Application && yarn install)
+        $ (cd tests/Application && yarn run gulp)
+        $ (cd tests/Application && bin/console assets:install web -e test)
     
-    $ (cd tests/Application && bin/console doctrine:database:create -e test)
-    $ (cd tests/Application && bin/console doctrine:schema:create -e test)
+        $ (cd tests/Application && bin/console doctrine:database:create -e test)
+        $ (cd tests/Application && bin/console doctrine:schema:create -e test)
 
   - PHPUnit
 
-    ```bash
-    $ bin/phpunit
-    ```
+        $ bin/phpunit
 
   - PHPSpec
 
-    ```bash
-    $ bin/phpspec run
-    ```
+        $ bin/phpspec run
 
   - Behat (non-JS scenarios)
 
-    ```bash
-    $ bin/behat features --tags="~@javascript"
-    ```
+        $ bin/behat features --tags="~@javascript"
 
   - Behat (JS scenarios)
  
@@ -447,36 +474,27 @@ With the provided keys you can influence which fields of a resource are exported
     
     2. Run Selenium server with previously downloaded Chromedriver:
     
-        ```bash
-        $ bin/selenium-server-standalone -Dwebdriver.chrome.driver=chromedriver
-        ```
+           $ bin/selenium-server-standalone -Dwebdriver.chrome.driver=chromedriver
+
     3. Run test application's webserver on `localhost:8080`:
     
-        ```bash
-        $ (cd tests/Application && bin/console server:run 127.0.0.1:8080 -d web -e test)
-        ```
+           $ (cd tests/Application && bin/console server:run 127.0.0.1:8080 -d web -e test)
     
     4. Run Behat:
     
-        ```bash
-        $ bin/behat features --tags="@javascript"
-        ```
+           $ bin/behat features --tags="@javascript"
 
 ### Opening Sylius with your plugin
 
 - Using `test` environment:
 
-    ```bash
-    $ (cd tests/Application && bin/console sylius:fixtures:load -e test)
-    $ (cd tests/Application && bin/console server:run -d web -e test)
-    ```
+      $ (cd tests/Application && bin/console sylius:fixtures:load -e test)
+      $ (cd tests/Application && bin/console server:run -d web -e test)
     
 - Using `dev` environment:
 
-    ```bash
-    $ (cd tests/Application && bin/console sylius:fixtures:load -e dev)
-    $ (cd tests/Application && bin/console server:run -d web -e dev)
-    ```
+      $ (cd tests/Application && bin/console sylius:fixtures:load -e dev)
+      $ (cd tests/Application && bin/console server:run -d web -e dev)
 
 Fixture file with login information:
 https://github.com/Sylius/Sylius/blob/master/src/Sylius/Bundle/CoreBundle/Resources/config/app/fixtures.yml
