@@ -43,15 +43,19 @@ final class ExportDataCommand extends Command
                 new InputArgument('file', InputArgument::OPTIONAL, 'The target file to export to.'),
                 new InputOption('format', null, InputOption::VALUE_REQUIRED, 'The format of the file to export to'),
                 /** @todo Extracting details to show with this option. At the moment it will have no effect */
-                new InputOption('details', null, InputOption::VALUE_NONE,
-                    'If to return details about skipped/failed rows'),
+                new InputOption(
+                    'details',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'If to return details about skipped/failed rows'
+                ),
             ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $exporter */
         $exporter = $input->getArgument('exporter');
@@ -59,7 +63,7 @@ final class ExportDataCommand extends Command
         if (empty($exporter)) {
             $this->listExporters($input, $output);
 
-            return;
+            return 0;
         }
 
         $format = $input->getOption('format');
@@ -97,6 +101,8 @@ final class ExportDataCommand extends Command
             $file,
             $name
         ));
+
+        return 0;
     }
 
     private function listExporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void
