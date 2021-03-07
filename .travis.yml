@@ -46,6 +46,16 @@ matrix:
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.6.* symfony/symfony:4.2.*"
 
+        # Sylius 1.9
+        -
+            php: 7.2
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.9.* symfony/symfony:5.2.*"
+        -
+            php: 7.3
+            env:
+                - DEPENDENCY_VERSIONS="sylius/sylius:1.9.* symfony/symfony:5.2.*"
+
 before_install:
     - phpenv config-rm xdebug.ini
     - echo "memory_limit=4096M" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
