@@ -75,7 +75,7 @@ final class ImportDataCommand extends Command
             } catch (\Throwable $exception) {
                 $output->writeln("<error>Format can't be detected.</error>");
 
-                return;
+                return 0;
             } finally {
                 $output->writeln('You can set it manually by using --format parameter');
             }
