@@ -38,22 +38,26 @@ final class ImportDataCommand extends Command
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputArgument('file', InputArgument::OPTIONAL, 'The file to import.'),
                 new InputOption('format', null, InputOption::VALUE_OPTIONAL, 'The format of the file to import'),
-                new InputOption('details', null, InputOption::VALUE_NONE,
-                    'If to return details about skipped/failed rows'),
+                new InputOption(
+                    'details',
+                    null,
+                    InputOption::VALUE_NONE,
+                    'If to return details about skipped/failed rows'
+                ),
             ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $importer */
         $importer = $input->getArgument('importer');
         if (empty($importer)) {
             $this->listImporters($input, $output);
 
-            return;
+            return 0;
         }
 
         $file = $input->getArgument('file');
@@ -78,7 +82,7 @@ final class ImportDataCommand extends Command
         }
 
         if (!\is_string($format)) {
-            return;
+            return 0;
         }
 
         $name = ImporterRegistry::buildServiceName($importer, $format);
@@ -120,6 +124,8 @@ final class ImportDataCommand extends Command
                 sprintf('Failed %s: %s', $countOrRows, $failed),
             ]
         );
+
+        return 0;
     }
 
     private function listImporters(InputInterface $input, OutputInterface $output, ?string $errorMessage = null): void

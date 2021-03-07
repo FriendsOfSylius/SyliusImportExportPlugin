@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Common\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 
 final class JsonResourceImporter extends ResourceImporter implements SingleDataArrayImporterInterface
 {
     public function __construct(
-        EntityManagerInterface $objectManager,
+        ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
         ImportResultLoggerInterface $importerResult,
         int $batchSize,
