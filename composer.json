@@ -5,7 +5,7 @@
     "license": "MIT",
     "require": {
         "php": "^7.2",
-        "sylius/sylius": "^1.4",
+        "sylius/sylius": "^1.9",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^4.4 || ^5.2",
         "queue-interop/queue-interop": "^0.6.2 || ^0.7 || ^0.8"
@@ -30,10 +30,10 @@
         "friends-of-behat/variadic-extension": "^1.1",
         "lakion/mink-debug-extension": "^1.2.3",
         "phpspec/phpspec": "^5.0",
-        "phpstan/phpstan-webmozart-assert": "^0.11.1",
-        "phpstan/phpstan-symfony": "^0.11.2",
-        "phpstan/phpstan-doctrine": "^0.11.2",
-        "phpstan/phpstan-shim": "^0.11.4",
+        "phpstan/phpstan": "0.12.68",
+        "phpstan/phpstan-doctrine": "0.12.30",
+        "phpstan/phpstan-webmozart-assert": "0.12.8",
+        "phpstan/phpstan-symfony": "^0.12",
         "phpunit/phpunit": "^6.5",
         "sensiolabs/security-checker": "^5.0",
         "sylius-labs/coding-standard": "^2.0",
@@ -78,6 +78,9 @@
     "extra": {
         "branch-alias": {
             "dev-master": "1.5-dev"
+        },
+        "symfony": {
+            "require": "^5.2"
         }
     }
 }
