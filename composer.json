@@ -8,7 +8,7 @@
         "sylius/sylius": "^1.4",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^4.4 || ^5.2",
-        "queue-interop/queue-interop": "^0.6.2|^0.7|^0.8"
+        "queue-interop/queue-interop": "^0.6.2 || ^0.7 || ^0.8"
     },
     "suggest": {
         "portphp/spreadsheet": "To support importing Excel and LibreOffice Calc files, use version ^1.1",
@@ -37,12 +37,12 @@
         "phpunit/phpunit": "^6.5",
         "sensiolabs/security-checker": "^5.0",
         "sylius-labs/coding-standard": "^2.0",
-        "symfony/browser-kit": "^3.4|^4.1",
-        "symfony/debug-bundle": "^3.4|^4.1",
-        "symfony/dotenv": "^4.2",
-        "symfony/intl": "^3.4|^4.1",
-        "symfony/web-profiler-bundle": "^3.4|^4.1",
-        "symfony/web-server-bundle": "^3.4|^4.1",
+        "symfony/browser-kit": "^4.4 || ^5.2",
+        "symfony/debug-bundle": "^4.4 || ^5.2",
+        "symfony/dotenv": "^4.4 || ^5.2",
+        "symfony/intl": "^4.4 || ^5.2",
+        "symfony/web-profiler-bundle": "^4.4 || ^5.2",
+        "symfony/web-server-bundle": "^4.4 || ^5.2",
         "portphp/csv": "^1.1.0",
         "portphp/spreadsheet": "^1.0.0-alpha",
         "predis/predis": "^1.1"
