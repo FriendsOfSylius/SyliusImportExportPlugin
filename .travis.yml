@@ -45,7 +45,6 @@ matrix:
             php: 7.3
             env:
                 - DEPENDENCY_VERSIONS="sylius/sylius:1.6.* symfony/symfony:4.2.*"
-
         # Sylius 1.9
         # Sylius ^1.9 requires PHP ^7.3
         -
@@ -59,6 +58,7 @@ before_install:
     - mkdir -p "${SYLIUS_CACHE_DIR}"
 
 install:
+    - composer self-update
     - composer require ${DEPENDENCY_VERSIONS} --no-update
     - composer update --prefer-dist
     - (cd tests/Application && yarn install)
