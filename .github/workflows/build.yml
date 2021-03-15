@@ -1,4 +1,4 @@
-name: Legacy Build
+name: Build
 
 on:
     push: ~
