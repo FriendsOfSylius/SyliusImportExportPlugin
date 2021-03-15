@@ -19,8 +19,8 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.3, 7.2]
-                symfony: [^4.2, ^5.2]
+                php: [7.4, 7.3]
+                symfony: [^4.4, ^5.2]
                 sylius: [~1.8.0, ~1.9.0]
                 node: [10.x]
                 mysql: [5.7, 8.0]
@@ -32,9 +32,7 @@ jobs:
                     -
                         sylius: ~1.8.0
                         symfony: ^5.2
-                    -
-                        sylius: ~1.9.0
-                        symfony: ^4.2
+
         env:
             APP_ENV: test
             DATABASE_URL: "mysql://root:root@127.0.0.1/sylius?serverVersion=${{ matrix.mysql }}"
@@ -82,12 +80,14 @@ jobs:
                     key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json **/composer.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
             -
                 name: Restrict Symfony version
                 if: matrix.symfony != ''
                 run: |
                     composer global require --no-progress --no-scripts --no-plugins "symfony/flex:^1.10"
                     composer config extra.symfony.require "${{ matrix.symfony }}"
+
             -
                 name: Restrict Sylius version
                 if: matrix.sylius != ''
@@ -110,6 +110,7 @@ jobs:
                     key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
                     restore-keys: |
                         ${{ runner.os }}-node-${{ matrix.node }}-yarn-
+
             -
                 name: Install JS dependencies
                 run: (cd tests/Application && yarn install)
@@ -119,11 +120,13 @@ jobs:
                 run: |
                     (cd tests/Application && bin/console doctrine:database:create -vvv)
                     (cd tests/Application && bin/console doctrine:migrations:migrate -n -vvv -q)
+
             -
                 name: Prepare test application assets
                 run: |
                     (cd tests/Application && bin/console assets:install public -vvv)
                     (cd tests/Application && yarn build)
+
             -
                 name: Prepare test application cache
                 run: (cd tests/Application && bin/console cache:warmup -vvv)
