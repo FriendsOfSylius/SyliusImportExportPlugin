@@ -20,7 +20,7 @@
     "require-dev": {
         "behat/behat": "^3.4",
         "behat/mink": "^1.8",
-        "behat/mink-browserkit-driver": "^1.3",
+        "friends-of-behat/mink-browserkit-driver": "^1.4",
         "behat/mink-extension": "^2.2",
         "behat/mink-selenium2-driver": "^1.3",
         "enqueue/redis": "^0.8.23",

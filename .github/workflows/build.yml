@@ -112,14 +112,11 @@ jobs:
 
             -
                 name: Install JS dependencies
-                run: |
-                    (cd tests/Application && yarn install)
-                    (cd tests/Application && yarn run gulp)
+                run: (cd tests/Application && yarn install)
 
             -
                 name: Prepare test application assets
-                run: |
-                    (cd tests/Application && bin/console assets:install public -vvv)
+                run: (cd tests/Application && bin/console assets:install public -vvv)
                     
             -
                 name: Prepare test application database
