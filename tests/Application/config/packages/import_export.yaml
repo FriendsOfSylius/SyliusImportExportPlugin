@@ -1,8 +1,0 @@
-
-fos_sylius_import_export:
-    message_queue:
-        service_id: 'redis_connection_factory'
-
-services:
-    redis_connection_factory:
-        class: Enqueue\Redis\RedisConnectionFactory
