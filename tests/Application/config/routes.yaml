@@ -1,9 +1,3 @@
-acme_sylius_example_shop:
-    resource: "@AcmeSyliusExamplePlugin/Resources/config/shop_routing.yml"
-    prefix: /{_locale}
-    requirements:
-        _locale: ^[a-z]{2}(?:_[A-Z]{2})?$
-
-acme_sylius_example_admin:
-    resource: "@AcmeSyliusExamplePlugin/Resources/config/admin_routing.yml"
+sylius_import_export:
+    resource: "@FOSSyliusImportExportPlugin/Resources/config/routing.yml"
     prefix: /admin
