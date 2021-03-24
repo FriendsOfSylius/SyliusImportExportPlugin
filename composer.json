@@ -18,7 +18,7 @@
         "enqueue/sqs" : "To support message queuing via sqs"
     },
     "require-dev": {
-        "behat/behat": "^3.4",
+        "behat/behat": "^3.6.1",
         "behat/mink": "^1.8",
         "friendsofsymfony/oauth-server-bundle": "^1.6 || >2.0.0-alpha.0 ^2.0@dev",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
@@ -31,10 +31,11 @@
         "friends-of-behat/variadic-extension": "^1.1",
         "lakion/mink-debug-extension": "^1.2.3",
         "phpspec/phpspec": "^7.0",
-        "phpstan/phpstan": "0.12.68",
-        "phpstan/phpstan-doctrine": "0.12.30",
-        "phpstan/phpstan-webmozart-assert": "0.12.8",
-        "phpstan/phpstan-symfony": "^0.12",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "0.12.82",
+        "phpstan/phpstan-doctrine": "0.12.33",
+        "phpstan/phpstan-strict-rules": "^0.12.0",
+        "phpstan/phpstan-webmozart-assert": "0.12.12",
         "phpunit/phpunit": "^6.5",
         "sensiolabs/security-checker": "^5.0",
         "sylius-labs/coding-standard": "^3.2",
@@ -68,7 +69,8 @@
         "classmap": ["tests/Application/Kernel.php"]
     },
     "config": {
-        "bin-dir": "bin"
+        "bin-dir": "bin",
+        "sort-packages": true
     },
     "scripts": {
         "analyse": [
