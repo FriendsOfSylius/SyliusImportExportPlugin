@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
@@ -15,8 +15,8 @@ class ResourceImporter implements ImporterInterface
     /** @var ReaderFactory */
     private $readerFactory;
 
-    /** @var ObjectManager */
-    protected $objectManager;
+    /** @var EntityManager */
+    protected $entityManager;
 
     /** @var ResourceProcessorInterface */
     protected $resourceProcessor;
@@ -38,7 +38,7 @@ class ResourceImporter implements ImporterInterface
 
     public function __construct(
         ReaderFactory $readerFactory,
-        ObjectManager $objectManager,
+        EntityManager $entityManager,
         ResourceProcessorInterface $resourceProcessor,
         ImportResultLoggerInterface $importerResult,
         int $batchSize,
@@ -46,7 +46,7 @@ class ResourceImporter implements ImporterInterface
         bool $stopOnFailure
     ) {
         $this->readerFactory = $readerFactory;
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
         $this->resourceProcessor = $resourceProcessor;
         $this->result = $importerResult;
         $this->batchSize = $batchSize;
@@ -67,7 +67,7 @@ class ResourceImporter implements ImporterInterface
         }
 
         if ($this->batchCount) {
-            $this->objectManager->flush();
+            $this->entityManager->flush();
         }
 
         $this->result->stop();
@@ -83,7 +83,7 @@ class ResourceImporter implements ImporterInterface
 
             ++$this->batchCount;
             if ($this->batchSize && $this->batchCount === $this->batchSize) {
-                $this->objectManager->flush();
+                $this->entityManager->flush();
                 $this->batchCount = 0;
             }
         } catch (ItemIncompleteException $e) {

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityRepository;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoolInterface;
-use FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageRepositoryInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProvider;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\ImageTypesProviderInterface;
@@ -44,8 +44,8 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productTaxonRepository;
     /** @var FactoryInterface */
     private $productImageFactory;
-    /** @var ProductImageRepositoryInterface */
-    private $productImageRepository;
+    /** @var EntityRepository */
+    private $entityRepository;
     /** @var ImageTypesProviderInterface */
     private $imageTypesProvider;
     /** @var \Doctrine\ORM\EntityManagerInterface */
@@ -99,7 +99,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         FactoryInterface $productVariantFactory,
         FactoryInterface $channelPricingFactory,
         ProductTaxonRepository $productTaxonRepository,
-        ProductImageRepositoryInterface $productImageRepository,
+        EntityRepository $entityRepository,
         RepositoryInterface $productVariantRepository,
         RepositoryInterface $channelPricingRepository,
         ImageTypesProviderInterface $imageTypesProvider,
@@ -125,7 +125,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productTaxonFactory = $productTaxonFactory;
         $this->productTaxonRepository = $productTaxonRepository;
         $this->productImageFactory = $productImageFactory;
-        $this->productImageRepository = $productImageRepository;
+        $this->entityRepository = $entityRepository;
         $this->imageTypesProvider = $imageTypesProvider;
         $this->productVariantFactory = $productVariantFactory;
         $this->productVariantRepository = $productVariantRepository;

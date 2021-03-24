@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Service;
 
-use FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageRepositoryInterface;
+use Doctrine\ORM\EntityRepository;
+use FriendsOfSylius\SyliusImportExportPlugin\Decorator\ProductImageTypeRepositoryDecorator;
 
 final class ImageTypesProvider implements ImageTypesProviderInterface
 {
     public const IMAGES_PREFIX = 'Images_';
 
-    /** @var ProductImageRepositoryInterface */
-    private $productImageRepository;
+    /** @var ProductImageTypeRepositoryDecorator */
+    private $imageTypeRepository;
 
-    public function __construct(ProductImageRepositoryInterface $productImageRepository)
+    public function __construct(EntityRepository $entityRepository)
     {
-        $this->productImageRepository = $productImageRepository;
+        $this->imageTypeRepository = new ProductImageTypeRepositoryDecorator($entityRepository);
     }
 
     public function getProductImagesCodesList(): array
@@ -42,7 +43,7 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
     private function extractProductImagesType(string $prefix = ''): array
     {
         $attrSlug = [];
-        $productImages = $this->productImageRepository->findTypes();
+        $productImages = $this->imageTypeRepository->findTypes();
         foreach ($productImages as $attr) {
             if (empty($attr['type'])) {
                 continue;

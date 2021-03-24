@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\ORM\EntityManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
 
 final class JsonResourceImporter extends ResourceImporter implements SingleDataArrayImporterInterface
 {
     public function __construct(
-        ObjectManager $objectManager,
+        EntityManager $entityManager,
         ResourceProcessorInterface $resourceProcessor,
         ImportResultLoggerInterface $importerResult,
         int $batchSize,
         bool $failOnIncomplete,
         bool $stopOnFailure
     ) {
-        $this->objectManager = $objectManager;
+        $this->entityManager = $entityManager;
         $this->resourceProcessor = $resourceProcessor;
         $this->result = $importerResult;
         $this->batchSize = $batchSize;
@@ -51,7 +51,7 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
         }
 
         if ($this->batchCount) {
-            $this->objectManager->flush();
+            $this->entityManager->flush();
         }
 
         $this->result->stop();
@@ -65,6 +65,6 @@ final class JsonResourceImporter extends ResourceImporter implements SingleDataA
     public function importSingleDataArrayWithoutResult(array $dataToImport): void
     {
         $this->resourceProcessor->process($dataToImport);
-        $this->objectManager->flush();
+        $this->entityManager->flush();
     }
 }
