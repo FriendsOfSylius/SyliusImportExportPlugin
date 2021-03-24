@@ -4,8 +4,8 @@
     "description": "import / export plugin for Sylius.",
     "license": "MIT",
     "require": {
-        "php": "^7.2",
-        "sylius/sylius": "^1.9",
+        "php": "^7.3",
+        "sylius/sylius": "~1.8.0 || ~1.9.0",
         "portphp/portphp": "^1.2",
         "symfony/stopwatch": "^4.4 || ^5.2",
         "queue-interop/queue-interop": "^0.6.2 || ^0.7 || ^0.8"
@@ -20,6 +20,7 @@
     "require-dev": {
         "behat/behat": "^3.4",
         "behat/mink": "^1.8",
+        "friendsofsymfony/oauth-server-bundle": "^1.6 || >2.0.0-alpha.0 ^2.0@dev",
         "friends-of-behat/mink-browserkit-driver": "^1.4",
         "behat/mink-extension": "^2.2",
         "behat/mink-selenium2-driver": "^1.3",
