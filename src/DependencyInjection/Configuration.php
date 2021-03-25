@@ -15,7 +15,7 @@ final class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('');
-        $rootNode = $treeBuilder->root('fos_sylius_import_export');
+        $rootNode = $treeBuilder->getRootNode('fos_sylius_import_export');
 
 
         $rootNode
