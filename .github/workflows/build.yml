@@ -158,25 +158,21 @@ jobs:
                 name: Validate database schema
                 run: (cd tests/Application && bin/console doctrine:schema:validate)
 
-            -
-                name: Run PHPStan
-                run: bin/phpstan analyse -c phpstan.neon -l max src/
+            # -
+            #     name: Run PHPStan
+            #     run: bin/phpstan analyse -c phpstan.neon -l max src/
 
-            -
-                name: Run Psalm
-                run: vendor/bin/psalm
-
-            -
-                name: Run PHPSpec
-                run: vendor/bin/phpspec run --ansi -f progress --no-interaction
+            # -
+            #     name: Run PHPSpec
+            #     run: bin/phpspec run --ansi -f progress --no-interaction
 
             -
                 name: Run PHPUnit
-                run: vendor/bin/phpunit --colors=always
+                run: bin/phpunit --colors=always
 
-            -
-                name: Run Behat
-                run: vendor/bin/behat --colors --strict -vvv --no-interaction || vendor/bin/behat --colors --strict -vvv --no-interaction --rerun
+            # -
+            #     name: Run Behat
+            #     run: bin/behat --colors --strict -vvv --no-interaction || bin/behat --colors --strict -vvv --no-interaction --rerun
 
             -
                 name: Upload Behat logs
