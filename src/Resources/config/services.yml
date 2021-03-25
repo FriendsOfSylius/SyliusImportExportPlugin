@@ -355,7 +355,7 @@ services:
     sylius.class_metadata.product_image:
         class: Doctrine\ORM\Mapping\ClassMetadata
         factory:   ['@doctrine.orm.default_entity_manager' , 'getClassMetadata']
-        arguments: ['Sylius\Component\Core\Model\ProductImage']
+        arguments: ['%sylius.model.product_image.class%']
 
     sylius.repository.product_image:
         class: FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageImageRepository
