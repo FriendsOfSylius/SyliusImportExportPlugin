@@ -40,14 +40,13 @@ final class ImportDataFromMessageQueueCommand extends Command
             ->setDefinition([
                 new InputArgument('importer', InputArgument::OPTIONAL, 'The importer to use.'),
                 new InputOption('timeout', 't', InputOption::VALUE_OPTIONAL, 'The time in ms the importer will wait for some input.', '0'),
-            ])
-        ;
+            ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output): void
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         /** @var string $importer */
         $importer = $input->getArgument('importer');
@@ -55,7 +54,7 @@ final class ImportDataFromMessageQueueCommand extends Command
         if (empty($importer)) {
             $this->listImporters($input, $output);
 
-            return;
+            return 0;
         }
 
         /** @var string $timeout */
@@ -80,6 +79,8 @@ final class ImportDataFromMessageQueueCommand extends Command
         $mqItemReader = $this->container->get('sylius.message_queue_reader');
         $this->importJsonDataFromMessageQueue($mqItemReader, $importer, $service, $output, (int) $timeout);
         $this->finishImport($name, $output);
+
+        return 0;
     }
 
     private function finishImport(string $name, OutputInterface $output): void
