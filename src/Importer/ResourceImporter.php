@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
 use Port\Reader\ReaderFactory;
-use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Exception\ItemIncompleteException;
 use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterface;
@@ -15,7 +15,7 @@ class ResourceImporter implements ImporterInterface
     /** @var ReaderFactory */
     private $readerFactory;
 
-    /** @var EntityManagerInterface */
+    /** @var ObjectManager */
     protected $objectManager;
 
     /** @var ResourceProcessorInterface */
@@ -38,7 +38,7 @@ class ResourceImporter implements ImporterInterface
 
     public function __construct(
         ReaderFactory $readerFactory,
-        EntityManagerInterface $objectManager,
+        ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
         ImportResultLoggerInterface $importerResult,
         int $batchSize,
