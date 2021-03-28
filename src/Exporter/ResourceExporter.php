@@ -13,7 +13,7 @@ class ResourceExporter implements ResourceExporterInterface
     /** @var string[] */
     protected $resourceKeys;
 
-    /** @var WriterInterface */
+    /** @var ?WriterInterface */
     protected $writer;
 
     /** @var PluginPoolInterface */
@@ -26,7 +26,7 @@ class ResourceExporter implements ResourceExporterInterface
      * @param string[] $resourceKeys
      */
     public function __construct(
-        WriterInterface $writer,
+        ?WriterInterface $writer,
         PluginPoolInterface $pluginPool,
         array $resourceKeys,
         ?TransformerPoolInterface $transformerPool
@@ -42,6 +42,12 @@ class ResourceExporter implements ResourceExporterInterface
      */
     public function setExportFile(string $filename): void
     {
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
+
         $this->writer->setFile($filename);
     }
 
@@ -50,6 +56,12 @@ class ResourceExporter implements ResourceExporterInterface
      */
     public function getExportedData(): string
     {
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
+
         return $this->writer->getFileContent();
     }
 
@@ -58,6 +70,11 @@ class ResourceExporter implements ResourceExporterInterface
      */
     public function export(array $idsToExport): void
     {
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
         $this->pluginPool->initPlugins($idsToExport);
         $this->writer->write($this->resourceKeys);
 
@@ -74,6 +91,13 @@ class ResourceExporter implements ResourceExporterInterface
     public function exportData(array $idsToExport): array
     {
         $this->pluginPool->initPlugins($idsToExport);
+
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
+
         $this->writer->write($this->resourceKeys);
 
         $exportIdDataArray = [];
@@ -88,6 +112,12 @@ class ResourceExporter implements ResourceExporterInterface
     private function writeDataForId(string $id): void
     {
         $dataForId = $this->getDataForId($id);
+
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
 
         $this->writer->write($dataForId);
     }
@@ -110,6 +140,12 @@ class ResourceExporter implements ResourceExporterInterface
 
     public function finish(): void
     {
+        if (null === $this->writer) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a writer parameter', __METHOD__, __CLASS__
+            ));
+        }
+
         $this->writer->finish();
     }
 }

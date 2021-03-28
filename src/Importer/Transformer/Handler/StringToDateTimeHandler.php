@@ -18,13 +18,14 @@ final class StringToDateTimeHandler extends Handler
 
     /**
      * {@inheritdoc}
+     * @return \DateTime|bool
      */
-    protected function process($type, $value)
+    protected function process(?string $type, string $value)
     {
         return \DateTime::createFromFormat($this->format, $value);
     }
 
-    protected function allows($type, $value): bool
+    protected function allows(?string $type, string $value): bool
     {
         return $type === 'datetime';
     }

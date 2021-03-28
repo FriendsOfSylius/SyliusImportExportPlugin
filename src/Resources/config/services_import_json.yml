@@ -3,6 +3,7 @@ services:
     sylius.importer.countries.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.country"
             - "@sylius.processor.countries"
             - "@sylius.importer.result"
@@ -15,6 +16,7 @@ services:
     sylius.importer.customer_group.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.customer_group"
             - "@sylius.processor.customer_groups"
             - "@sylius.importer.result"
@@ -27,6 +29,7 @@ services:
     sylius.importer.payment_methods.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.payment_method"
             - "@sylius.processor.payment_methods"
             - "@sylius.importer.result"
@@ -39,6 +42,7 @@ services:
     sylius.importer.tax_categories.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.tax_category"
             - "@sylius.processor.tax_categories"
             - "@sylius.importer.result"
@@ -52,6 +56,7 @@ services:
     sylius.importer.customers.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.customer"
             - "@sylius.processor.customers"
             - "@sylius.importer.result"
@@ -64,6 +69,7 @@ services:
     sylius.importer.taxons.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Importer\JsonResourceImporter
         arguments:
+            - null
             - "@sylius.manager.taxon"
             - "@sylius.processor.taxonomies"
             - "@sylius.importer.result"

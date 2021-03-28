@@ -3,6 +3,7 @@ services:
     sylius.exporter.countries.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
+            - null
             - "@sylius.exporter.pluginpool.countries"
             - ["Id", "Code" ,"Enabled"]
             - "@sylius.exporters_transformer_pool"
@@ -12,6 +13,7 @@ services:
     sylius.exporter.orders.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
+            - null
             - "@sylius.exporter.pluginpool.orders"
             - [ "State", "Product_list" , "Total" ,  "Currency_code", "Checkout_completed_at", "Checkout_state", "Payment_state", "Shipping_state", "Token_value", "Gender", "Full_name", "Email", "Telephone", "Shipping_address", "Billing_address" , "Customer_ip", "Notes"]
             - "@sylius.exporters_transformer_pool"
@@ -21,6 +23,7 @@ services:
     sylius.exporter.customers.json:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\JsonResourceExporter
         arguments:
+            - null
             - "@sylius.exporter.pluginpool.customers"
             - ["Email", "Email_canonical", "First_name" , "Last_name" ,  "Birthday", "Gender", "Phone_number", "Subscribed_to_newsletter"]
             - "@sylius.exporters_transformer_pool"

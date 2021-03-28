@@ -30,7 +30,7 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
 
     public function extractImageTypeFromImport(array $keys): array
     {
-        $keys = \array_filter($keys, function ($value) {
+        $keys = \array_filter($keys, function ($value): bool {
             return \mb_substr($value, 0, \mb_strlen(self::IMAGES_PREFIX)) === self::IMAGES_PREFIX;
         });
 
@@ -44,7 +44,7 @@ final class ImageTypesProvider implements ImageTypesProviderInterface
         $attrSlug = [];
         $productImages = $this->productImageRepository->findTypes();
         foreach ($productImages as $attr) {
-            if (empty($attr['type'])) {
+            if (null === $attr['type'] || '' === $attr['type']) {
                 continue;
             }
 

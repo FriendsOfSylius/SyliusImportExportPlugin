@@ -67,9 +67,9 @@ final class ProductResourcePlugin extends ResourcePlugin
     {
         $mainTaxonSlug = '';
 
-        /** @var \Sylius\Component\Core\Model\TaxonInterface $taxon */
+        /** @var \Sylius\Component\Core\Model\TaxonInterface $mainTaxon */
         $mainTaxon = $resource->getMainTaxon();
-        if (null !== $mainTaxon) {
+        if (null != $mainTaxon) {
             $mainTaxonSlug = $mainTaxon->getCode();
         }
 
@@ -89,7 +89,7 @@ final class ProductResourcePlugin extends ResourcePlugin
     {
         $channelSlug = '';
 
-        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channel */
+        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channels */
         $channels = $resource->getChannels();
         foreach ($channels as $channel) {
             $channelSlug .= $channel->getCode() . '|';
@@ -128,7 +128,7 @@ final class ProductResourcePlugin extends ResourcePlugin
             return;
         }
 
-        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channel */
+        /** @var \Sylius\Component\Core\Model\ChannelInterface[] $channels */
         $channels = $resource->getChannels();
         foreach ($channels as $channel) {
             /** @var ChannelPricingInterface|null $channelPricing */

@@ -26,13 +26,13 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($key, $value): ?string
+    protected function process(?string $key, $value): ?string
     {
-        return money_format($this->format, $value / 100);
+        return \money_format($this->format, $value / 100);
     }
 
-    protected function allows($key, $value): bool
+    protected function allows(?string $key, $value): bool
     {
-        return is_int($value) && in_array($key, $this->keys);
+        return is_int($value) && in_array($key, $this->keys, true);
     }
 }

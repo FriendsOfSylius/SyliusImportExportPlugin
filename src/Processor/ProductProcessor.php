@@ -213,7 +213,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         foreach ($this->attrCode as $attrCode) {
             $attributeValue = $product->getAttributeByCodeAndLocale($attrCode);
 
-            if (empty($data[$attrCode])) {
+            if ([] === $data[$attrCode]) {
                 if ($attributeValue !== null) {
                     $product->removeAttribute($attributeValue);
                 }
@@ -249,7 +249,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->setShortDescription(substr($data['Short_description'], 0, 255));
         $product->setMetaDescription(substr($data['Meta_description'], 0, 255));
         $product->setMetaKeywords(substr($data['Meta_keywords'], 0, 255));
-        $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
+        $product->setSlug($product->getSlug() ?? $this->slugGenerator->generate($product->getName()));
     }
 
     private function setVariant(ProductInterface $product, array $data): void
@@ -344,8 +344,8 @@ final class ProductProcessor implements ResourceProcessorInterface
 
             // remove old images if import is empty
             foreach ($productImageByType as $productImage) {
-                if (empty($data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
-                    if ($productImage !== null) {
+                if (null === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType] || '' === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType]) {
+                    if ($productImage != null) {
                         $product->removeImage($productImage);
                     }
 
@@ -353,7 +353,7 @@ final class ProductProcessor implements ResourceProcessorInterface
                 }
             }
 
-            if (empty($data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
+            if (null === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType] || '' === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType]) {
                 continue;
             }
 
@@ -371,7 +371,9 @@ final class ProductProcessor implements ResourceProcessorInterface
 
         // create image if import has new one
         foreach ($this->imageTypesProvider->extractImageTypeFromImport(\array_keys($data)) as $imageType) {
-            if (\in_array($imageType, $productImageCodes) || empty($data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
+            if (\in_array($imageType, $productImageCodes, true)
+                || (null === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType]
+                    || '' === $data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
                 continue;
             }
 

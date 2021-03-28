@@ -15,6 +15,9 @@ interface HandlerInterface
 
     /**
      * Loops through handlers until it gets satisfying result
+     *
+     * @param int|\DateTime|array $value
+     * @return mixed
      */
-    public function handle($key, $value);
+    public function handle(?string $key, $value);
 }

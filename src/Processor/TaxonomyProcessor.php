@@ -92,7 +92,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
         return $taxon;
     }
 
-    private function getLocale(string $locale)
+    private function getLocale(string $locale): string
     {
         if ('' === $locale) {
             return  $this->localeProvider->getDefaultLocaleCode();
@@ -102,7 +102,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
             $this->availableLocalesCodes = $this->localeProvider->getAvailableLocalesCodes();
         }
 
-        if (in_array($locale, $this->availableLocalesCodes)) {
+        if (in_array($locale, $this->availableLocalesCodes, true)) {
             return $locale;
         }
 

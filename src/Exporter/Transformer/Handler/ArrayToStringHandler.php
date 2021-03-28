@@ -11,12 +11,15 @@ final class ArrayToStringHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($key, $value)
+    protected function process(?string $key, $value): string
     {
         return \implode('|', $value);
     }
 
-    protected function allows($key, $value): bool
+    /**
+     * {@inheritdoc}
+     */
+    protected function allows(?string $key, $value): bool
     {
         return \is_array($value);
     }

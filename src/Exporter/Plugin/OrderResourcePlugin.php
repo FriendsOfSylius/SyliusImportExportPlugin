@@ -143,7 +143,7 @@ class OrderResourcePlugin extends ResourcePlugin
         $str = '';
 
         foreach ($items as $itemId => $item) {
-            if (!empty($str)) {
+            if (null != $str && '' != $str) {
                 $str .= ' | ';
             }
             $str .= sprintf('%dx %s(id:%d)', $item['count'], $item['name'], $itemId);

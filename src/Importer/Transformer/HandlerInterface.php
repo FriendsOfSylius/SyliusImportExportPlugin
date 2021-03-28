@@ -18,5 +18,5 @@ interface HandlerInterface
      *
      * @return string
      */
-    public function handle($type, $value);
+    public function handle(?string $type, string $value): string;
 }

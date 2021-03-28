@@ -12,7 +12,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Processor\ResourceProcessorInterfac
 
 class ResourceImporter implements ImporterInterface
 {
-    /** @var ReaderFactory */
+    /** @var ?ReaderFactory */
     private $readerFactory;
 
     /** @var ObjectManager */
@@ -37,7 +37,7 @@ class ResourceImporter implements ImporterInterface
     protected $batchCount = 0;
 
     public function __construct(
-        ReaderFactory $readerFactory,
+        ?ReaderFactory $readerFactory,
         ObjectManager $objectManager,
         ResourceProcessorInterface $resourceProcessor,
         ImportResultLoggerInterface $importerResult,
@@ -56,6 +56,11 @@ class ResourceImporter implements ImporterInterface
 
     public function import(string $fileName): ImporterResultInterface
     {
+        if (null === $this->readerFactory) {
+            throw new \InvalidArgumentException(sprintf(
+                'Method %s of class %s require a readFactory parameter', __METHOD__, __CLASS__
+            ));
+        }
         $reader = $this->readerFactory->getReader(new \SplFileObject($fileName));
 
         $this->result->start();
@@ -66,7 +71,7 @@ class ResourceImporter implements ImporterInterface
             }
         }
 
-        if ($this->batchCount) {
+        if ($this->batchCount > 0) {
             $this->objectManager->flush();
         }
 
@@ -82,7 +87,7 @@ class ResourceImporter implements ImporterInterface
             $this->result->success($i);
 
             ++$this->batchCount;
-            if ($this->batchSize && $this->batchCount === $this->batchSize) {
+            if (null !== $this->batchSize && $this->batchCount === $this->batchSize) {
                 $this->objectManager->flush();
                 $this->batchCount = 0;
             }

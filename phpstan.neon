@@ -1,6 +1,12 @@
 parameters:
+    level: max
+    paths:
+        - src
     reportUnmatchedIgnoredErrors: false
     checkMissingIterableValueType: false
+
+    symfony:
+        container_xml_path: tests/Application/var/cache/dev/Tests_FriendsOfSylius_SyliusImportExportPlugin_Application_KernelDevDebugContainer.xml
 
     excludes_analyse:
         # Makes PHPStan crash

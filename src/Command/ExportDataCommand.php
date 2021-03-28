@@ -60,7 +60,7 @@ final class ExportDataCommand extends Command
         /** @var string $exporter */
         $exporter = $input->getArgument('exporter');
 
-        if (empty($exporter)) {
+        if ('' === $exporter) {
             $this->listExporters($input, $output);
 
             return 0;
@@ -121,7 +121,7 @@ final class ExportDataCommand extends Command
 
         $list = [];
         foreach ($exporters as $exporter => $formats) {
-            // prints the exporterentity, implodes the types and outputs them in a form
+            // prints the exporter entity, implodes the types and outputs them in a form
             $list[] = sprintf(
                 '%s (formats: %s)',
                 $exporter,
@@ -132,7 +132,7 @@ final class ExportDataCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
 
-        if ($errorMessage) {
+        if (null !== $errorMessage) {
             throw new \RuntimeException($errorMessage);
         }
     }

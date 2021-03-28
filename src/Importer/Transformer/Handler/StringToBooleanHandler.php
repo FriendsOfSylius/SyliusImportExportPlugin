@@ -11,12 +11,12 @@ final class StringToBooleanHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($type, $value)
+    protected function process(?string $type, string $value): bool
     {
         return (bool) $value;
     }
 
-    protected function allows($type, $value): bool
+    protected function allows(?string $type, string $value): bool
     {
         return $type === 'checkbox';
     }

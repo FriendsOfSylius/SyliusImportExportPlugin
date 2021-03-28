@@ -9,23 +9,11 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\TransformerPoo
 
 final class JsonResourceExporter extends ResourceExporter
 {
+    /** @var array[] */
     private $data = [];
 
     /** @var string */
     private $filename;
-
-    /**
-     * @param string[] $resourceKeys
-     */
-    public function __construct(
-        PluginPoolInterface $pluginPool,
-        array $resourceKeys,
-        ?TransformerPoolInterface $transformerPool
-    ) {
-        $this->pluginPool = $pluginPool;
-        $this->transformerPool = $transformerPool;
-        $this->resourceKeys = $resourceKeys;
-    }
 
     /**
      * {@inheritdoc}
@@ -48,7 +36,8 @@ final class JsonResourceExporter extends ResourceExporter
      */
     public function getExportedData(): string
     {
-        return json_encode($this->data) ?: '';
+        $data = json_encode($this->data);
+        return $data !== false ? $data : '';
     }
 
     /**

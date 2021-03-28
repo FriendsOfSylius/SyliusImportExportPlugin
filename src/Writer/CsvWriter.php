@@ -28,7 +28,7 @@ class CsvWriter implements WriterInterface
     public function setFile(string $filename): void
     {
         $file = fopen($filename, 'w+');
-        if (!$file) {
+        if (false === $file) {
             throw new \Exception('File open failed.');
         }
 

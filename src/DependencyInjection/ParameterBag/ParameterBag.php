@@ -16,15 +16,19 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 
 final class ParameterBag extends FrozenParameterBag implements ParameterBagInterface
 {
+    /** @var Container */
     private $container;
 
-    public function __construct(Container $container)
+    public function __construct(Container $container, array $parameters = [])
     {
+        parent::__construct($parameters);
         $this->container = $container;
     }
 
     /**
      * {@inheritdoc}
+     * 
+     * @return string[]
      */
     public function all()
     {
@@ -33,6 +37,8 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $name
      */
     public function get($name)
     {
@@ -41,6 +47,8 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
 
     /**
      * {@inheritdoc}
+     *
+     * @param string $name
      */
     public function has($name)
     {

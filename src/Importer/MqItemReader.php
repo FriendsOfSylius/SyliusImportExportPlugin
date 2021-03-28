@@ -45,8 +45,7 @@ class MqItemReader implements ItemReaderInterface
         /** @var PsrConsumer $consumer */
         $consumer = $this->context->createConsumer($this->queue);
 
-        /** @var PsrMessage $message */
-        while ($message = $consumer->receive($timeout)) {
+        while (/** @var PsrMessage $message */ $message = $consumer->receive($timeout)) {
             $dataArrayToImport = (array) json_decode($message->getBody());
 
             $service->importSingleDataArrayWithoutResult($dataArrayToImport);

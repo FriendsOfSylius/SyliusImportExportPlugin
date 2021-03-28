@@ -26,7 +26,7 @@ abstract class Handler implements HandlerInterface
     /**
      * {@inheritdoc}
      */
-    final public function handle($type, $value)
+    final public function handle(?string $type, string $value): string
     {
         $response = $this->allows($type, $value) ? $this->process($type, $value) : null;
 
@@ -46,10 +46,10 @@ abstract class Handler implements HandlerInterface
      *
      * @return mixed|null
      */
-    abstract protected function process($type, $value);
+    abstract protected function process(?string $type, string $value);
 
     /**
      * Will define whether this request will be handled by this handler (e.g. check on object type)
      */
-    abstract protected function allows($type, $value): bool;
+    abstract protected function allows(?string $type, string $value): bool;
 }

@@ -15,7 +15,7 @@ class MetadataValidator implements MetadataValidatorInterface
     {
         $missingHeaderKeys = array_diff($headerKeys, array_keys($dataset));
 
-        if (false === empty($missingHeaderKeys)) {
+        if (false === ([] === $missingHeaderKeys)) {
             throw new ItemIncompleteException(
                 sprintf(
                     'The mandatory header-keys, "%s", are missing in the data-set. Found header-keys are "%s". ' .

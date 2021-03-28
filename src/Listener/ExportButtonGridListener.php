@@ -84,7 +84,7 @@ final class ExportButtonGridListener
         ];
 
         $currentRequest = $this->requestStack->getCurrentRequest();
-        if ($currentRequest) {
+        if (null !== $currentRequest) {
             // @TODO Find way to validate the list of criteria injected
             $parameters['criteria'] = $currentRequest->query->get('criteria');
         }
@@ -92,7 +92,7 @@ final class ExportButtonGridListener
         $resource = $this->resource;
 
         $explode = explode('.', $this->resource);
-        if (\is_array($explode) && !empty($explode)) {
+        if (false != $explode && [] != $explode) {
             $resource = \end($explode);
         }
 

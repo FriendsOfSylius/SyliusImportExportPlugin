@@ -51,7 +51,7 @@ final class ImportDataFromMessageQueueCommand extends Command
         /** @var string $importer */
         $importer = $input->getArgument('importer');
 
-        if (empty($importer)) {
+        if ('' === $importer) {
             $this->listImporters($input, $output);
 
             return 0;
@@ -92,7 +92,7 @@ final class ImportDataFromMessageQueueCommand extends Command
         $output->writeln($message);
     }
 
-    private function importJsonDataFromMessageQueue(ItemReaderInterface $mqItemReader, $importer, SingleDataArrayImporterInterface $service, OutputInterface $output, int $timeout): void
+    private function importJsonDataFromMessageQueue(ItemReaderInterface $mqItemReader, string $importer, SingleDataArrayImporterInterface $service, OutputInterface $output, int $timeout): void
     {
         $mqItemReader->initQueue('sylius.export.queue.' . $importer);
         $mqItemReader->readAndImport($service, $timeout);
@@ -124,7 +124,7 @@ final class ImportDataFromMessageQueueCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
 
-        if ($errorMessage) {
+        if (null !== $errorMessage) {
             throw new \RuntimeException($errorMessage);
         }
     }

@@ -12,14 +12,17 @@ use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterImporterPass implements CompilerPassInterface
 {
+    /** @var string[] */
     private $eventHookNames = [
         'taxonomy' => 'app.block_event_listener.admin.taxon.create.after_content',
     ];
 
+    /** @var string[] */
     private $eventNames = [
         'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
     ];
 
+    /** @var string[] */
     private $templateNames = [
         'taxonomy' => '@FOSSyliusImportExportPlugin/Taxonomy/import.html.twig',
     ];
@@ -50,7 +53,7 @@ final class RegisterImporterPass implements CompilerPassInterface
 
             $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
-            if ($container->getParameter('sylius.importer.web_ui')) {
+            if (null !== $container->getParameter('sylius.importer.web_ui')) {
                 $this->registerImportFormBlockEvent($container, $type);
             }
         }

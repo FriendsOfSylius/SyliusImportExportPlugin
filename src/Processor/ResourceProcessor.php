@@ -86,7 +86,7 @@ final class ResourceProcessor implements ResourceProcessorInterface
      */
     private function getResource(array $data): ResourceInterface
     {
-        $lowerCaseKey = strtolower(key($data));
+        $lowerCaseKey = strtolower((string) key($data));
 
         /** @var ResourceInterface|null $resource */
         $resource = $this->resourceRepository->findOneBy([$lowerCaseKey => $data[key($data)]]);

@@ -11,12 +11,12 @@ final class StringToFloatHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($type, $value)
+    protected function process(?string $type, string $value): float
     {
         return (float) $value;
     }
 
-    protected function allows($type, $value): bool
+    protected function allows(?string $type, string $value): bool
     {
         return $type === 'float' || $type === 'percent';
     }

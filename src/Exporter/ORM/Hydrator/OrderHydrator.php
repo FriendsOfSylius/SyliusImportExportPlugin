@@ -7,6 +7,7 @@ namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\ORM\Hydrator;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Sylius\Component\Core\Model\Order;
 use Sylius\Component\Resource\Model\ResourceInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
@@ -46,7 +47,7 @@ final class OrderHydrator implements HydratorInterface
     private function findOrdersQb(array $idsToExport): QueryBuilder
     {
         /**
-         * @var \Doctrine\ORM\EntityRepository
+         * @var \Doctrine\ORM\EntityRepository<Order>
          */
         $repository = $this->repository;
 
@@ -62,7 +63,7 @@ final class OrderHydrator implements HydratorInterface
     private function hydrateOrderItemsQb(array $idsToExport): QueryBuilder
     {
         /**
-         * @var \Doctrine\ORM\EntityRepository
+         * @var \Doctrine\ORM\EntityRepository<Order>
          */
         $repository = $this->repository;
 

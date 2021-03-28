@@ -61,7 +61,7 @@ class PluginPool implements PluginPoolInterface
             $result = $this->getDataForIdFromPlugin($id, $plugin, $result);
         }
 
-        if (!empty($this->exportKeysNotFound)) {
+        if (null != $this->exportKeysNotFound && '' != $this->exportKeysNotFound) {
             throw new \InvalidArgumentException(sprintf(
                 'Not all defined export keys have been found: "%s". Choose from: "%s"',
                 implode(', ', $this->exportKeysNotFound),
@@ -80,14 +80,14 @@ class PluginPool implements PluginPoolInterface
     private function getDataForIdFromPlugin(string $id, PluginInterface $plugin, array $result): array
     {
         foreach ($plugin->getData($id, $this->exportKeys) as $exportKey => $exportValue) {
-            if (false === empty($result[$exportKey])) {
+            if (false === ([] === $result[$exportKey])) {
                 continue;
             }
 
             // no other plugin has delivered a value till now
             $result[$exportKey] = $exportValue;
 
-            $foundKey = array_search($exportKey, $this->exportKeysNotFound);
+            $foundKey = array_search($exportKey, $this->exportKeysNotFound, true);
             unset($this->exportKeysNotFound[$foundKey]);
         }
 

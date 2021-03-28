@@ -72,7 +72,7 @@ final class ImportDataController
         }
         $referer = $request->headers->get('referer');
 
-        return new RedirectResponse($referer);
+        return new RedirectResponse($referer ?? '');
     }
 
     private function getForm(string $importerType): FormInterface

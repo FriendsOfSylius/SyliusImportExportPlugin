@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler;
+use PhpOffice\PhpSpreadsheet\Shared\Date;
 
 final class DateTimeToStringHandler extends Handler
 {
@@ -19,12 +20,15 @@ final class DateTimeToStringHandler extends Handler
     /**
      * {@inheritdoc}
      */
-    protected function process($key, $value)
+    protected function process(?string $key, $value): string
     {
         return $value->format($this->format);
     }
 
-    protected function allows($key, $value): bool
+    /**
+     * {@inheritdoc}
+     */
+    protected function allows(?string $key, $value): bool
     {
         return $value instanceof \DateTimeInterface;
     }

@@ -87,16 +87,19 @@ class ResourcePlugin implements PluginInterface
         return isset($this->data[$id][$exportKey]);
     }
 
-    protected function getDataForResourceAndExportKey(ResourceInterface $resource, string $exportKey)
+    protected function getDataForResourceAndExportKey(ResourceInterface $resource, string $exportKey): array
     {
         return $this->getDataForExportKey((string) $resource->getId(), $exportKey);
     }
 
-    protected function getDataForExportKey(string $id, string $exportKey)
+    protected function getDataForExportKey(string $id, string $exportKey): array
     {
         return $this->data[$id][$exportKey];
     }
 
+    /**
+     * @param mixed $value
+     */
     protected function addDataForResource(ResourceInterface $resource, string $field, $value): void
     {
         $this->data[$resource->getId()][$field] = $value;

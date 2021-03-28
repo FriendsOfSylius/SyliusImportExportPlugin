@@ -19,8 +19,9 @@ final class Pool implements TransformerPoolInterface
 
     /**
      * {@inheritdoc}
+     * @param int|\DateTime|array $value
      */
-    public function handle($key, $value)
+    public function handle(?string $key, $value)
     {
         if (null === $this->handler) {
             $this->registerHandlers();

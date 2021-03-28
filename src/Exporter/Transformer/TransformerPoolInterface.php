@@ -8,6 +8,7 @@ interface TransformerPoolInterface
 {
     /**
      * @return mixed (Something that can cast to string at least)
+     * @param int|\DateTime|array $value
      */
-    public function handle($key, $value);
+    public function handle(?string $key, $value);
 }

@@ -54,13 +54,13 @@ final class ImportDataCommand extends Command
     {
         /** @var string $importer */
         $importer = $input->getArgument('importer');
-        if (empty($importer)) {
+        if ('' === $importer) {
             $this->listImporters($input, $output);
 
             return 0;
         }
 
-        $file = $input->getArgument('file');
+        $file = $input->getOption('file');
         $format = $input->getOption('format');
 
         if (null === $format) {
@@ -104,7 +104,7 @@ final class ImportDataCommand extends Command
         $io = new SymfonyStyle($input, $output);
 
         $details = $input->getOption('details');
-        if ($details) {
+        if ('' !== $details) {
             $imported = implode(', ', $result->getSuccessRows());
             $skipped = implode(', ', $result->getSkippedRows());
             $failed = implode(', ', $result->getFailedRows());
@@ -153,7 +153,7 @@ final class ImportDataCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $io->listing($list);
 
-        if ($errorMessage) {
+        if (null !== $errorMessage) {
             throw new \RuntimeException($errorMessage);
         }
     }

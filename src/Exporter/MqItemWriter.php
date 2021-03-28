@@ -42,7 +42,7 @@ class MqItemWriter implements ItemWriterInterface
     {
         foreach ($items as $item) {
             $message = $this->context->createMessage(
-                json_encode($item) ?: '',
+                false !== json_encode($item) ? json_encode($item) : '',
                 [],
                 ['recordedOn' => (new \DateTime())->format('Y-m-d H:i:s')]
             );

@@ -20,7 +20,7 @@ final class Pool implements TransformerPoolInterface
     /**
      * {@inheritdoc}
      */
-    public function handle($type, $value)
+    public function handle(?string $type, string $value)
     {
         if (null === $this->handler) {
             $this->registerHandlers();

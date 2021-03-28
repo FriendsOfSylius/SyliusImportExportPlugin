@@ -23,7 +23,7 @@ final class AttributeCodesProvider implements AttributeCodesProviderInterface
         $productAttr = $this->productAttributeRepository->findBy([], ['id' => 'ASC']);
         /** @var ProductAttribute $attr */
         foreach ($productAttr as $attr) {
-            if (!empty($attr->getCode())) {
+            if (!(null === $attr->getCode() || '' === $attr->getCode())) {
                 $attrSlug[] = $attr->getCode();
             }
         }
