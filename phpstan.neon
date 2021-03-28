@@ -6,7 +6,7 @@ parameters:
     checkMissingIterableValueType: false
 
     symfony:
-        container_xml_path: tests/Application/var/cache/dev/Tests_FriendsOfSylius_SyliusImportExportPlugin_Application_KernelDevDebugContainer.xml
+       console_application_loader: src/FOSSyliusImportExportPlugin.php
 
     excludes_analyse:
         # Makes PHPStan crash
