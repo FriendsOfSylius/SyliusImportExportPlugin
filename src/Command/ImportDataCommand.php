@@ -60,7 +60,7 @@ final class ImportDataCommand extends Command
             return 0;
         }
 
-        $file = $input->getOption('file');
+        $file = $input->getArgument('file');
         $format = $input->getOption('format');
 
         if (null === $format) {
