@@ -9,11 +9,11 @@
         <testsuite name="SyliusImportExportPlugin Test Suite">
             <directory>tests</directory>
         </testsuite>
-        <server name="APP_ENV" value="test"/>
-        <env name="SHELL_VERBOSITY" value="-1" />
     </testsuites>
 
     <php>
+        <server name="APP_ENV" value="test"/>
+        <env name="SHELL_VERBOSITY" value="-1" />
         <server name="KERNEL_CLASS_PATH" value="/tests/Application/AppKernel.php" />
         <server name="IS_DOCTRINE_ORM_SUPPORTED" value="true" />
     </php>
