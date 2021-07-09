@@ -17,13 +17,13 @@ jobs:
         runs-on: ubuntu-latest
 
         name: "Sylius ${{ matrix.sylius }}, PHP ${{ matrix.php }}, Symfony ${{ matrix.symfony }}, MySQL ${{ matrix.mysql }}"
-        
+
         strategy:
             fail-fast: false
             matrix:
                 php: [7.4, 7.3]
                 symfony: [^4.4, ^5.2]
-                sylius: [~1.8.0, ~1.9.0]
+                sylius: [~1.8.0, ~1.9.0, ~1.10.0]
                 node: [10.x]
                 mysql: [5.7]
 
@@ -31,6 +31,9 @@ jobs:
                     -
                         sylius: ~1.8.0
                         symfony: ^5.2
+                    -
+                        sylius: ~1.10.0
+                        php: 7.3
 
         env:
             APP_ENV: test
@@ -107,6 +110,11 @@ jobs:
                 name: Restrict Sylius version
                 if: matrix.sylius != ''
                 run: composer require "sylius/sylius:${{ matrix.sylius }}" --no-update --no-scripts --no-interaction
+
+            -
+                name: Add Admin API Bundle for Sylius >= 1.10
+                if: matrix.sylius != '~1.8.0' && matrix.sylius != '~1.9.0'
+                run: composer require sylius/admin-api-bundle --no-update --no-scripts --no-interaction
 
             -
                 name: Install PHP dependencies
