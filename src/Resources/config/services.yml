@@ -345,6 +345,8 @@ services:
             - '@sylius.repository.product_taxon'
             - '@sylius.repository.product_image'
             - '@sylius.repository.product_variant'
+            - '@sylius.repository.product_option'
+            - '@sylius.repository.product_option_value'
             - '@sylius.repository.channel_pricing'
             - '@sylius.service.product_image_code'
             - "@sylius.generator.slug"
