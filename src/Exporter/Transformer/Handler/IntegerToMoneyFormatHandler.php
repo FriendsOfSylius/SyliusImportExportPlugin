@@ -28,7 +28,12 @@ final class IntegerToMoneyFormatHandler extends Handler
      */
     protected function process($key, $value): ?string
     {
-        return money_format($this->format, $value / 100);
+        $locale = '';
+        if(isset($GLOBALS['request']) && $GLOBALS['request']) {
+            $locale = $GLOBALS['request']->getLocale();
+       }
+        $fmt = new \NumberFormatter( $locale, \NumberFormatter::CURRENCY );
+        return $fmt->formatCurrency($value/100, "EUR");
     }
 
     protected function allows($key, $value): bool
