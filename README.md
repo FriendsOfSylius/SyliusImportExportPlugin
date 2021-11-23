@@ -157,7 +157,7 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
 
 #### Notes
   
-  - Replace `app.foo` with the name of the resource (under `sylius_resource` config) you want to implement in the following examples.
+  - Replace `app` and `foo` with the name of the resource (under `sylius_resource` config) you want to implement in the following examples.
   - Replace `bar` with the name of the format you want to implement in the following examples (csv, json, ...).
   - Note it is of course also possible to implement a dedicated importer for `app.foo` resource and format `bar`,
     in case a generic type implementation is not possible.
@@ -177,7 +177,7 @@ sylius.importer.foo.bar:
         - "@sylius.processor.foo"
         - "@sylius.importer.result"
     tags:
-        - { name: sylius.importer, type: app.foo, format: csv }
+        - { name: sylius.importer, type: foo, domain: app, format: csv }
 ```
   
 ##### Alternatively implement a custom ResourceImporter _FooImporter_
@@ -199,7 +199,7 @@ sylius.importer.foo.bar:
       - "@sylius.processor.foo"
       - "@sylius.importer.result"
   tags:
-      - { name: sylius.importer, type: app.foo, format: bar }
+      - { name: sylius.importer, type: foo, domain: app, format: bar }
 ```
 
 #### Adding a ResourceProcessor

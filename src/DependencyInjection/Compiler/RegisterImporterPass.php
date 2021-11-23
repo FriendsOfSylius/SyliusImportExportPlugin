@@ -46,17 +46,18 @@ final class RegisterImporterPass implements CompilerPassInterface
 
             $type = $attributes[0]['type'];
             $format = $attributes[0]['format'];
+            $domain = $attributes[0]['domain'] ?? null;
             $name = ImporterRegistry::buildServiceName($type, $format);
 
             $importersRegistry->addMethodCall('register', [$name, new Reference($id)]);
 
             if ($container->getParameter('sylius.importer.web_ui')) {
-                $this->registerImportFormBlockEvent($container, $type);
+                $this->registerImportFormBlockEvent($container, $type, $domain);
             }
         }
     }
 
-    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type): void
+    private function registerImportFormBlockEvent(ContainerBuilder $container, string $type, ?string $domain): void
     {
         $eventHookName = $this->buildEventHookName($type);
 
@@ -64,7 +65,7 @@ final class RegisterImporterPass implements CompilerPassInterface
             return;
         }
 
-        $eventName = $this->buildEventName($type);
+        $eventName = $this->buildEventName($type, $domain);
         $templateName = $this->buildTemplateName($type);
         $container
             ->register(
@@ -92,13 +93,13 @@ final class RegisterImporterPass implements CompilerPassInterface
         return sprintf('app.block_event_listener.admin.crud.after_content_%s.import', $type);
     }
 
-    private function buildEventName(string $type): string
+    private function buildEventName(string $type, ?string $domain): string
     {
         if (isset($this->eventNames[$type])) {
             return $this->eventNames[$type];
         }
 
-        $domain = 'sylius';
+        $domain = $domain ?? 'sylius';
         // backward compatibility with the old configuration
         if (count(\explode('.', $type)) === 2) {
             [$domain, $type] = \explode('.', $type);
