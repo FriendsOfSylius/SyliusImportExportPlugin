@@ -21,19 +21,31 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.4, 7.3]
-                symfony: [^4.4, ^5.2]
-                sylius: [~1.8.0, ~1.9.0, ~1.10.0]
-                node: [10.x]
+                php: [7.3, 7.4, 8.0]
+                symfony: [^4.4, ^5.4]
+                sylius: [~1.8.0, ~1.9.0, ~1.10.0, ~1.11.0]
+                node: [12.x]
                 mysql: [5.7]
 
                 exclude:
                     -
                         sylius: ~1.8.0
-                        symfony: ^5.2
+                        symfony: ^5.4
+                    -
+                        sylius: ~1.8.0
+                        php: 8.0
+                    -
+                        sylius: ~1.9.0
+                        php: 8.0
                     -
                         sylius: ~1.10.0
                         php: 7.3
+                    -
+                        sylius: ~1.11.0
+                        php: 7.3
+                    -
+                        sylius: ~1.11.0
+                        php: 7.4
 
         env:
             APP_ENV: test
