@@ -11,7 +11,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Writer\WriterInterface;
 use Sylius\Bundle\CoreBundle\Doctrine\ORM\OrderRepository;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 
-class OrderResourceExporter  extends ResourceExporter
+class OrderResourceExporter extends ResourceExporter
 {
     /** @var string[] */
     protected $resourceKeys;
@@ -31,13 +31,13 @@ class OrderResourceExporter  extends ResourceExporter
 
     /** @var RepositoryInterface */
     private $repository;
+
     public function __construct(
         WriterInterface           $writer,
         PluginPoolInterface       $pluginPool,
         array                     $resourceKeys,
         ?TransformerPoolInterface $transformerPool,
-        RepositoryInterface $repository
-
+        RepositoryInterface       $repository
     )
     {
         $this->writer = $writer;
@@ -45,26 +45,17 @@ class OrderResourceExporter  extends ResourceExporter
         $this->transformerPool = $transformerPool;
         $this->resourceKeys = $resourceKeys;
         $this->repository = $repository;
-
     }
 
     public function export(array $idsToExport): void
-
     {
-
         $this->pluginPool->initPlugins($idsToExport);
         $this->writer->write($this->resourceKeys);
-
         foreach ($idsToExport as $id) {
-
             $items = $this->repository->findBy(['id' => $id]);
-
             foreach ($items[0]->getItems() as $item) {
-
                 $this->writeDataForId((string)$item->getId());
-
             }
         }
     }
-
 }
