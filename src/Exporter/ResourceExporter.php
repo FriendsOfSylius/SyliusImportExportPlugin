@@ -85,7 +85,7 @@ class ResourceExporter implements ResourceExporterInterface
         return $exportIdDataArray;
     }
 
-    private function writeDataForId(string $id): void
+    protected function writeDataForId(string $id): void
     {
         $dataForId = $this->getDataForId($id);
 
