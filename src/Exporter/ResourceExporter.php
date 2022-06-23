@@ -21,10 +21,7 @@ class ResourceExporter implements ResourceExporterInterface
 
     /** @var TransformerPoolInterface|null */
     protected $transformerPool;
-
-    /**
-     * @param string[] $resourceKeys
-     */
+    
     public function __construct(
         WriterInterface $writer,
         PluginPoolInterface $pluginPool,
@@ -81,14 +78,13 @@ class ResourceExporter implements ResourceExporterInterface
         foreach ($idsToExport as $id) {
             $exportIdDataArray[$id] = $this->getDataForId((string) $id);
         }
-
+        
         return $exportIdDataArray;
     }
 
-    private function writeDataForId(string $id): void
+    protected function writeDataForId(string $id): void
     {
         $dataForId = $this->getDataForId($id);
-
         $this->writer->write($dataForId);
     }
 
@@ -98,13 +94,12 @@ class ResourceExporter implements ResourceExporterInterface
     protected function getDataForId(string $id): array
     {
         $data = $this->pluginPool->getDataForId($id);
-
+        
         if (null !== $this->transformerPool) {
             foreach ($data as $key => $value) {
                 $data[$key] = $this->transformerPool->handle($key, $value);
             }
         }
-
         return $data;
     }
 

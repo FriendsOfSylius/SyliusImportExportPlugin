@@ -108,17 +108,21 @@ class ResourcePlugin implements PluginInterface
 
         foreach ($fields->getFieldNames() as $index => $field) {
             $this->fieldNames[$index] = ucfirst($field);
-
             if (!$this->propertyAccessor->isReadable($resource, $field)) {
                 continue;
             }
 
-            $this->addDataForResource(
-                $resource,
-                ucfirst($field),
-                $this->propertyAccessor->getValue($resource, $field)
-            );
+            $this->addDataForCustomResource($resource,$field);
+
         }
+    }
+    protected  function addDataForCustomResource($resource,$field)
+    {
+        $this->addDataForResource(
+            $resource,
+            ucfirst($field),
+            $this->propertyAccessor->getValue($resource, $field)
+        );
     }
 
     /**
