@@ -1,20 +1,13 @@
+[![License](https://img.shields.io/packagist/l/friendsofsylius/sylius-import-export-plugin.svg)](https://github.com/FriendsOfSylius/SyliusImportExportPlugin/blob/master/LICENSE)
+[![Version](https://img.shields.io/packagist/v/friendsofsylius/sylius-import-export-plugin.svg)](https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin)
+[![Build](https://github.com/FriendsOfSylius/SyliusImportExportPlugin/actions/workflows/build.yml/badge.svg?branch=master)](https://github.com/FriendsOfSylius/SyliusImportExportPlugin/actions/workflows/build.yml)
+
 <p align="center">
     <a href="http://sylius.org" target="_blank">
         <img src="https://demo.sylius.com/assets/shop/img/logo.png" />
     </a>
 </p>
 <h1 align="center">FOSSyliusImportExportPlugin</h1>
-<p align="center">
-    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="License">
-        <img src="https://img.shields.io/packagist/l/friendsofsylius/sylius-import-export-plugin.svg" />
-    </a>
-    <a href="https://packagist.org/packages/friendsofsylius/sylius-import-export-plugin" title="Version">
-        <img src="https://img.shields.io/packagist/v/friendsofsylius/sylius-import-export-plugin.svg" />
-    </a>
-    <a href="http://travis-ci.org/FriendsOfSylius/SyliusImportExportPlugin" title="Build status">
-        <img src="https://img.shields.io/travis/FriendsOfSylius/SyliusImportExportPlugin/master.svg" />
-    </a>
-</p>
 
 <p align="center">
     <a href="https://sylius.com/plugins/" target="_blank"><img src="https://sylius.com/assets/badge-approved-by-sylius.png" width="200"></a>
