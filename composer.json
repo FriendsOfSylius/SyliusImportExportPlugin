@@ -68,6 +68,12 @@
         "classmap": ["tests/Application/Kernel.php"]
     },
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "phpstan/extension-installer": true,
+            "symfony/flex": true,
+            "symfony/thanks": false
+        },
         "bin-dir": "bin",
         "sort-packages": true
     },
