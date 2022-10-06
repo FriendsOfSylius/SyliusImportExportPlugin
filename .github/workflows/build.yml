@@ -21,7 +21,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.3, 7.4, 8.0, 8.1]
+                php: [7.3, 7.4, 8.0]
                 symfony: [^4.4, ^5.4]
                 sylius: [~1.8.0, ~1.9.0, ~1.10.0, ~1.11.0]
                 node: [12.x]
