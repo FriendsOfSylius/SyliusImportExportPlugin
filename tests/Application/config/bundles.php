@@ -58,11 +58,13 @@ $bundles = [
     Lexik\Bundle\JWTAuthenticationBundle\LexikJWTAuthenticationBundle::class => ['all' => true],
     Sylius\Bundle\ApiBundle\SyliusApiBundle::class => ['all' => true],
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
+    Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     // Symplify\ConsoleColorDiff\ConsoleColorDiffBundle::class => ['dev' => true, 'test' => true],
 ];
 
 if (Kernel::MINOR_VERSION >= 12) {
     $bundles[League\FlysystemBundle\FlysystemBundle::class] = ['all' => true];
+    $bundles[Sylius\Calendar\SyliusCalendarBundle::class ] = ['all' => true];
 }
 
 return $bundles;
