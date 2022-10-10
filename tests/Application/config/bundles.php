@@ -61,7 +61,7 @@ $bundles = [
     // Symplify\ConsoleColorDiff\ConsoleColorDiffBundle::class => ['dev' => true, 'test' => true]
 ];
 
-if (Kernel::MINOR_VERSION >= 11) {
+if (Kernel::MINOR_VERSION <= 11) {
     $bundles[Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class] = ['all' => true];
 }
     
