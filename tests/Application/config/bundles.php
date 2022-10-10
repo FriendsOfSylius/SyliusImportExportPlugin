@@ -65,7 +65,7 @@ if (Kernel::MINOR_VERSION >= 11) {
 }
     
 if (Kernel::MINOR_VERSION >= 12) {
-    $bundles[Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class] = ['all' => true];
+    //$bundles[Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class] = ['all' => true];
     $bundles[League\FlysystemBundle\FlysystemBundle::class] = ['all' => true];
     $bundles[Sylius\Calendar\SyliusCalendarBundle::class ] = ['all' => true];
 }
