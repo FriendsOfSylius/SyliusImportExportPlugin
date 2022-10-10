@@ -42,6 +42,7 @@
         "symfony/debug-bundle": "^4.4 || ^5.2",
         "symfony/dotenv": "^4.4 || ^5.2",
         "symfony/intl": "^4.4 || ^5.2",
+        "symfony/mailer": "^4.4 || ^5.2",
         "symfony/webpack-encore-bundle": "^1.15",
         "symfony/web-profiler-bundle": "^4.4 || ^5.2",
         "symfony/web-server-bundle": "^4.4 || ^5.2",
