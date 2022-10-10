@@ -57,7 +57,8 @@
         "symfony/dependency-injection": "4.1.8",
         "symfony/dom-crawler": "4.1.8",
         "symfony/routing": "4.1.8",
-        "sonata-project/core-bundle": ">=3.12 <3.13.4"
+        "sonata-project/core-bundle": ">=3.12 <3.13.4",
+        "sylius/mailer-bundle": "^1.8.0"
     },
     "prefer-stable": true,
     "minimum-stability": "alpha",
