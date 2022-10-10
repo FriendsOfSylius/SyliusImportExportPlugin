@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Twig\Environment;
 
 final class ImportDataController
 {
@@ -29,14 +30,14 @@ final class ImportDataController
     /** @var FormFactoryInterface */
     private $formFactory;
 
-    /** @var \Twig_Environment */
+    /** @var Environment */
     private $twig;
 
     public function __construct(
         ServiceRegistryInterface $registry,
         FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
-        \Twig_Environment $twig
+        Environment $twig
     ) {
         $this->registry = $registry;
         $this->formFactory = $formFactory;
