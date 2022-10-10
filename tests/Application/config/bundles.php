@@ -59,13 +59,14 @@ $bundles = [
     SyliusLabs\DoctrineMigrationsExtraBundle\SyliusLabsDoctrineMigrationsExtraBundle::class => ['all' => true],
     Symfony\WebpackEncoreBundle\WebpackEncoreBundle::class => ['all' => true],
     // Symplify\ConsoleColorDiff\ConsoleColorDiffBundle::class => ['dev' => true, 'test' => true]
+    Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class => ['test_with_swiftmailer' => true],
 ];
 
 if (Kernel::MINOR_VERSION >= 11) {
+    $bundles[Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class] = ['all' => true];
 }
     
 if (Kernel::MINOR_VERSION >= 12) {
-    //$bundles[Symfony\Bundle\SwiftmailerBundle\SwiftmailerBundle::class] = ['all' => true];
     $bundles[League\FlysystemBundle\FlysystemBundle::class] = ['all' => true];
     $bundles[Sylius\Calendar\SyliusCalendarBundle::class ] = ['all' => true];
 }
