@@ -24,8 +24,8 @@ class PoolSpec extends ObjectBehavior
 
     function let(HandlerInterface $dateTimeToStringHandler)
     {
-        $generator = new RewindableGenerator(function () use ($dateTimeToStringHandler) {
-            return [$dateTimeToStringHandler];
+        $generator = new RewindableGenerator(function () use ($dateTimeToStringHandler): \Traversable {
+            yield $dateTimeToStringHandler;
         }, $count = 1);
 
         $this->beConstructedWith($generator);

@@ -41,7 +41,7 @@ class DateTimeToStringHandlerSpec extends ObjectBehavior
         $date = \DateTime::createFromFormat('Y-m-d', '2018-01-01');
 
         $generator = new RewindableGenerator(function () {
-            return [$this->getWrappedObject()];
+            yield $this->getWrappedObject();
         }, $count = 1);
 
         $pool = new Pool($generator);

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace spec\FriendsOfSylius\SyliusImportExportPlugin\Importer;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Persistence\ObjectManager;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterResultInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImportResultLoggerInterface;

@@ -43,7 +43,7 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
     function it_should_process_via_pool()
     {
         $generator = new RewindableGenerator(function () {
-            return [$this->getWrappedObject()];
+            yield $this->getWrappedObject();
         }, $count = 1);
 
         $pool = new Pool($generator);
