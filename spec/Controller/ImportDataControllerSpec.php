@@ -9,6 +9,7 @@ use PhpSpec\ObjectBehavior;
 use Sylius\Component\Registry\ServiceRegistryInterface;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Session\Flash\FlashBagInterface;
+use Twig\Environment;
 
 class ImportDataControllerSpec extends ObjectBehavior
 {
@@ -16,7 +17,7 @@ class ImportDataControllerSpec extends ObjectBehavior
         ServiceRegistryInterface $registry,
         FlashBagInterface $flashBag,
         FormFactoryInterface $formFactory,
-        \Twig_Environment $twig
+        Environment $twig
     ) {
         $this->beConstructedWith(
             $registry,
