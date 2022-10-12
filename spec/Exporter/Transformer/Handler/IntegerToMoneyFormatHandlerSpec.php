@@ -41,7 +41,7 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
     function it_should_process_directly()
     {
         $this->handle('test', 10000)->shouldBeString();
-        $this->handle('test', 12345)->shouldBe('€123.45');
+        $this->handle('test', 12345)->shouldBe('123.45');
     }
 
     function it_should_process_via_pool()
@@ -54,6 +54,6 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
 
         $result = $pool->handle('test', 12345);
 
-        Assert::same('€123.45', $result);
+        Assert::same('123.45', $result);
     }
 }
