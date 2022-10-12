@@ -31,6 +31,7 @@ final class IntegerToMoneyFormatHandler extends Handler
      */
     protected function process($key, $value): ?string
     {
+        return number_format($value, 2, '.', '');
         return (new MoneyFormatter())->format($value, "EUR", $this->localeContext->getLocaleCode());
     }
 
