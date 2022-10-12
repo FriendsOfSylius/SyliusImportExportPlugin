@@ -11,11 +11,11 @@ final class IntegerToMoneyFormatHandler extends Handler
     /** @var array */
     private $keys;
 
+    /** @var string */
     private $format;
 
     /**
      * @param string[] $allowedKeys
-     * @param string $format
      */
     public function __construct(array $allowedKeys, string $format = '%0.2f')
     {
