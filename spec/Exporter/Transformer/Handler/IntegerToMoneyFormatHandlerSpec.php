@@ -10,7 +10,6 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\HandlerInterfa
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Prophet;
-use Sylius\Component\Locale\Context\LocaleContextInterface;
 use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Webmozart\Assert\Assert;
 
@@ -18,9 +17,7 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
 {
     function let()
     {
-        $contextLocaleInterface = (new Prophet)->prophesize(LocaleContextInterface::class);
-        $this->beConstructedWith(['test'], ($contextLocaleInterface)->reveal());
-        $contextLocaleInterface->getLocaleCode()->willReturn('en');
+        $this->beConstructedWith(['test']);
     }
 
     function it_is_initializable()
@@ -42,6 +39,7 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
     {
         $this->handle('test', 10000)->shouldBeString();
         $this->handle('test', 12345)->shouldBe('123.45');
+        $this->handle('test', 987654)->shouldBe('9876.54');
     }
 
     function it_should_process_via_pool()
