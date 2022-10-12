@@ -28,7 +28,7 @@ final class IntegerToMoneyFormatHandler extends Handler
      */
     protected function process($key, $value): ?string
     {
-        return sprintf($this->format, $value/100);
+        return sprintf($this->format, $value / 100);
     }
 
     protected function allows($key, $value): bool
