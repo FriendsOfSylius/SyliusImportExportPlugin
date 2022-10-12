@@ -96,7 +96,6 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\IntegerToMoneyFormatHandler
         arguments:
             - ['Total']
-            - "@sylius.context.locale"
         tags:
             - { name: sylius.exporter_transformer }
 
