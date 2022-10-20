@@ -35,6 +35,18 @@ jobs:
                         sylius: ~1.8.0
                         symfony: ^6.0
                     -
+                        sylius: ~1.9.0
+                        symfony: ^6.0
+                    -
+                        sylius: ~1.10.0
+                        symfony: ^6.0
+                    -
+                        sylius: ~1.11.0
+                        symfony: ^6.0
+                    -
+                        sylius: ~1.8.0
+                        symfony: ^6.0
+                    -
                         sylius: ~1.12.x-dev
                         symfony: ^4.4
                     -
