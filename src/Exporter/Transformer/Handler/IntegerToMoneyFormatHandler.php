@@ -17,7 +17,7 @@ final class IntegerToMoneyFormatHandler extends Handler
     /**
      * @param string[] $allowedKeys
      */
-    public function __construct(array $allowedKeys, string $format = '%.2n')
+    public function __construct(array $allowedKeys, string $format = '%0.2f')
     {
         $this->keys = $allowedKeys;
         $this->format = $format;
@@ -28,7 +28,7 @@ final class IntegerToMoneyFormatHandler extends Handler
      */
     protected function process($key, $value): ?string
     {
-        return money_format($this->format, $value / 100);
+        return sprintf($this->format, $value / 100);
     }
 
     protected function allows($key, $value): bool

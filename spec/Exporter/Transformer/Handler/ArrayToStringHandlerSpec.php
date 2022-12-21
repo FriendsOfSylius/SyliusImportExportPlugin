@@ -41,7 +41,7 @@ class ArrayToStringHandlerSpec extends ObjectBehavior
         $array = ['a', 'b', 'c'];
 
         $generator = new RewindableGenerator(function () {
-            return [$this->getWrappedObject()];
+            yield $this->getWrappedObject();
         }, $count = 1);
 
         $pool = new Pool($generator);
