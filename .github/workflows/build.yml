@@ -21,61 +21,16 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.3, 7.4, 8.0, 8.1]
-                symfony: [^4.4, ^5.4, ^6.0]
-                sylius: [~1.8.0, ~1.9.0, ~1.10.0, ~1.11.0, ~1.12.x-dev]
+                php: [8.0, 8.1]
+                symfony: [^5.4, ^6.0]
+                sylius: [~1.11.0, ~1.12.0]
                 node: [14.x]
                 mysql: [5.7]
 
                 exclude:
                     -
-                        sylius: ~1.8.0
-                        symfony: ^5.4
-                    -
-                        sylius: ~1.8.0
-                        symfony: ^6.0
-                    -
-                        sylius: ~1.9.0
-                        symfony: ^6.0
-                    -
-                        sylius: ~1.10.0
-                        symfony: ^6.0
-                    -
                         sylius: ~1.11.0
                         symfony: ^6.0
-                    -
-                        sylius: ~1.8.0
-                        symfony: ^6.0
-                    -
-                        sylius: ~1.12.x-dev
-                        symfony: ^4.4
-                    -
-                        sylius: ~1.8.0
-                        php: 8.0
-                    -
-                        sylius: ~1.9.0
-                        php: 8.0
-                    -
-                        sylius: ~1.8.0
-                        php: 8.1
-                    -
-                        sylius: ~1.9.0
-                        php: 8.1
-                    -
-                        sylius: ~1.10.0
-                        php: 7.3
-                    -
-                        sylius: ~1.11.0
-                        php: 7.3
-                    -
-                        sylius: ~1.11.0
-                        php: 7.4
-                    -
-                        sylius: ~1.12.x-dev
-                        php: 7.3
-                    -
-                        sylius: ~1.12.x-dev
-                        php: 7.4
 
         env:
             APP_ENV: test
@@ -153,11 +108,6 @@ jobs:
                 name: Restrict Sylius version
                 if: matrix.sylius != ''
                 run: composer require "sylius/sylius:${{ matrix.sylius }}" --no-update --no-scripts --no-interaction
-
-            -
-                name: Add Admin API Bundle for Sylius >= 1.10
-                if: matrix.sylius != '~1.8.0' && matrix.sylius != '~1.9.0'
-                run: composer require sylius/admin-api-bundle --no-update --no-scripts --no-interaction
 
             -
                 name: Install PHP dependencies

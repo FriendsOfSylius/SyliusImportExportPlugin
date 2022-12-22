@@ -40,7 +40,7 @@ class ResourceExporterSpec extends ObjectBehavior
         PluginInterface $plugin
     ) {
         $generator = new RewindableGenerator(function () {
-            return [new DateTimeToStringHandler()];
+            yield new DateTimeToStringHandler();
         }, $count = 1);
 
         $pool = new Pool($generator);

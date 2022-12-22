@@ -9,6 +9,7 @@ use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Handler\Intege
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\HandlerInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Exporter\Transformer\Pool;
 use PhpSpec\ObjectBehavior;
+use Prophecy\Prophet;
 use Symfony\Component\DependencyInjection\Argument\RewindableGenerator;
 use Webmozart\Assert\Assert;
 
@@ -38,12 +39,13 @@ class IntegerToMoneyFormatHandlerSpec extends ObjectBehavior
     {
         $this->handle('test', 10000)->shouldBeString();
         $this->handle('test', 12345)->shouldBe('123.45');
+        $this->handle('test', 987654)->shouldBe('9876.54');
     }
 
     function it_should_process_via_pool()
     {
         $generator = new RewindableGenerator(function () {
-            return [$this->getWrappedObject()];
+            yield $this->getWrappedObject();
         }, $count = 1);
 
         $pool = new Pool($generator);
