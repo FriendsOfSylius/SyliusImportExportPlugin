@@ -26,7 +26,7 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all(): array
     {
         return $this->container->getParameterBag()->all();
     }
@@ -34,7 +34,7 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
     /**
      * {@inheritdoc}
      */
-    public function get($name)
+    public function get($name): array|bool|string|int|float|\UnitEnum|null
     {
         return $this->container->getParameter($name);
     }
@@ -42,7 +42,7 @@ final class ParameterBag extends FrozenParameterBag implements ParameterBagInter
     /**
      * {@inheritdoc}
      */
-    public function has($name)
+    public function has($name): bool
     {
         return $this->container->hasParameter($name);
     }

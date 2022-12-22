@@ -1,3 +1,2 @@
-security:
-    encoders:
-        sha512: sha512
+imports:
+    - { resource: ../test/security.yaml }

@@ -11,7 +11,7 @@ services:
         class: FriendsOfSylius\SyliusImportExportPlugin\Controller\ImportDataController
         arguments:
             - "@sylius.importers_registry"
-            - "@session.flash_bag"
+            - "@request_stack"
             - "@form.factory"
             - "@twig"
         tags: ['controller.service_arguments']
