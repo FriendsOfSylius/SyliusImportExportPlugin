@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace FriendsOfSylius\SyliusImportExportPlugin\Processor;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use FriendsOfSylius\SyliusImportExportPlugin\Exception\ImporterException;
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\Transformer\TransformerPoolInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Repository\ProductImageRepositoryInterface;
 use FriendsOfSylius\SyliusImportExportPlugin\Service\AttributeCodesProviderInterface;
@@ -24,14 +26,16 @@ use Sylius\Component\Product\Factory\ProductFactoryInterface;
 use Sylius\Component\Product\Generator\SlugGeneratorInterface;
 use Sylius\Component\Product\Model\ProductAttribute;
 use Sylius\Component\Product\Model\ProductAttributeValueInterface;
+use Sylius\Component\Product\Model\ProductOptionValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 final class ProductProcessor implements ResourceProcessorInterface
 {
+    private const COLUMN_PRODUCT_OPTION_PREFIX = "Product_Option_";
+
     /** @var RepositoryInterface */
     private $channelPricingRepository;
     /** @var FactoryInterface */
@@ -60,8 +64,6 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productRepository;
     /** @var TaxonRepositoryInterface */
     private $taxonRepository;
-    /** @var PropertyAccessorInterface */
-    private $propertyAccessor;
     /** @var MetadataValidatorInterface */
     private $metadataValidator;
     /** @var array */
@@ -81,7 +83,7 @@ final class ProductProcessor implements ResourceProcessorInterface
     /** @var FactoryInterface */
     private $productVariantFactory;
     /** @var RepositoryInterface */
-    private $productVariantRepository;
+    private $productOptionValueRepository;
 
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -89,7 +91,6 @@ final class ProductProcessor implements ResourceProcessorInterface
         ProductRepositoryInterface $productRepository,
         TaxonRepositoryInterface $taxonRepository,
         MetadataValidatorInterface $metadataValidator,
-        PropertyAccessorInterface $propertyAccessor,
         RepositoryInterface $productAttributeRepository,
         AttributeCodesProviderInterface $attributeCodesProvider,
         FactoryInterface $productAttributeValueFactory,
@@ -100,7 +101,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         FactoryInterface $channelPricingFactory,
         ProductTaxonRepository $productTaxonRepository,
         ProductImageRepositoryInterface $productImageRepository,
-        RepositoryInterface $productVariantRepository,
+        RepositoryInterface $productOptionValueRepository,
         RepositoryInterface $channelPricingRepository,
         ImageTypesProviderInterface $imageTypesProvider,
         SlugGeneratorInterface $slugGenerator,
@@ -113,7 +114,6 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productRepository = $productRepository;
         $this->taxonRepository = $taxonRepository;
         $this->metadataValidator = $metadataValidator;
-        $this->propertyAccessor = $propertyAccessor;
         $this->productAttributeRepository = $productAttributeRepository;
         $this->productAttributeValueFactory = $productAttributeValueFactory;
         $this->attributeCodesProvider = $attributeCodesProvider;
@@ -128,84 +128,249 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productImageRepository = $productImageRepository;
         $this->imageTypesProvider = $imageTypesProvider;
         $this->productVariantFactory = $productVariantFactory;
-        $this->productVariantRepository = $productVariantRepository;
+        $this->productOptionValueRepository = $productOptionValueRepository;
         $this->channelPricingFactory = $channelPricingFactory;
         $this->channelPricingRepository = $channelPricingRepository;
     }
 
     /**
      * {@inheritdoc}
+     * @throws ImporterException
      */
     public function process(array $data): void
     {
-        $this->attrCode = $this->attributeCodesProvider->getAttributeCodesList();
-        $this->imageCode = $this->imageTypesProvider->getProductImagesCodesWithPrefixList();
-
-        $this->headerKeys = \array_merge($this->headerKeys, $this->attrCode);
-        $this->headerKeys = \array_merge($this->headerKeys, $this->imageCode);
+        $this->loadAttributeCodes();
+        $this->mergeHeaderKeys();
         $this->metadataValidator->validateHeaders($this->headerKeys, $data);
 
-        $product = $this->getProduct($data['Code']);
-
-        $this->setDetails($product, $data);
-        $this->setVariant($product, $data);
-        $this->setAttributesData($product, $data);
-        $this->setMainTaxon($product, $data);
-        $this->setTaxons($product, $data);
-        $this->setChannel($product, $data);
-        $this->setImage($product, $data);
-
-        $this->productRepository->add($product);
-    }
-
-    private function getProduct(string $code): ProductInterface
-    {
-        /** @var ProductInterface|null $product */
-        $product = $this->productRepository->findOneBy(['code' => $code]);
-        if (null === $product) {
-            /** @var ProductInterface $product */
-            $product = $this->resourceProductFactory->createNew();
-            $product->setCode($code);
+        if ($this->isProductVariant($data)) {
+            $mainProduct = $this->loadProductFromParentCode($data);
+            $this->setVariantAndOptions($mainProduct, $data);
+            $this->productRepository->add($mainProduct);
+            return;
         }
 
-        return $product;
+        /** @var ProductInterface $mainProduct */
+        $mainProduct = $this->productRepository->findOneByCode($data['Code']);
+        if (null === $mainProduct) {
+            $mainProduct = $this->resourceProductFactory->createNew();
+        }
+
+        $mainProduct->setCode($data['Code']);
+        $this->setDetails($mainProduct, $data);
+        $this->setVariantAndOptions($mainProduct, $data);
+        $this->setAttributesData($mainProduct, $data);
+        $this->setMainTaxon($mainProduct, $data);
+        $this->setTaxons($mainProduct, $data);
+        $this->setChannel($mainProduct, $data);
+        $this->setImage($mainProduct, $data);
+
+        $this->productRepository->add($mainProduct);
     }
 
-    private function getProductVariant(string $code): ProductVariantInterface
+    private function loadAttributeCodes()
     {
-        /** @var ProductVariantInterface|null $productVariant */
-        $productVariant = $this->productVariantRepository->findOneBy(['code' => $code]);
-        if ($productVariant === null) {
-            /** @var ProductVariantInterface $productVariant */
+        $this->attrCode = $this->attributeCodesProvider->getAttributeCodesList();
+    }
+
+    private function mergeHeaderKeys()
+    {
+        $this->imageCode = $this->imageTypesProvider->getProductImagesCodesWithPrefixList();
+        $this->headerKeys = \array_merge($this->headerKeys, $this->imageCode);
+    }
+
+    private function isProductVariant(array $data): bool
+    {
+        return !empty($data['Parent_Code']);
+    }
+
+    private function loadProductFromParentCode(array $data): ProductInterface
+    {
+        $mainProduct = $this->productRepository->findOneByCode($data['Parent_Code']);
+        if (null === $mainProduct) {
+            throw new ImporterException(
+                "Parent Product with code {$data['Parent_Code']} does not exist yet. Create it first."
+            );
+        }
+        return $mainProduct;
+    }
+
+    /**
+     * @throws ImporterException
+     */
+    private function setVariantAndOptions(ProductInterface $product, array $data): void
+    {
+        $productOptionValueList = $this->getProductOptionValueListFromData($data);
+
+        $productVariant = $this->getOrCreateProductVariant($product, $productOptionValueList);
+
+        $productVariant->setCode($data['Code']);
+        $productVariant->setCurrentLocale(
+            $this->getVariantLocale($data, $product)
+        );
+        $productVariant->setName(
+            $this->generateVariantName($data, $product->getName())
+        );
+
+        /** @var ProductOptionValueInterface $productOptionValue */
+        foreach ($productOptionValueList as $productOptionValue) {
+            $product->addOption($productOptionValue->getOption());
+            $productVariant->addOptionValue($productOptionValue);
+        }
+
+        $channels = \explode('|', $data['Channels']);
+        foreach ($channels as $channelCode) {
+            /** @var ChannelPricingInterface|null $channelPricing */
+            $channelPricing = $this->channelPricingRepository->findOneBy([
+                'channelCode' => $channelCode,
+                'productVariant' => $productVariant,
+            ]);
+
+            if (null === $channelPricing) {
+                /** @var ChannelPricingInterface $channelPricing */
+                $channelPricing = $this->channelPricingFactory->createNew();
+                $channelPricing->setChannelCode($channelCode);
+                $productVariant->addChannelPricing($channelPricing);
+            }
+
+            $channelPricing->setPrice((int)$data['Price']);
+            $channelPricing->setOriginalPrice((int)$data['Price']);
+        }
+
+        $product->addVariant($productVariant);
+    }
+
+    private function getProductOptionValueListFromData(array $data): array
+    {
+        $productOptionValues = array_values(
+            $this->getProductOptionColumnsFromData($data)
+        );
+        $productOptionValueList = array_map(
+            function (string $optionValueCode) {
+                // Empty string values should be allowed
+                // Don't throw an exception for this case
+                if ('' === $optionValueCode) {
+                    return null;
+                }
+
+                /** @var $productOptionValue ProductOptionValueInterface */
+                $productOptionValue = $this->productOptionValueRepository->findOneBy(
+                    ['code' => $optionValueCode]
+                );
+
+                if (null === $productOptionValue) {
+                    throw new ImporterException(
+                        "Product option value with code: $optionValueCode does not exist."
+                    );
+                }
+                return $productOptionValue;
+            },
+            $productOptionValues
+        );
+
+        return array_filter($productOptionValueList);
+    }
+
+    private function getProductOptionColumnsFromData(array $data): array
+    {
+        return array_filter(
+            $data,
+            function ($key) {
+                return strpos($key, self::COLUMN_PRODUCT_OPTION_PREFIX) === 0;
+            },
+            ARRAY_FILTER_USE_KEY
+        );
+    }
+
+    private function getOrCreateProductVariant(
+        ProductInterface $product,
+        array $productOptionValueListFromData
+    ): ProductVariantInterface {
+        $productVariant = null;
+        $productVariants = $product->getVariants();
+
+        if ($productVariants->isEmpty()) {
             $productVariant = $this->productVariantFactory->createNew();
-            $productVariant->setCode($code);
+        } else {
+            $productVariant = $this->findProductVariant(
+                $productVariants,
+                $productOptionValueListFromData,
+            );
+
+            if (null === $productVariant) {
+                $productVariant = $this->productVariantFactory->createNew();
+            }
         }
 
         return $productVariant;
     }
 
-    private function setMainTaxon(ProductInterface $product, array $data): void
-    {
-        /** @var Taxon|null $taxon */
-        $taxon = $this->taxonRepository->findOneBy(['code' => $data['Main_taxon']]);
-        if ($taxon === null) {
-            return;
-        }
+    /**
+     * Looks up the appropriate Product variant with the given option
+     * values.
+     *
+     * @param Collection $productVariants ProductVariantInterface collection
+     * @param array $productOptionValueListFromData A list of ProductOptionValueInterface objects
+     * @return ProductVariantInterface $productVariant The found product variant or null
+     */
+    private function findProductVariant(
+        Collection $productVariants,
+        array $productOptionValueListFromData
+    ): ?ProductVariantInterface {
+        /** @var ProductVariantInterface $productVariantItem */
+        foreach ($productVariants as $productVariantItem) {
+            $productVariantOptionValueCheckResult = array_map(
+                function (ProductOptionValueInterface $optionValue) use (
+                    $productVariantItem
+                ) {
+                    return $productVariantItem->hasOptionValue(
+                        $optionValue
+                    );
+                },
+                $productOptionValueListFromData
+            );
 
-        /** @var ProductInterface $product */
-        $product->setMainTaxon($taxon);
+            $productVariantFound = array_product(
+                $productVariantOptionValueCheckResult
+            );
 
-        $this->addTaxonToProduct($product, $data['Main_taxon']);
-    }
-
-    private function setTaxons(ProductInterface $product, array $data): void
-    {
-        $taxonCodes = \explode('|', $data['Taxons']);
-        foreach ($taxonCodes as $taxonCode) {
-            if ($taxonCode !== $data['Main_taxon']) {
-                $this->addTaxonToProduct($product, $taxonCode);
+            if ($productVariantFound) {
+                return $productVariantItem;
             }
         }
+
+        return null;
+    }
+
+    private function getVariantLocale(array $data, ProductInterface $product): string
+    {
+        return $data['Locale'] ?: $product->getTranslation()->getLocale();
+    }
+
+    private function generateVariantName(array $data, $fallbackName): string
+    {
+        $variantName = substr($data['Name'], 0, 255);
+        return $variantName ?: $fallbackName;
+    }
+
+    private function setDetails(ProductInterface $product, array $data): void
+    {
+        $product->setCurrentLocale($data['Locale']);
+        $product->setFallbackLocale($data['Locale']);
+
+        $product->setName(substr($data['Name'], 0, 255));
+        $product->setEnabled((bool)$data['Enabled']);
+        $product->setDescription($data['Description']);
+        $product->setShortDescription(
+            substr($data['Short_description'], 0, 255)
+        );
+        $product->setMetaDescription(substr($data['Meta_description'], 0, 255));
+        $product->setMetaKeywords(substr($data['Meta_keywords'], 0, 255));
+        $product->setSlug(
+            $product->getSlug() ?: $this->slugGenerator->generate(
+                "{$product->getCode()}-{$product->getName()}"
+            )
+        );
     }
 
     private function setAttributesData(ProductInterface $product, array $data): void
@@ -238,52 +403,15 @@ final class ProductProcessor implements ResourceProcessorInterface
         }
     }
 
-    private function setDetails(ProductInterface $product, array $data): void
-    {
-        $product->setCurrentLocale($data['Locale']);
-        $product->setFallbackLocale($data['Locale']);
-
-        $product->setName(substr($data['Name'], 0, 255));
-        $product->setEnabled((bool) $data['Enabled']);
-        $product->setDescription($data['Description']);
-        $product->setShortDescription(substr($data['Short_description'], 0, 255));
-        $product->setMetaDescription(substr($data['Meta_description'], 0, 255));
-        $product->setMetaKeywords(substr($data['Meta_keywords'], 0, 255));
-        $product->setSlug($product->getSlug() ?: $this->slugGenerator->generate($product->getName()));
-    }
-
-    private function setVariant(ProductInterface $product, array $data): void
-    {
-        $productVariant = $this->getProductVariant($product->getCode());
-        $productVariant->setCurrentLocale($data['Locale']);
-        $productVariant->setName(substr($data['Name'], 0, 255));
-
-        $channels = \explode('|', $data['Channels']);
-        foreach ($channels as $channelCode) {
-            /** @var ChannelPricingInterface|null $channelPricing */
-            $channelPricing = $this->channelPricingRepository->findOneBy([
-                'channelCode' => $channelCode,
-                'productVariant' => $productVariant,
-            ]);
-
-            if (null === $channelPricing) {
-                /** @var ChannelPricingInterface $channelPricing */
-                $channelPricing = $this->channelPricingFactory->createNew();
-                $channelPricing->setChannelCode($channelCode);
-                $productVariant->addChannelPricing($channelPricing);
-            }
-
-            $channelPricing->setPrice((int) $data['Price']);
-            $channelPricing->setOriginalPrice((int) $data['Price']);
-        }
-
-        $product->addVariant($productVariant);
-    }
-
-    private function setAttributeValue(ProductInterface $product, array $data, string $attrCode): void
-    {
+    private function setAttributeValue(
+        ProductInterface $product,
+        array $data,
+        string $attrCode
+    ): void {
         /** @var ProductAttribute $productAttr */
-        $productAttr = $this->productAttributeRepository->findOneBy(['code' => $attrCode]);
+        $productAttr = $this->productAttributeRepository->findOneBy(
+            ['code' => $attrCode]
+        );
         /** @var ProductAttributeValueInterface $attr */
         $attr = $this->productAttributeValueFactory->createNew();
         $attr->setAttribute($productAttr);
@@ -291,7 +419,10 @@ final class ProductProcessor implements ResourceProcessorInterface
         $attr->setLocaleCode($product->getTranslation()->getLocale());
 
         if (null !== $this->transformerPool) {
-            $data[$attrCode] = $this->transformerPool->handle($productAttr->getType(), $data[$attrCode]);
+            $data[$attrCode] = $this->transformerPool->handle(
+                $productAttr->getType(),
+                $data[$attrCode]
+            );
         }
 
         $attr->setValue($data[$attrCode]);
@@ -299,21 +430,25 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->manager->persist($attr);
     }
 
-    private function setChannel(ProductInterface $product, array $data): void
+    private function setMainTaxon(ProductInterface $product, array $data): void
     {
-        $channels = \explode('|', $data['Channels']);
-        foreach ($channels as $channelCode) {
-            /** @var ChannelInterface|null $channel */
-            $channel = $this->channelRepository->findOneBy(['code' => $channelCode]);
-            if ($channel === null) {
-                continue;
-            }
-            $product->addChannel($channel);
+        /** @var Taxon|null $taxon */
+        $taxon = $this->taxonRepository->findOneBy(
+            ['code' => $data['Main_taxon']]
+        );
+        if ($taxon === null) {
+            return;
         }
+
+        $product->setMainTaxon($taxon);
+
+        $this->addTaxonToProduct($product, $data['Main_taxon']);
     }
 
-    private function addTaxonToProduct(ProductInterface $product, string $taxonCode): void
-    {
+    private function addTaxonToProduct(
+        ProductInterface $product,
+        string $taxonCode
+    ): void {
         /** @var Taxon|null $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => $taxonCode]);
         if ($taxon === null) {
@@ -335,6 +470,31 @@ final class ProductProcessor implements ResourceProcessorInterface
         $product->addProductTaxon($productTaxon);
     }
 
+    private function setTaxons(ProductInterface $product, array $data): void
+    {
+        $taxonCodes = \explode('|', $data['Taxons']);
+        foreach ($taxonCodes as $taxonCode) {
+            if ($taxonCode !== $data['Main_taxon']) {
+                $this->addTaxonToProduct($product, $taxonCode);
+            }
+        }
+    }
+
+    private function setChannel(ProductInterface $product, array $data): void
+    {
+        $channels = \explode('|', $data['Channels']);
+        foreach ($channels as $channelCode) {
+            /** @var ChannelInterface|null $channel */
+            $channel = $this->channelRepository->findOneBy(
+                ['code' => $channelCode]
+            );
+            if ($channel === null) {
+                continue;
+            }
+            $product->addChannel($channel);
+        }
+    }
+
     private function setImage(ProductInterface $product, array $data): void
     {
         $productImageCodes = $this->imageTypesProvider->getProductImagesCodesList();
@@ -348,8 +508,6 @@ final class ProductProcessor implements ResourceProcessorInterface
                     if ($productImage !== null) {
                         $product->removeImage($productImage);
                     }
-
-                    continue;
                 }
             }
 
@@ -365,20 +523,31 @@ final class ProductProcessor implements ResourceProcessorInterface
             }
 
             $productImage->setType($imageType);
-            $productImage->setPath($data[ImageTypesProvider::IMAGES_PREFIX . $imageType]);
+            $productImage->setPath(
+                $data[ImageTypesProvider::IMAGES_PREFIX . $imageType]
+            );
             $product->addImage($productImage);
         }
 
         // create image if import has new one
-        foreach ($this->imageTypesProvider->extractImageTypeFromImport(\array_keys($data)) as $imageType) {
-            if (\in_array($imageType, $productImageCodes) || empty($data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
+        foreach (
+            $this->imageTypesProvider->extractImageTypeFromImport(
+                \array_keys($data)
+            ) as $imageType
+        ) {
+            if (\in_array(
+                    $imageType,
+                    $productImageCodes
+                ) || empty($data[ImageTypesProvider::IMAGES_PREFIX . $imageType])) {
                 continue;
             }
 
             /** @var ProductImageInterface $productImage */
             $productImage = $this->productImageFactory->createNew();
             $productImage->setType($imageType);
-            $productImage->setPath($data[ImageTypesProvider::IMAGES_PREFIX . $imageType]);
+            $productImage->setPath(
+                $data[ImageTypesProvider::IMAGES_PREFIX . $imageType]
+            );
             $product->addImage($productImage);
         }
     }

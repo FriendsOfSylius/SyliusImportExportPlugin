@@ -1,0 +1,6 @@
+Code,Parent_Code,Channels,Locale,Enabled,Name,Description,Short_description,Meta_description,Meta_keywords,Main_taxon,Taxons,Product_Option_color,Price,tax_category_code
+1000,,shop,en_US,1,My Product Test Name 1000,,,,,taxon1,taxon1|subtaxon11,red,8400,normal
+1001,1000,shop,en_US,1,,,,,,,,blue,18000,normal
+1002,1000,shop,en_US,1,,,,,,,,green,37500,normal
+1003,1000,shop,en_US,1,,,,,,,,yellow,84000,normal
+1004,1000,shop,en_US,1,,,,,,,,violet,168000,normal
