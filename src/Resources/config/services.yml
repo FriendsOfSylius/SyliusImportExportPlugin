@@ -348,6 +348,7 @@ services:
             - '@sylius.service.product_image_code'
             - "@sylius.generator.slug"
             - "@sylius.importers_transformer_pool"
+            - "@sylius.repository.tax_category"
             - "@doctrine.orm.entity_manager"
             - ['Code', 'Locale', 'Name', 'Description', 'Short_description', 'Meta_description', 'Meta_keywords', 'Main_taxon', 'Taxons', 'Channels', 'Enabled', 'Price']
 

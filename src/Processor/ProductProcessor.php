@@ -29,6 +29,8 @@ use Sylius\Component\Product\Model\ProductAttributeValueInterface;
 use Sylius\Component\Product\Model\ProductOptionValueInterface;
 use Sylius\Component\Resource\Factory\FactoryInterface;
 use Sylius\Component\Resource\Repository\RepositoryInterface;
+use Sylius\Component\Taxation\Model\TaxCategory;
+use Sylius\Component\Taxation\Repository\TaxCategoryRepositoryInterface;
 use Sylius\Component\Taxonomy\Factory\TaxonFactoryInterface;
 use Sylius\Component\Taxonomy\Repository\TaxonRepositoryInterface;
 
@@ -84,6 +86,7 @@ final class ProductProcessor implements ResourceProcessorInterface
     private $productVariantFactory;
     /** @var RepositoryInterface */
     private $productOptionValueRepository;
+    private TaxCategoryRepositoryInterface $taxCategoryRepository;
 
     public function __construct(
         ProductFactoryInterface $productFactory,
@@ -106,6 +109,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         ImageTypesProviderInterface $imageTypesProvider,
         SlugGeneratorInterface $slugGenerator,
         ?TransformerPoolInterface $transformerPool,
+        TaxCategoryRepositoryInterface $taxCategoryRepository,
         EntityManagerInterface $manager,
         array $headerKeys
     ) {
@@ -131,6 +135,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $this->productOptionValueRepository = $productOptionValueRepository;
         $this->channelPricingFactory = $channelPricingFactory;
         $this->channelPricingRepository = $channelPricingRepository;
+        $this->taxCategoryRepository = $taxCategoryRepository;
     }
 
     /**
@@ -195,13 +200,22 @@ final class ProductProcessor implements ResourceProcessorInterface
         return $mainProduct;
     }
 
+    private function setTaxCategory(ProductVariantInterface $productVariant, array $data)
+    {
+        /** @var TaxCategory $taxCategory */
+        $taxCategory = $this->taxCategoryRepository->findOneBy(['code' => $data['tax_category_code']]);
+
+        if ($taxCategory) {
+            $productVariant->setTaxCategory($taxCategory);
+        }
+    }
+
     /**
      * @throws ImporterException
      */
     private function setVariantAndOptions(ProductInterface $product, array $data): void
     {
         $productOptionValueList = $this->getProductOptionValueListFromData($data);
-
         $productVariant = $this->getOrCreateProductVariant($product, $productOptionValueList);
 
         $productVariant->setCode($data['Code']);
@@ -211,6 +225,7 @@ final class ProductProcessor implements ResourceProcessorInterface
         $productVariant->setName(
             $this->generateVariantName($data, $product->getName())
         );
+        $this->setTaxCategory($productVariant, $data);
 
         /** @var ProductOptionValueInterface $productOptionValue */
         foreach ($productOptionValueList as $productOptionValue) {
