@@ -86,7 +86,7 @@ final class ExportButtonGridListener
         $currentRequest = $this->requestStack->getCurrentRequest();
         if ($currentRequest) {
             // @TODO Find way to validate the list of criteria injected
-            $parameters['criteria'] = $currentRequest->query->get('criteria');
+            $parameters['criteria'] = $currentRequest->get('criteria');
         }
 
         $resource = $this->resource;
