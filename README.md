@@ -109,7 +109,7 @@ fos_sylius_import_export:
 * customer (csv, excel, json)
 * product (csv)
 
-## Example import files
+### Example import files
 
 See the fixtures in the Behat tests: `tests/Behat/Resources/fixtures`
 
@@ -143,6 +143,24 @@ admin overview panel using the event hook system, ie. `admin/tax-categories/`.
   - Export data of resources to message queue using `country` exporter
   
         $ bin/console sylius:export-to-message-queue country
+
+### Product (and variants) import
+
+The `tests/Behat/Resources/fixtures/products_and_variants.csv` file shows an example on how products and its variants 
+can be managed in the CSV file.
+
+The product options need to exist already, they won't be created automatically.
+
+The main idea is using the `Parent_Code` column which makes the connection from a product variant to its main product.
+If no `Parent_Code` is set, it simply creates a new product entry.
+
+Product variants rows don't need to repeat the common main product data such as `Name`, `Description` or the product attributes
+because they will be taken from the main product.
+
+To create the different product variants by defining the product options, 
+you need to add a column with the prefix `Product_Option_[PRODUCT_OPTION_CODE]` and fill in the correct option values.
+
+Optionally, you can also set the corresponding tax category code in the `tax_category_code` column.
 
 ## Development
 
