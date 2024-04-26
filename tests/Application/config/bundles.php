@@ -68,4 +68,8 @@ if (Kernel::MINOR_VERSION >= 12) {
     $bundles[Sylius\Calendar\SyliusCalendarBundle::class ] = ['all' => true];
 }
 
+if (Kernel::MINOR_VERSION >= 13) {
+    $bundles[Sylius\Abstraction\StateMachine\SyliusStateMachineAbstractionBundle::class ] = ['all' => true];
+}
+
 return $bundles;
