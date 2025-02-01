@@ -52,7 +52,7 @@ final class ExportButtonGridListener
         $action->setLabel('fos.import_export.ui.export');
         $action->setOptions([
             'class' => '',
-            'icon' => 'save',
+            'icon' => 'tabler:download',
             'header' => [
                 'icon' => 'file code outline',
                 'label' => 'sylius.ui.type',
@@ -98,7 +98,7 @@ final class ExportButtonGridListener
 
         return [
             'label' => 'fos.import_export.ui.types.' . $format,
-            'icon' => 'file archive',
+            'icon' => 'tabler:file-download',
             'route' => \sprintf('app_export_data_%s', $resource),
             'parameters' => $parameters,
         ];

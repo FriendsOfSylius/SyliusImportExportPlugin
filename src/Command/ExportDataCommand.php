@@ -14,20 +14,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class ExportDataCommand extends Command
 {
-    use ContainerAwareTrait;
-
     /** @var ExporterRegistry */
     private $exporterRegistry;
+    /** @var ContainerInterface */
+    private $container;
 
     public function __construct(ExporterRegistry $exporterRegistry)
     {
         $this->exporterRegistry = $exporterRegistry;
 
         parent::__construct();
+    }
+
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 
     /**

@@ -4,11 +4,11 @@
     "description": "import / export plugin for Sylius.",
     "license": "MIT",
     "require": {
-        "php": "^8.1",
-        "sylius/sylius": "~1.11.0 || ~1.12.0 || ~1.13.0 || ~1.14.0",
+        "php": "^8.2",
+        "sylius/sylius": "~2.0",
         "portphp/portphp": "^1.2",
         "queue-interop/queue-interop": "^0.6.2 || ^0.7 || ^0.8",
-        "symfony/stopwatch": "^5.2 || ^6.0"
+        "symfony/stopwatch": "^6.4 || ^7.1"
     },
     "suggest": {
         "portphp/spreadsheet": "To support importing Excel and LibreOffice Calc files, use version ^1.1",
@@ -37,13 +37,13 @@
         "phpstan/phpstan-webmozart-assert": "0.12.12",
         "phpunit/phpunit": "^9.5",
         "sylius-labs/coding-standard": "^3.2 || ^4.0",
-        "symfony/browser-kit": "^5.4 || ^6.0",
-        "symfony/debug-bundle": "^5.4 || ^6.0",
-        "symfony/dotenv": "^5.4 || ^6.0",
-        "symfony/intl": "^5.4 || ^6.0",
-        "symfony/mailer": "^5.4 || ^6.0",
-        "symfony/webpack-encore-bundle": "^1.15",
-        "symfony/web-profiler-bundle": "^5.4 || ^6.0",
+        "symfony/browser-kit": "^6.4 || ^7.1",
+        "symfony/debug-bundle": "^6.4 || ^7.1",
+        "symfony/dotenv": "^6.4 || ^7.1",
+        "symfony/intl": "^6.4 || ^7.1",
+        "symfony/mailer": "^6.4 || ^7.1",
+        "symfony/webpack-encore-bundle": "^1.15 || ^2.2",
+        "symfony/web-profiler-bundle": "^6.4 || ^7.1",
         "portphp/csv": "^1.1.0",
         "portphp/spreadsheet": "^1.0.0-alpha",
         "predis/predis": "^1.1"
@@ -71,6 +71,7 @@
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,
+            "php-http/discovery": true,
             "phpstan/extension-installer": true,
             "symfony/flex": true,
             "symfony/thanks": false
