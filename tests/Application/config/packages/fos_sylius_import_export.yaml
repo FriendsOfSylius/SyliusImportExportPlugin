@@ -1,0 +1,13 @@
+fos_sylius_import_export:
+  importer:
+    # set to false to not add an upload form to the entity overview pages
+    web_ui:               true
+    # set to an integer value bigger than 0 to flush the object manager in regular intervals
+    batch_size:           0
+    # if incomplete rows (ie. missing required fields) should be considered failures
+    fail_on_incomplete:   false
+    # if to stop the import process in case of a failure
+    stop_on_failure:      false
+  exporter:
+    # set to false to not add export buttons
+    web_ui:               true
