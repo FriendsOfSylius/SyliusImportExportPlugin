@@ -24,7 +24,7 @@ jobs:
                 php: [8.2]
                 symfony: [^6.4, ^7.1]
                 sylius: [~2.0]
-                node: [18.x]
+                node: [20.x]
                 mysql: [5.7]
 
         env:
@@ -84,7 +84,7 @@ jobs:
 
             -
                 name: Cache Composer
-                uses: actions/cache@v2
+                uses: actions/cache@v4
                 with:
                     path: ${{ steps.composer-cache.outputs.dir }}
                     key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json **/composer.lock') }}
@@ -115,7 +115,7 @@ jobs:
 
             -
                 name: Cache Yarn
-                uses: actions/cache@v2
+                uses: actions/cache@v4
                 with:
                     path: ${{ steps.yarn-cache.outputs.dir }}
                     key: ${{ runner.os }}-node-${{ matrix.node }}-yarn-${{ hashFiles('**/package.json **/yarn.lock') }}
