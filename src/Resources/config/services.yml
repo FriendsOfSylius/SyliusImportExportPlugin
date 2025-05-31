@@ -368,6 +368,6 @@ services:
         arguments:
             - "@sylius.custom_factory.taxon"
             - "@sylius.repository.taxon"
-            - "@sylius.locale_provider"
+            - "@sylius.provider.locale"
             - "@sylius.importer.metadata_validator"
             - ["Code", "Parent", "Locale", "Name", "Slug", "Description"]

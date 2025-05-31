@@ -8,7 +8,7 @@
         <defaults public="true" />
 
         <service id="test.behat.context.notification_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\NotificationContext">
-            <argument type="service" id="sylius.behat.notification_checker"/>
+            <argument type="service" id="sylius.behat.notification_checker.shop" />
         </service>
 
         <service id="test.behat.context.countries_context" class="Tests\FriendsOfSylius\SyliusImportExportPlugin\Behat\Context\CountriesContext">

@@ -13,20 +13,25 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\DependencyInjection\ContainerAwareTrait;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 final class ImportDataFromMessageQueueCommand extends Command
 {
-    use ContainerAwareTrait;
-
     /** @var ImporterRegistry */
     private $importerRegistry;
+    /** @var ContainerInterface */
+    private $container;
 
     public function __construct(ImporterRegistry $importerRegistry)
     {
         $this->importerRegistry = $importerRegistry;
 
         parent::__construct();
+    }
+
+    public function setContainer(ContainerInterface $container): void
+    {
+        $this->container = $container;
     }
 
     /**

@@ -5,19 +5,15 @@ declare(strict_types=1);
 namespace FriendsOfSylius\SyliusImportExportPlugin\DependencyInjection\Compiler;
 
 use FriendsOfSylius\SyliusImportExportPlugin\Importer\ImporterRegistry;
-use Sylius\Bundle\UiBundle\Block\BlockEventListener;
+use Sylius\TwigHooks\Hookable\HookableTemplate;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
 
 final class RegisterImporterPass implements CompilerPassInterface
 {
-    private $eventHookNames = [
-        'taxonomy' => 'app.block_event_listener.admin.taxon.create.after_content',
-    ];
-
-    private $eventNames = [
-        'taxonomy' => 'sonata.block.event.sylius.admin.taxon.create.after_content',
+    private $twigHookNames = [
+        'taxonomy' => 'sylius_admin.taxon.create.content.sections#right',
     ];
 
     private $templateNames = [
@@ -59,57 +55,37 @@ final class RegisterImporterPass implements CompilerPassInterface
 
     private function registerImportFormBlockEvent(ContainerBuilder $container, string $type, ?string $domain): void
     {
-        $eventHookName = $this->buildEventHookName($type);
+        $twigHookName = $this->buildTwigHookName($type);
+        $twigHookId = sprintf('%s.%s', $twigHookName, $type);
 
-        if ($container->has($eventHookName)) {
+        if ($container->has($twigHookId)) {
             return;
         }
 
-        $eventName = $this->buildEventName($type, $domain);
         $templateName = $this->buildTemplateName($type);
+
         $container
-            ->register(
-                $eventHookName,
-                BlockEventListener::class
-            )
-            ->setAutowired(false)
-            ->addArgument($templateName)
-            ->addTag(
-                'kernel.event_listener',
-                [
-                    'event' => $eventName,
-                    'method' => 'onBlockEvent',
-                ]
-            )
+            ->register($twigHookId, HookableTemplate::class)
+            ->setArguments([
+                $twigHookName,
+                $type,
+                $templateName,
+                [],
+                ['resource' => $type],
+                null,
+                true,
+            ])
+            ->addTag('sylius_twig_hooks.hookable', ['priority' => 0])
         ;
     }
 
-    private function buildEventHookName(string $type): string
+    private function buildTwigHookName(string $type): string
     {
-        if (isset($this->eventHookNames[$type])) {
-            return $this->eventHookNames[$type];
+        if (isset($this->twigHookNames[$type])) {
+            return $this->twigHookNames[$type];
         }
 
-        return sprintf('app.block_event_listener.admin.crud.after_content_%s.import', $type);
-    }
-
-    private function buildEventName(string $type, ?string $domain): string
-    {
-        if (isset($this->eventNames[$type])) {
-            return $this->eventNames[$type];
-        }
-
-        $domain = $domain ?? 'sylius';
-        // backward compatibility with the old configuration
-        if (count(\explode('.', $type)) === 2) {
-            [$domain, $type] = \explode('.', $type);
-        }
-
-        return \sprintf(
-            'sonata.block.event.%s.admin.%s.index.after_content',
-            $domain,
-            $type
-        );
+        return sprintf('sylius_admin.%s.index.content.grid', $type);
     }
 
     private function buildTemplateName(string $type): string

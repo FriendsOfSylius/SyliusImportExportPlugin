@@ -1,23 +1,23 @@
-{% form_theme form '@FOSSyliusImportExportPlugin/Form/theme.html.twig' %}
+{% form_theme form '@SyliusAdmin/shared/form_theme.html.twig' %}
 {% set header = 'sylius.ui.'~resource %}
 
-<div class="ui styled fluid accordion">
-    <div class="title active">
-        <i class="dropdown icon"></i>
-        {{ 'fos.import_export.ui.import'|trans }} {{ header|trans }}
-    </div>
-    <div class="content active">
-        {{ form_start(form, {
-            'action': path('app_import_data',  {'resource': resource}),
-            'method': 'POST',
-            'attr': {'class': 'ui loadable form', 'novalidate': 'novalidate'}
-        }) }}
-        <div class="ui segment">
-            {{ form_widget(form) }}
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">{{ 'fos.import_export.ui.import'|trans }} {{ header|trans }}</h5>
+        <div class="card-text">
+            {{ form_start(form, {
+                'action': path('app_import_data',  {'resource': resource}),
+                'method': 'POST',
+                'attr': {'novalidate': 'novalidate'}
+            }) }}
+            <div class="row">
+                {{ form_widget(form) }}
+            </div>
+
+            <button type="submit" class="btn">
+                {{ resource|capitalize }} {{ 'fos.import_export.ui.import'|trans }}
+            </button>
+            {{ form_end(form) }}
         </div>
-        <button class="ui icon primary button" type="submit" id="import-data">
-            {{ resource|capitalize }} {{ 'fos.import_export.ui.import'|trans }}
-        </button>
-        {{ form_end(form) }}
     </div>
 </div>
