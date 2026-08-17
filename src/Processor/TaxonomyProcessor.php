@@ -72,7 +72,7 @@ final class TaxonomyProcessor implements ResourceProcessorInterface
         $this->taxonRepository->add($taxon);
     }
 
-    private function getTaxon(string $code, string $parentCode = null): TaxonInterface
+    private function getTaxon(string $code, ?string $parentCode = null): TaxonInterface
     {
         /** @var TaxonInterface|null $taxon */
         $taxon = $this->taxonRepository->findOneBy(['code' => $code]);
